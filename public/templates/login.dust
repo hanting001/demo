@@ -1,0 +1,63 @@
+{>"layouts/master" /}
+
+{<content}
+<div class="container">
+    <h1>{title}</h1>
+    {?message}
+    <div class="alert alert-warning fade in">
+        <button class="close" type="button" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>{message}</strong>
+    </div>
+    {/message}
+    <form class="form-horizontal" id="userform" method="post" role="form">
+        <div class="form-group" id="nameFiled">
+            <label class="col-sm-2 control-label" for="inputUsername">用户名</label>
+            <div class="col-sm-10">
+                    <input id="username" type="text" name="username"
+                        class="form-control">
+            </div>
+        </div>
+		<div id="passwdFiled" class="form-group">
+			<label for="inputPass" class="col-sm-2 control-label">密码</label>
+			<div class="col-sm-10">
+				<input id="password" type="password" name="password"
+					class="form-control">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-1">
+				<input id="submitbtn" type="button" value="登陆"
+					class="btn btn-default">
+			</div>
+			<div class="col-sm-1">
+				<a href="/users" role="button" class="btn btn-info">注册 </a>
+			</div>
+		</div>
+		<input type="hidden" name="_csrf" value="{_csrf}"/>
+	</form>
+</div>
+{/content}
+{<script}
+<script type="text/javascript">
+$("#submitbtn").click(function(){
+    var username = $("#username").val();
+    var password = $("#password").val();
+    var password2 = $("#confirmpd").val();
+    if (username.trim() == '') {
+       alert('用户名必须录入！');
+       $("#nameFiled").addClass('has-error');
+       return;
+    } else {
+        $("#nameFiled").removeClass('has-error');
+    }
+    if (password.trim() == '') {
+        alert('密码必须输入！');
+        $("#passwdFiled").addClass('has-error');
+        return;
+    } else {
+        $("#passwdFiled").removeClass('has-error');
+    }
+    $("#userform").submit();
+});
+</script>
+{/script}

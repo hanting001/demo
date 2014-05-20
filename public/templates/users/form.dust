@@ -1,0 +1,82 @@
+{>"layouts/master" /}
+{<content}
+<div class="container">
+    <h1>{title}</h1>
+    {?message}
+    <div class="alert alert-warning fade in">
+        <button class="close" type="button" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>{message}</strong>
+    </div>
+    {/message}    
+    <form id="userform" method="post" role="form" class="form-horizontal">
+        <div id="nameFiled" class="form-group">
+            <label for="inputUsername" class="col-sm-2 control-label">用户名</label>
+            <div class="col-sm-10">
+                <input id="username" type="text" name="username"
+                    class="form-control">
+            </div>
+        </div>
+        <div id="passwdFiled" class="form-group">
+            <label for="inputPass" class="col-sm-2 control-label">密码</label>
+            <div class="col-sm-10">
+                <input id="password" type="password" name="password"
+                    class="form-control">
+            </div>
+        </div>
+        <div id="passwd2Filed" class="form-group">
+            <label for="inputPass" class="col-sm-2 control-label">确认密码</label>
+            <div class="col-sm-10">
+                <input id="confirmpd" type="password" name="password2"
+                    class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input id="submitbtn" type="button" value="注册"
+                    class="btn btn-default">
+            </div>
+        </div>
+        <input type="hidden" name="_csrf" value="{_csrf}"/>
+    </form>
+</div>
+{/content}
+{<script}
+<script type="text/javascript">
+        $("#submitbtn").click(function(){
+            var username = $("#username").val();
+            var password = $("#password").val();
+            var password2 = $("#confirmpd").val();
+            if (username.trim() == '') {
+               alert('用户名必须录入！');
+               $("#nameFiled").addClass('has-error');
+               return;
+            } else {
+                $("#nameFiled").removeClass('has-error');
+            }
+            if (password.trim() == '') {
+                alert('密码必须输入！');
+                $("#passwdFiled").addClass('has-error');
+                return;
+            } else {
+                $("#passwdFiled").removeClass('has-error');
+            }
+            if (password2.trim() == '') {
+                alert('确认密码必须输入！');
+                $("#passwd2Filed").addClass('has-error');
+                return;
+            } else {
+                $("#passwd2Filed").removeClass('has-error');
+            }
+            if (password != password2) {
+                alert('两次输入的密码不一致！');
+                $("#passwdFiled").addClass('has-error');
+                $("#passwd2Filed").addClass('has-error');
+                return;
+            } else {
+                $("#passwdFiled").removeClass('has-error');
+                $("#passwd2Filed").removeClass('has-error');            
+            }
+            $("#userform").submit();
+        });
+</script>
+{/script}

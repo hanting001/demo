@@ -1,0 +1,41 @@
+{
+  "name": "demo",
+  "version": "0.1.0",
+  "description": "kraken demo app",
+  "author": "hting",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt test",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "kraken-js": "^0.7.0",
+    "express": "~3.4.4",
+    "nconf": "^0.6.8",
+    "dustjs-helpers": "^1.1.1",
+    "dustjs-linkedin": "^2.0.3",
+    "adaro": "^0.1.5",
+    "makara": "^0.3.4",
+    "less": "^1.6.1",
+    "mongoose": "^3.8.9",
+    "mongoose-paginate": "^2.2.0",
+    "bcrypt": "^0.7.8",
+    "passport": "^0.2.0",
+    "passport-local": "^1.0.0",
+    "connect-flash": "^0.1.1",
+    "connect-redis": "^1.4.7",
+    "socket.io": "^0.9.16"
+  },
+  "devDependencies": {
+    "mocha": "^1.17.0",
+    "supertest": "^0.8.2",
+    "grunt-dustjs": "^1.2.0",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-copy-to": "0.0.10",
+    "grunt-config-dir": "^0.3.2",
+    "grunt-contrib-less": "^0.9.0",
+    "grunt-mocha-cli": "^1.5.0",
+    "grunt-contrib-jshint": "^0.6.4",
+    "grunt": "^0.4.1"
+  }
+}
