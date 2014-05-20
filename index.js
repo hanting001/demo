@@ -70,7 +70,7 @@ if (cluster.isMaster) {
 	    	var SIO = require('./lib/sio');
 	    	var sio = SIO.createNew();
 	    	sio.init(global.socketio);
-	    });
+	    });   
 	}
 }
 module.exports = _app;
