@@ -44,6 +44,7 @@ if (cluster.isMaster) {
 	
 	_app.requestStart = function requestStart(app) {
 	    // Run before most express middleware has been registered.
+		app.locals.pretty = true;        //format HTML page source code
 	};
 	
 	
@@ -53,6 +54,7 @@ if (cluster.isMaster) {
 		app.use(passport.session());     //Persist the user in the session
 		app.use(flash());                //Use flash for saving/retrieving error messages for the user
 		app.use(auth.injectUser);        //Inject the authenticated user into the response context
+		
 	};
 	
 	
