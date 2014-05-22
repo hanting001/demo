@@ -44,8 +44,6 @@ if (cluster.isMaster) {
 	_app.requestStart = function requestStart(app) {
 	    
 	};
-	
-	
 	_app.requestBeforeRoute = function requestBeforeRoute(app) {
 	    // Run before any routes have been added.
 		app.use(passport.initialize());  //Use Passport for authentication
