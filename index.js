@@ -20,7 +20,6 @@ if (cluster.isMaster) {
 	    User = require('./models/User'),
 	    _app = {};
 	
-	//global.socketio = null;
 	_app.configure = function configure(nconf, next) {
 	    // Async method run on startup.
 		// Configure the database
