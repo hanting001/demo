@@ -24,7 +24,8 @@
     "passport-local": "^1.0.0",
     "connect-flash": "^0.1.1",
     "connect-redis": "^1.4.7",
-    "socket.io": "^0.9.16"
+    "socket.io": "^0.9.16",
+    "validator-js": "^0.2.1"
   },
   "devDependencies": {
     "mocha": "^1.17.0",

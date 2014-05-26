@@ -2,7 +2,6 @@
 {<content}
 <div class="container">
 	<h1>{title}</h1>
-	<div id="tools"></div>
 	<form class="form-inline" role="form" action="/tools" method="post">
 		<div class="form-group">
 			<label class="sr-only" for="inputName">名称</label> 
