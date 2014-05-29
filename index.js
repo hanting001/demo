@@ -45,8 +45,6 @@ if (cluster.isMaster) {
 	    // Run before most express middleware has been registered.
 		app.locals.pretty = true;        //format HTML page source code
 	};
-	
-	
 	_app.requestBeforeRoute = function requestBeforeRoute(app) {
 	    // Run before any routes have been added.
 		app.use(passport.initialize());  //Use Passport for authentication

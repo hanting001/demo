@@ -9,7 +9,14 @@
 	"bcrypt": {
 	    "difficulty": 8
 	},
-	"uploadDir": "../upload/tools"
+	"uploadDir": "../upload/tools",
+	"apiServer": {
+		"host":"localhost",
+		"port":"8080"
+	},
+	"pagination": {
+		"max":10
+	}
 //
 // "i18n": {
 //     "fallback": "en-US",
