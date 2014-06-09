@@ -1,6 +1,4 @@
-<div class="container">
-    <div class="footer">
-        <hr style="margin: 30px 0 10px 0;">
-        <p>&copy;&nbsp;<a href="#">Tiananframework</a> 2014</p>
-    </div>
+<div class="container-fluid">
+        <p align="center">&copy;&nbsp;<a href="#">Tiananframework</a> 2014</p>
 </div>
+

@@ -4,14 +4,14 @@ var cluster = require('cluster');
 var os = require('os');
 var numCPUs = os.cpus().length;
 
-if (cluster.isMaster) {
-	for ( var i = 0; i < numCPUs; i++) {
-		cluster.fork();
-	}
-	cluster.on('death', function(worker) {
-		console.log('Worker ' + worker.pid + ' died.');
-	});
-} else {
+//if (cluster.isMaster) {
+//	for ( var i = 0; i < numCPUs; i++) {
+//		cluster.fork();
+//	}
+//	cluster.on('death', function(worker) {
+//		console.log('Worker ' + worker.pid + ' died.');
+//	});
+//} else {
 	var kraken = require('kraken-js'),
 		db = require('./lib/database'),
 	    passport = require('passport'),
@@ -19,7 +19,7 @@ if (cluster.isMaster) {
 	    flash = require('connect-flash'),
 	    User = require('./models/User'),
 	    _app = {};
-	
+	require('./lib/helper-dateFormat');
 	_app.configure = function configure(nconf, next) {
 	    // Async method run on startup.
 		// Configure the database
@@ -69,5 +69,5 @@ if (cluster.isMaster) {
 	    	sio.init(global.socketio);
 	    });   
 	}
-}
-module.exports = _app;
+//}
+//module.exports = _app;

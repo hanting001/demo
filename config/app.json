@@ -4,7 +4,7 @@
 	"port": 4000,
     "databaseConfig": {
         "host": "localhost",
-        "database": "toolDB"
+        "database": "huibaoDB"
     },
 	"bcrypt": {
 	    "difficulty": 8
