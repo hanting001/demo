@@ -1,6 +1,7 @@
 var Branch = require('../../models/userInfo/Branch');
-
-
+var baseCode = require('../../lib/baseCode');
+var mongoose = require('mongoose');
+var ObjectId = mongoose.Types.ObjectId;
 module.exports = function(app) {
 	app.get('/branches', function(req, res, next) {
 		var page = 1;
@@ -12,14 +13,33 @@ module.exports = function(app) {
 				return next(err);
 			}
 			// console.log('pageCount:%s', pageCount);
-			console.log(branches[0]);
 			var model = {
 					title : '机构列表',
+					isAdmin : true,
 					branches : branches,
 					page : page,
 					pageCount : pageCount
 				};			
 			res.render('userInfo/branches/index', model);
+		});
+	});
+	
+	app.get('/branches/:id/addSub', function(req, res, next) {
+		var id = req.params.id;
+		Branch.findById(new ObjectId(id), 'abbrName', function(err, branch){
+			if (err) {
+				return next(err);
+			}
+			console.log(branch);
+			var model = {
+					title : '新增机构',
+					isAdmin : true,
+					parent : {abbrName:branch.abbrName, id:id},
+					branchLevel : baseCode.branchLevel,
+					branchTypeLevel : baseCode.branchTypeLevel,
+					branchType:baseCode.branchType
+				};			
+			res.render('userInfo/branches/addSub', model);			
 		});
 	});
 };

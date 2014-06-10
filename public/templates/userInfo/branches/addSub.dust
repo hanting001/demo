@@ -1,0 +1,109 @@
+{>"layouts/master" /} 
+{<content}
+<div class="panel panel-primary">
+  <div class="panel-heading">基本信息</div>
+  <div class="panel-body">
+		<form class="form-horizontal" role="form">
+			<div class="form-group">
+				<label for="companyName" class="col-sm-1 control-label">公司名称<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					<input type="text" name="branch[name]" class="form-control" id="companyName" required>
+				</div>
+				<label for="companyAbbr" class="col-sm-1 control-label">公司简称<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					<input type="text" name="branch[abbrName]" class="form-control" id="companyAbbr" required>
+				</div>
+				<label for="companyLevel" class="col-sm-1 control-label">公司级别<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					<select class="form-control" id="companyLevel" name="branch[level]" required>
+						<option />
+						{#branchLevel}
+							<option>{.}</option>
+						{/branchLevel}
+					</select>
+				</div>
+				<label for="companyID" class="col-sm-1 control-label">注册号</label>
+				<div class="col-sm-2">
+					<input type="text" name="branch[companyID]" class="form-control" id="companyID" >
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="branchTypeLevel" class="col-sm-1 control-label">公司类别<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					<select class="form-control" id="branchTypeLevel" name="branch[typeLevel]" required>
+						<option />
+						{#branchTypeLevel}
+							<option>{.}</option>
+						{/branchTypeLevel}
+					</select>
+				</div>
+				<label for="companyAbbr" class="col-sm-1 control-label">上级机构<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					<p class="form-control">{parent.abbrName}</p>
+					<input type="hidden" name="branch[parent]" value="{parent.id}">
+				</div>
+				<label for="companyLevel" class="col-sm-1 control-label">机构性质<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					<select class="form-control" id="companyLevel" name="branch[level]" required>
+						<option />
+						{#branchType}
+							<option>{.}</option>
+						{/branchType}
+					</select>
+				</div>
+				<label for="businessAddress" class="col-sm-1 control-label">经营地址<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					<input type="text" name="branch[address]" class="form-control" id="businessAddress" >
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="establishDate" class="col-sm-1 control-label">成立日期<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					<div class="input-append date" id="datetimepicker">
+						<input class="form-control" size="16"   type="text" value="" readonly>
+						<span class="add-on"><i class="icon-th"></i></span>
+					</div>
+				</div>
+				<label for="companyAbbr" class="col-sm-1 control-label">联系地址<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					<p class="form-control">{parent.abbrName}</p>
+					<input type="hidden" name="branch[parent]" value="{parent.id}">
+				</div>
+				<label for="companyLevel" class="col-sm-1 control-label">邮编<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					<select class="form-control" id="companyLevel" name="branch[level]" required>
+						<option />
+						{#branchType}
+							<option>{.}</option>
+						{/branchType}
+					</select>
+				</div>
+				<label for="businessAddress" class="col-sm-1 control-label">电话<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					<input type="text" name="branch[address]" class="form-control" id="businessAddress" >
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+				<div class="btn-toolbar" role="toolbar">
+					<div class="btn-group">
+						<button type="submit" class="btn btn-primary">提交</button>
+					</div>
+					<div class="btn-group">
+						<button type="button" class="btn btn-default">返回</button>
+					</div>
+			</div>
+		</form>
+	</div>
+</div>
+{/content}
+{<script}
+<script type="text/javascript">
+	$('#datetimepicker').datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        language: 'zh-CN',
+        todayHighlight: true
+    });
+</script> 
+{/script}

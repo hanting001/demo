@@ -1,13 +1,14 @@
 var mongoose = require('mongoose');
+var baseCode = require('../../lib/baseCode');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var branchSchema = new mongoose.Schema({
 	code			:	{ type: String, unique: true, required: true },
 	name			:	{ type: String, required: true },
 	abbrName		: 	{ type: String, required: true },
-	type			:	{ type: String, required: true },
+	type			:	{ type: String, required: true,  enum : baseCode.branchType},
 	parent			:	ObjectId,
-	level			:	{type : String, enum : ['总公司', '分公司', '营业区', '营业部']},
-	typeLevel		:	{type : String, enum : ['A级', 'B级', 'C级', '']},
+	level			:	{type : String, enum : baseCode.branchLevel},
+	typeLevel		:	{type : String, enum : baseCode.branchTypeLevel},
 	bizScope		:	String,
 	establishDate	:	Date,
 	revokeDate		:	Date,
@@ -48,7 +49,8 @@ var branchSchema = new mongoose.Schema({
 	propertyInfo	:	{				/* 物业信息 */
 	},
 	telephone		:	String,
-	address			:	String,
+	address			:	{type : String, required: true},
+	contactAddr		:	String,
 	zip				:	String,
 	countryCode		:	String,
 	districtCode	:	String,

@@ -37,7 +37,10 @@
 		<tbody>
 		{#branches} 
 		    <tr>
-		      <td class="col-md-2"><a  href="/tool/{.id}/download"><b class="glyphicon glyphicon-chevron-left"></b></a>{.name}<a  href="/tool/{.id}/download"><b class="glyphicon glyphicon-chevron-right"></b></a></td>
+		      <td class="col-md-2">
+		      <a class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="显示上级机构"  href="/tool/{.id}/download" ><i class="icon-angle-left icon-large"></i></a>
+		      	{.name}
+		      <a class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="显示下级机构" href="/tool/{.id}/download"><i class="icon-angle-right icon-large"></i></a></td>
 		      <td class="col-md-1">{.level}</td>
 		      <td class="col-md-1">{.typeLevel}</td>
 		      <td class="col-md-2">{.address}</td>
@@ -46,8 +49,10 @@
 		      <td class="col-md-1">{.status}</td>
 		      <td class="col-md-2">
 		          {?isAdmin}
-		          <a class="btn btn-default btn-xs" href="/tool/{.id}/edit">修改</a>
-		          <button class="btn btn-default btn-xs" onclick="deleteTool('{.id}')">删除</button>
+		          <div class="btn-group btn-group-sm">
+  					<a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="编辑"><i class="icon-edit icon-large"></i></a>
+  					<a class="btn btn-default" href="/branches/{.id}/addSub" data-toggle="tooltip" data-placement="top" title="新增下级"><i class="icon-plus icon-large"></i></a>
+				  </div>
 		          {:else}
 		          <a class="btn btn-default btn-xs disabled" href="#">修改</a>
 		          <a class="btn btn-default btn-xs disabled" href="#">删除</a>
@@ -58,4 +63,37 @@
 		</tbody>
 	</table>
 </div>
+<div class="container-fluid">
+    <ul class="pagination"></ul>
+</div>
 {/content}
+{<script}
+<script type="text/javascript">
+	var options = {
+	    currentPage: {page},
+	    bootstrapMajorVersion : 3,
+	    totalPages: {pageCount},
+	    pageUrl : function(type, page, current){
+	        return '/branches?page='+page;
+	    },
+	    itemContainerClass: function (type, page, current) {
+	        return (page === current) ? "disabled" : "pointer-cursor";
+	    },
+	    itemTexts: function (type, page, current) {
+	        switch (type) {
+	            case "first":
+	                return "<<";
+	            case "prev":
+	                return "<";
+	            case "next":
+	                return ">";
+	            case "last":
+	                return ">>";
+	            case "page":
+	                return page;
+	        }
+	    }
+	};
+	$('.pagination').bootstrapPaginator(options);
+</script> 
+{/script}
