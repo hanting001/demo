@@ -1,7 +1,7 @@
 {>"layouts/master" /} 
 {<content}
 <div class="panel panel-primary">
-  <div class="panel-heading">基本信息</div>
+  <div class="panel-heading">信息录入</div>
   <div class="panel-body">
 		<form class="form-horizontal" role="form">
 			<div class="form-group">
@@ -59,32 +59,84 @@
 			<div class="form-group">
 				<label for="establishDate" class="col-sm-1 control-label">成立日期<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<div class="input-append date" id="datetimepicker">
-						<input class="form-control" size="16"   type="text" value="" readonly>
-						<span class="add-on"><i class="icon-th"></i></span>
+					<div class="input-group date" id="datetimepicker">
+						<input class="form-control" name="branch[establishDate]" size="16"   type="text" value="" readonly>
+						<span class="input-group-addon"><i class="icon-th icon-large"></i></span>
 					</div>
 				</div>
-				<label for="companyAbbr" class="col-sm-1 control-label">联系地址<span class="required-indicator">*</span></label>
+				<label for="contactAddr" class="col-sm-1 control-label">联系地址<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<p class="form-control">{parent.abbrName}</p>
-					<input type="hidden" name="branch[parent]" value="{parent.id}">
+                    <input type="text" name="branch[contactAddr]" class="form-control" id="contactAddr" >
 				</div>
-				<label for="companyLevel" class="col-sm-1 control-label">邮编<span class="required-indicator">*</span></label>
+				<label for="branchZip" class="col-sm-1 control-label">邮编<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<select class="form-control" id="companyLevel" name="branch[level]" required>
-						<option />
-						{#branchType}
-							<option>{.}</option>
-						{/branchType}
-					</select>
+					<input type="text" name="branch[zip]" class="form-control" id="branchZip" >
 				</div>
-				<label for="businessAddress" class="col-sm-1 control-label">电话<span class="required-indicator">*</span></label>
+				<label for="telephone" class="col-sm-1 control-label">电话<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<input type="text" name="branch[address]" class="form-control" id="businessAddress" >
+					<input type="text" name="branch[telephone]" class="form-control" id="telephone" >
 				</div>
 			</div>
+            <div class="form-group">
+                <label for="chief" class="col-sm-1 control-label">机构负责人</label>
+                <div class="col-sm-2">
+                    <input type="text" name="branch[chief]" class="form-control" id="chief" >
+                </div>
+                <label for="chiefTele" class="col-sm-1 control-label">负责人电话</label>
+                <div class="col-sm-2">
+                    <input type="text" name="branch[chiefTele]" class="form-control" id="chiefTele" >
+                </div>
+                <label for="insurNO" class="col-sm-1 control-label">保监核准文号</label>
+                <div class="col-sm-2">
+                    <input type="text" name="" class="form-control" id="insurNO" >
+                </div>
+                <label for="insurDate" class="col-sm-1 control-label">保监核准日期</label>
+                <div class="col-sm-2">
+                    <div class="input-group date" id="insurDate">
+                        <input class="form-control" size="16"   type="text" value="" readonly>
+                        <span class="input-group-addon"><i class="icon-th icon-large"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a href="#home" data-toggle="tab">业务许可证</a></li>
+                      <li><a href="#profile" data-toggle="tab">机构代码证</a></li>
+                      <li><a href="#messages" data-toggle="tab">国税</a></li>
+                    </ul>
+                </div>
+           </div>
+            <div class="form-group">
+                <div class="col-sm-12 tab-content">
+		            <div class="tab-pane active" id="home"><div class="form-group">
+		                <label for="chief" class="col-sm-1 control-label">机构负责人</label>
+		                <div class="col-sm-2">
+		                    <input type="text" name="branch[chief]" class="form-control" id="chief" >
+		                </div>
+		                <label for="chiefTele" class="col-sm-1 control-label">负责人电话</label>
+		                <div class="col-sm-2">
+		                    <input type="text" name="branch[chiefTele]" class="form-control" id="chiefTele" >
+		                </div>
+		                <label for="insurNO" class="col-sm-1 control-label">保监核准文号</label>
+		                <div class="col-sm-2">
+		                    <input type="text" name="" class="form-control" id="insurNO" >
+		                </div>
+		                <label for="insurDate" class="col-sm-1 control-label">保监核准日期</label>
+		                <div class="col-sm-2">
+		                    <div class="input-group date" id="insurDate">
+		                        <input class="form-control" size="16"   type="text" value="" readonly>
+		                        <span class="input-group-addon"><i class="icon-th icon-large"></i></span>
+		                    </div>
+		                </div>
+		            </div>
+                </div>
+                    <div class="tab-pane" id="profile">profile</div>
+                    <div class="tab-pane" id="messages">message</div>
+                </div>
+           </div>
 			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
+				<div class="col-sm-offset-1 col-sm-11">
 				<div class="btn-toolbar" role="toolbar">
 					<div class="btn-group">
 						<button type="submit" class="btn btn-primary">提交</button>
@@ -93,6 +145,7 @@
 						<button type="button" class="btn btn-default">返回</button>
 					</div>
 			</div>
+
 		</form>
 	</div>
 </div>
@@ -100,10 +153,16 @@
 {<script}
 <script type="text/javascript">
 	$('#datetimepicker').datepicker({
-        format: "yyyy-mm-dd",
-        autoclose: true,
-        language: 'zh-CN',
-        todayHighlight: true
-    });
+		format : "yyyy-mm-dd",
+		autoclose : true,
+		language : 'zh-CN',
+		todayHighlight : true
+	});
+	$('#insurDate').datepicker({
+		format : "yyyy-mm-dd",
+		autoclose : true,
+		language : 'zh-CN',
+		todayHighlight : true
+	});
 </script> 
 {/script}

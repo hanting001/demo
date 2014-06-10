@@ -12,7 +12,8 @@ var branchSchema = new mongoose.Schema({
 	bizScope		:	String,
 	establishDate	:	Date,
 	revokeDate		:	Date,
-	chief			:	ObjectId,		/* 责任人ID */
+	chief			:	String,
+	chiefTele		:	String,
 	businesslicence			:	{
 		licenceNO			:	{ type: String, required: true },	/* 业务许可证 */
 		licenceDate			:	Date,
@@ -50,7 +51,7 @@ var branchSchema = new mongoose.Schema({
 	},
 	telephone		:	String,
 	address			:	{type : String, required: true},
-	contactAddr		:	String,
+	contactAddr		:	{type : String, required: true},
 	zip				:	String,
 	countryCode		:	String,
 	districtCode	:	String,

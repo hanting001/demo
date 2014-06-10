@@ -38,9 +38,9 @@
 		{#branches} 
 		    <tr>
 		      <td class="col-md-2">
-		      <a class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="显示上级机构"  href="/tool/{.id}/download" ><i class="icon-angle-left icon-large"></i></a>
+		      <a  data-toggle="tooltip" data-placement="top" title="显示上级机构"  href="/tool/{.id}/download" ><i class="icon-angle-left icon-large"></i></a>
 		      	{.name}
-		      <a class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="显示下级机构" href="/tool/{.id}/download"><i class="icon-angle-right icon-large"></i></a></td>
+		      <a  data-toggle="tooltip" data-placement="top" title="显示下级机构" href="/tool/{.id}/download"><i class="icon-angle-right icon-large"></i></a></td>
 		      <td class="col-md-1">{.level}</td>
 		      <td class="col-md-1">{.typeLevel}</td>
 		      <td class="col-md-2">{.address}</td>
