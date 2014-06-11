@@ -42,4 +42,17 @@ module.exports = function(app) {
 			res.render('userInfo/branches/addSub', model);			
 		});
 	});
+	
+	app.post('/branches/:id/addSub', function(req, res, next) {
+		var id = req.params.id;
+		var branch = req.body.branch;
+		Branch.findById(new ObjectId(id), 'abbrName', function(err, branch){
+			if (err) {
+				branch.status = '有效';
+				return next(err);
+			}
+			console.log(req.body);			
+			res.redirect('/branches');			
+		});
+	});
 };

@@ -1,14 +1,13 @@
 var mongoose = require('mongoose');
-var baseCode = require('../../lib/baseCode');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var branchSchema = new mongoose.Schema({
 	code			:	{ type: String, unique: true, required: true },
 	name			:	{ type: String, required: true },
 	abbrName		: 	{ type: String, required: true },
-	type			:	{ type: String, required: true,  enum : baseCode.branchType},
+	typeId			:	Number,
 	parent			:	ObjectId,
-	level			:	{type : String, enum : baseCode.branchLevel},
-	typeLevel		:	{type : String, enum : baseCode.branchTypeLevel},
+	levelId			:	Number,
+	typeLevelId		:	Number,
 	bizScope		:	String,
 	establishDate	:	Date,
 	revokeDate		:	Date,

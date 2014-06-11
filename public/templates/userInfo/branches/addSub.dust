@@ -3,7 +3,8 @@
 <div class="panel panel-primary">
   <div class="panel-heading">信息录入</div>
   <div class="panel-body">
-		<form class="form-horizontal" role="form">
+		<form class="form-horizontal" method="post" id="addSubForm" role="form">
+			<input type="hidden" name="_csrf" value="{_csrf}" />
 			<div class="form-group">
 				<label for="companyName" class="col-sm-1 control-label">公司名称<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
@@ -15,10 +16,10 @@
 				</div>
 				<label for="companyLevel" class="col-sm-1 control-label">公司级别<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<select class="form-control" id="companyLevel" name="branch[level]" required>
+					<select class="form-control" id="companyLevel" name="branch[levelId]" required>
 						<option />
 						{#branchLevel}
-							<option>{.}</option>
+							<option value="{.id}">{.value}</option>
 						{/branchLevel}
 					</select>
 				</div>
@@ -30,51 +31,50 @@
 			<div class="form-group">
 				<label for="branchTypeLevel" class="col-sm-1 control-label">公司类别<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<select class="form-control" id="branchTypeLevel" name="branch[typeLevel]" required>
+					<select class="form-control" id="branchTypeLevel" name="branch[typeLevelId]" required>
 						<option />
 						{#branchTypeLevel}
-							<option>{.}</option>
+							<option value="{.id}">{.value}</option>
 						{/branchTypeLevel}
 					</select>
 				</div>
 				<label for="companyAbbr" class="col-sm-1 control-label">上级机构<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
 					<p class="form-control">{parent.abbrName}</p>
-					<input type="hidden" name="branch[parent]" value="{parent.id}">
 				</div>
 				<label for="companyLevel" class="col-sm-1 control-label">机构性质<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<select class="form-control" id="companyLevel" name="branch[level]" required>
+					<select class="form-control" id="companyLevel" name="branch[typeId]" required>
 						<option />
 						{#branchType}
-							<option>{.}</option>
+							<option value="{.id}">{.value}</option>
 						{/branchType}
 					</select>
 				</div>
 				<label for="businessAddress" class="col-sm-1 control-label">经营地址<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<input type="text" name="branch[address]" class="form-control" id="businessAddress" >
+					<input type="text" name="branch[address]" class="form-control" id="businessAddress" required>
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="establishDate" class="col-sm-1 control-label">成立日期<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
 					<div class="input-group date" id="datetimepicker">
-						<input class="form-control" name="branch[establishDate]" size="16"   type="text" value="" readonly>
+						<input class="form-control" name="branch[establishDate]" size="16"   type="text" value="" readonly required>
 						<span class="input-group-addon"><i class="icon-th icon-large"></i></span>
 					</div>
 				</div>
 				<label for="contactAddr" class="col-sm-1 control-label">联系地址<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-                    <input type="text" name="branch[contactAddr]" class="form-control" id="contactAddr" >
+                    <input type="text" name="branch[contactAddr]" class="form-control" id="contactAddr" required >
 				</div>
 				<label for="branchZip" class="col-sm-1 control-label">邮编<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<input type="text" name="branch[zip]" class="form-control" id="branchZip" >
+					<input type="text" name="branch[zip]" class="form-control" id="branchZip" required>
 				</div>
 				<label for="telephone" class="col-sm-1 control-label">电话<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<input type="text" name="branch[telephone]" class="form-control" id="telephone" >
+					<input type="text" name="branch[telephone]" class="form-control" id="telephone" required>
 				</div>
 			</div>
             <div class="form-group">
@@ -101,42 +101,108 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <ul class="nav nav-tabs">
-                      <li class="active"><a href="#home" data-toggle="tab">业务许可证</a></li>
-                      <li><a href="#profile" data-toggle="tab">机构代码证</a></li>
-                      <li><a href="#messages" data-toggle="tab">国税</a></li>
+                      <li class="active"><a href="#businesslicenceLicence" data-toggle="tab">业务许可证</a></li>
+                      <li><a href="#orgLicence" data-toggle="tab">机构代码证</a></li>
+                      <li><a href="#remarks" data-toggle="tab">备注</a></li>
                     </ul>
                 </div>
            </div>
             <div class="form-group">
                 <div class="col-sm-12 tab-content">
-		            <div class="tab-pane active" id="home"><div class="form-group">
-		                <label for="chief" class="col-sm-1 control-label">机构负责人</label>
-		                <div class="col-sm-2">
-		                    <input type="text" name="branch[chief]" class="form-control" id="chief" >
-		                </div>
-		                <label for="chiefTele" class="col-sm-1 control-label">负责人电话</label>
-		                <div class="col-sm-2">
-		                    <input type="text" name="branch[chiefTele]" class="form-control" id="chiefTele" >
-		                </div>
-		                <label for="insurNO" class="col-sm-1 control-label">保监核准文号</label>
-		                <div class="col-sm-2">
-		                    <input type="text" name="" class="form-control" id="insurNO" >
-		                </div>
-		                <label for="insurDate" class="col-sm-1 control-label">保监核准日期</label>
-		                <div class="col-sm-2">
-		                    <div class="input-group date" id="insurDate">
-		                        <input class="form-control" size="16"   type="text" value="" readonly>
-		                        <span class="input-group-addon"><i class="icon-th icon-large"></i></span>
-		                    </div>
-		                </div>
-		            </div>
-                </div>
-                    <div class="tab-pane" id="profile">profile</div>
-                    <div class="tab-pane" id="messages">message</div>
+		            <div class="tab-pane active" id="businesslicenceLicence">
+			            <div class="form-group">
+			                <label for="businesslicenceLicenceNO" class=" col-sm-offset-1 col-sm-1 control-label">许可证编号</label>
+			                <div class="col-sm-2">
+			                    <input type="text" name="businesslicence[licenceNO]" class="form-control" id="businesslicenceLicenceNO" >
+			                </div>
+			                <label for="businesslicenceDate" class="col-sm-1 control-label">发证日期</label>
+			                <div class="col-sm-2">
+			                	<div class="input-group date" id="businesslicenceDate">
+                        			<input class="form-control" size="16" name="businesslicence[licenceDate]"  type="text" value="" readonly>
+                        			<span class="input-group-addon"><i class="icon-th icon-large"></i></span>
+                   				</div>
+			                </div>
+			                <label for="businesslicenceStartDate" class="col-sm-1 control-label">有效期起</label>
+			                <div class="col-sm-2">
+			                	<div class="input-group date" id="businesslicenceStartDate">
+                        			<input class="form-control" size="16" name="businesslicence[startDate]"  type="text" value="" readonly>
+                        			<span class="input-group-addon"><i class="icon-th icon-large"></i></span>
+                   				</div>
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label for="businesslicenceEndDate" class="col-sm-offset-1 col-sm-1 control-label">有效期止</label>
+			                <div class="col-sm-2">
+			                	<div class="input-group date" id="businesslicenceEndDate">
+                        			<input class="form-control" size="16" name="businesslicence[endDate]"  type="text" value="" readonly>
+                        			<span class="input-group-addon"><i class="icon-th icon-large"></i></span>
+                   				</div>
+			                </div>
+			                <label for="businesslicenceAuthority" class="col-sm-1 control-label">发证单位</label>
+			                <div class="col-sm-2">
+			                    <input type="text" name="businesslicence[authority]" class="form-control" id="businesslicenceAuthority" >
+			                </div>
+			            </div>
+                	</div>
+                	
+                    <div class="tab-pane" id="orgLicence">
+ 			            <div class="form-group">
+			                <label for="orgLicenceStartDate" class=" col-sm-offset-1 col-sm-1 control-label">有效期起</label>
+			                <div class="col-sm-2">
+			                	<div class="input-group date" id="orgLicenceStartDate">
+                        			<input class="form-control" size="16" name="orgLicence[startDate]"  type="text" value="" readonly>
+                        			<span class="input-group-addon"><i class="icon-th icon-large"></i></span>
+                   				</div>
+			                </div>
+			                <label for="orgLicenceEndDate" class=" col-sm-offset-1 col-sm-1 control-label">有效期止</label>
+			                <div class="col-sm-2">
+			                	<div class="input-group date" id="orgLicenceEndDate">
+                        			<input class="form-control" size="16" name="orgLicence[endDate]"  type="text" value="" readonly>
+                        			<span class="input-group-addon"><i class="icon-th icon-large"></i></span>
+                   				</div>
+			                </div>
+			                <label for="orgLicenceCode" class="col-sm-1 control-label">代码</label>
+			                <div class="col-sm-2">
+								<input type="text" name="orgLicence[orgCode]" class="form-control" id="orgLicenceCode" >
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label for="orgLicenceType" class="col-sm-offset-1 col-sm-1 control-label">类型</label>
+			                <div class="col-sm-2">
+			                	<input type="text" name="orgLicence[orgType]" class="form-control" id="orgLicenceType" >
+			                </div>
+			                <label for="orgLicenceDate" class=" col-sm-offset-1 col-sm-1 control-label">发证日期</label>
+			                <div class="col-sm-2">
+			                	<div class="input-group date" id="orgLicenceDate">
+                        			<input class="form-control" size="16" name="orgLicence[licenceDate]"  type="text" value="" readonly>
+                        			<span class="input-group-addon"><i class="icon-th icon-large"></i></span>
+                   				</div>
+			                </div>
+			                <label for="orgLicenceRegNO" class="col-sm-1 control-label">登记号</label>
+			                <div class="col-sm-2">
+			                	<input type="text" name="orgLicence[regNO]" class="form-control" id="orgLicenceRegNO" >
+			                </div>
+			            </div>
+			            <div class="form-group">
+			                <label for="orgLicenceAuthority" class="col-sm-offset-1 col-sm-1 control-label">发证单位</label>
+			                <div class="col-sm-2">
+			                	<input type="text" name="orgLicence[authority]" class="form-control" id="orgLicenceAuthority" >
+			                </div>
+			            </div>                                       
+                    </div>
+                    
+                    <div class="tab-pane" id="remarks">
+                    	<div class="form-group">
+                    		<label for="remarks" class=" col-sm-offset-1 col-sm-1 control-label">备注信息</label>
+			                <div class="col-sm-5">
+                  				<textarea  name="branch[remarks]" id="remarks" class="form-control"></textarea>
+			                </div>
+                    	</div>
+					</div>
                 </div>
            </div>
 			<div class="form-group">
-				<div class="col-sm-offset-1 col-sm-11">
+				<div class="col-sm-12">
 				<div class="btn-toolbar" role="toolbar">
 					<div class="btn-group">
 						<button type="submit" class="btn btn-primary">提交</button>
@@ -152,17 +218,19 @@
 {/content}
 {<script}
 <script type="text/javascript">
-	$('#datetimepicker').datepicker({
+	$('.date').datepicker({
 		format : "yyyy-mm-dd",
 		autoclose : true,
 		language : 'zh-CN',
 		todayHighlight : true
 	});
-	$('#insurDate').datepicker({
-		format : "yyyy-mm-dd",
-		autoclose : true,
-		language : 'zh-CN',
-		todayHighlight : true
+	$("#addSubForm").validate({
+		submitHandler:function(form){
+			$(":button").attr("disabled","true");  
+			form.action = '/branches/{parent.id}/addSub';
+            form.submit();
+        },
+        focusCleanup:true
 	});
 </script> 
 {/script}
