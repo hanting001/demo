@@ -8,18 +8,18 @@
 			<div class="form-group">
 				<label for="companyName" class="col-sm-1 control-label">公司名称<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<input type="text" name="branch[name]" class="form-control" id="companyName" required>
+					<input type="text" name="branch[name]" class="form-control" id="companyName" value="{branch.name}" required>
 				</div>
 				<label for="companyAbbr" class="col-sm-1 control-label">公司简称<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<input type="text" name="branch[abbrName]" class="form-control" id="companyAbbr" required>
+					<input type="text" name="branch[abbrName]" class="form-control" id="companyAbbr" value="{branch.abbrName}" required>
 				</div>
-				<label for="companyLevel" class="col-sm-1 control-label">公司级别<span class="required-indicator">*</span></label>
+				<label for="companyLevel" class="col-sm-1 control-label">公司级别{branch.levelId}<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<select class="form-control" id="companyLevel" name="branch[levelId]" required>
+					<select class="form-control" id="companyLevel"  name="branch[levelId]" required>
 						<option />
 						{#branchLevel}
-							<option value="{.id}">{.value}</option>
+							<option value="{key}" {@eq key=key value=branch.levelId}  selected="true"{/eq}>{value}</option>
 						{/branchLevel}
 					</select>
 				</div>
@@ -34,20 +34,21 @@
 					<select class="form-control" id="branchTypeLevel" name="branch[typeLevelId]" required>
 						<option />
 						{#branchTypeLevel}
-							<option value="{.id}">{.value}</option>
+							<option value="{.key}">{.value}</option>
 						{/branchTypeLevel}
 					</select>
 				</div>
 				<label for="companyAbbr" class="col-sm-1 control-label">上级机构<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
 					<p class="form-control">{parent.abbrName}</p>
+					<input name="parentAbbr" type="hidden" value="{parent.abbrName}">
 				</div>
 				<label for="companyLevel" class="col-sm-1 control-label">机构性质<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
 					<select class="form-control" id="companyLevel" name="branch[typeId]" required>
 						<option />
 						{#branchType}
-							<option value="{.id}">{.value}</option>
+							<option value="{.key}">{.value}</option>
 						{/branchType}
 					</select>
 				</div>

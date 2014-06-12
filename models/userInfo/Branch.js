@@ -55,8 +55,8 @@ var branchSchema = new mongoose.Schema({
 	countryCode		:	String,
 	districtCode	:	String,
 	originalCode	:	String,
-	status			:	{type : String, enum : ['有效', '无效']},
-	remarks			:	String
+	status			:	{type : String, enum : ['0', '1']},
+	remarks			:	{type : String, required : true}
 }, { collection: 'branches' });
 
 

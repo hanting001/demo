@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
-	_id		: 	Number,
+	key		: 	String,
 	value	:	String
 },{ collection: 'branchTypeLevelBase' });
 

@@ -12,7 +12,7 @@ module.exports = function(app) {
 			if (err) {
 				return next(err);
 			}
-			// console.log('pageCount:%s', pageCount);
+			
 			var model = {
 					title : '机构列表',
 					isAdmin : true,
@@ -30,14 +30,13 @@ module.exports = function(app) {
 			if (err) {
 				return next(err);
 			}
-			console.log(branch);
 			var model = {
 					title : '新增机构',
 					isAdmin : true,
 					parent : {abbrName:branch.abbrName, id:id},
-					branchLevel : baseCode.branchLevel,
-					branchTypeLevel : baseCode.branchTypeLevel,
-					branchType:baseCode.branchType
+					branchLevel : baseCode.branchLevel(),
+					branchTypeLevel : baseCode.branchTypeLevel(),
+					branchType:baseCode.branchType()
 				};			
 			res.render('userInfo/branches/addSub', model);			
 		});
@@ -46,13 +45,22 @@ module.exports = function(app) {
 	app.post('/branches/:id/addSub', function(req, res, next) {
 		var id = req.params.id;
 		var branch = req.body.branch;
-		Branch.findById(new ObjectId(id), 'abbrName', function(err, branch){
-			if (err) {
-				branch.status = '有效';
-				return next(err);
-			}
-			console.log(req.body);			
-			res.redirect('/branches');			
+		branch.parent = new ObjectId(id);
+		branch.status = '1';
+		branch.businesslicence = req.body.businesslicence;
+		//添加其它信息省略
+		var branchModel = new Branch(branch);
+		branchModel.save(function(err){
+			console.log(branch);
+			var model = {
+					branch : branch,
+					parent : {id : id, abbrName : req.body.parentAbbr},
+					branchLevel : baseCode.branchLevel(),
+					branchTypeLevel : baseCode.branchTypeLevel(),
+					branchType:baseCode.branchType(),
+					test1 : {test2:2}
+			};
+			res.render('userInfo/branches/addSub', model);
 		});
 	});
 };
