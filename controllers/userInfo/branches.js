@@ -47,18 +47,18 @@ module.exports = function(app) {
 		var branch = req.body.branch;
 		branch.parent = new ObjectId(id);
 		branch.status = '1';
-		branch.businesslicence = req.body.businesslicence;
 		//添加其它信息省略
+		//...
+		
 		var branchModel = new Branch(branch);
 		branchModel.save(function(err){
-			console.log(branch);
+			console.log(err);
 			var model = {
 					branch : branch,
 					parent : {id : id, abbrName : req.body.parentAbbr},
 					branchLevel : baseCode.branchLevel(),
 					branchTypeLevel : baseCode.branchTypeLevel(),
-					branchType:baseCode.branchType(),
-					test1 : {test2:2}
+					branchType:baseCode.branchType()
 			};
 			res.render('userInfo/branches/addSub', model);
 		});
