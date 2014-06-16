@@ -255,14 +255,23 @@
 	});
 	
 	
-    function showErrors() {
-    	var errorMessages = '{errorMessages|js|s}';
-    	
-    	alert(errorMessages);
 
-		
-    };
-    
-    showErrors();
+	function showErrors() {
+		var errorMessages = '{errorMessages|js|s}';
+		if (errorMessages) {
+			var obj = JSON.parse(errorMessages);
+			for ( var f in obj) {
+				var element = $("#" + f);
+				if (element) {
+					element.removeClass('valid').addClass('error');
+					var label = $("<label/>").attr("for", f + '').addClass(
+							'error').html(obj[f]);
+					label.insertAfter(element);
+				}
+			}
+		}
+	};
+
+	showErrors();
 </script> 
 {/script}

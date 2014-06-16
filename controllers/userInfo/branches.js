@@ -8,11 +8,12 @@ module.exports = function(app) {
 		if (req.query.page) {
 			page = req.query.page;
 		}
+		
 		Branch.paginate({}, page, 10, function(err, pageCount, branches) {
 			if (err) {
 				return next(err);
 			}
-			
+			console.log(branches);
 			var model = {
 					title : '机构列表',
 					isAdmin : true,
@@ -23,7 +24,7 @@ module.exports = function(app) {
 			res.render('userInfo/branches/index', model);
 		});
 	});
-	
+
 	app.get('/branches/:id/addSub', function(req, res, next) {
 		var id = req.params.id;
 		Branch.findById(new ObjectId(id), 'abbrName', function(err, branch){

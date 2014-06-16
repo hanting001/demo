@@ -1,4 +1,4 @@
-input.error, select.error { border: 1px solid #FF9900; }
+input.error, select.error, textarea.error { border: 1px solid #FF9900; }
 label.error {
   /* background:url("/images/unchecked.gif") no-repeat 0px 0px; */
 
