@@ -18,6 +18,7 @@ var numCPUs = os.cpus().length;
 	    auth = require('./lib/auth'),
 	    flash = require('connect-flash'),
 	    User = require('./models/User'),
+	    errorMessages = require('./lib/middlewear/errorMessages'),
 	    _app = {};
 	require('./lib/helper-dateFormat');
 	_app.configure = function configure(nconf, next) {
@@ -42,7 +43,7 @@ var numCPUs = os.cpus().length;
 	
 	
 	_app.requestStart = function requestStart(app) {
-	    
+		//app.use(errorMessages());
 	};
 	_app.requestBeforeRoute = function requestBeforeRoute(app) {
 	    // Run before any routes have been added.
@@ -54,7 +55,7 @@ var numCPUs = os.cpus().length;
 	
 	
 	_app.requestAfterRoute = function requestAfterRoute(app) {
-	    // Run after all routes have been added.
+		app.use(errorMessages());
 	};
 	
 	

@@ -191,14 +191,16 @@ var proto = {
         enrouten(app).withRoutes({
             directory: this._resolve(this._config.get('routes:routePath'))
         });
-
+        console.log(000);
         if (typeof delegate.requestAfterRoute === 'function') {
+        	console.log(111);
             delegate.requestAfterRoute(app);
         }
 
         app.use(kraken.fileNotFound(errorPages['404']));
         app.use(kraken.serverError(errorPages['500']));
         app.use(kraken.errorHandler(config.errorHandler));
+        console.log(222);
     },
 
     _resolve: function (path) {

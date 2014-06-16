@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var updatedTimestamp = require('mongoose-updated_at');
+var validator = require('../../lib/validator');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var Error = mongoose.Error;
 var branchSchema = new mongoose.Schema({
@@ -62,20 +63,24 @@ var branchSchema = new mongoose.Schema({
 	createdAt		: 	{ type: Date, default: Date.now }
 }, { collection: 'branches' });
 
-branchSchema.pre('validate', function (next) {
-	var errMsg = '';
-	if (this.businesslicence.startDate && this.businesslicence.endDate
-			&& this.businesslicence.startDate > this.businesslicence.endDate) {
-		errMsg = errMsg + '业务信息中的开始日期不能大于结束日期';
+
+//添加create、update字段
+branchSchema.plugin(updatedTimestamp);
+
+//添加自定义校验
+branchSchema.pre('save', function (next) {
+	var errMsg = {};
+	if (!validator.isTeleNO(this.telephone)) {
+		//key为页面上输入元素的id,value为错误信息
+		errMsg.branchTelephone = '电话号码格式不正确！';
 	}
+	
 	if (errMsg) {
-		var err = new Error(errMsg);
+		var err = new Error(JSON.stringify(errMsg));
 		next(err);
 	} else {
 		next();
 	}
-	
 });
-branchSchema.plugin(updatedTimestamp);
 
 module.exports = mongoose.model('Branch', branchSchema);

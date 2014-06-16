@@ -6,7 +6,7 @@
 		<form class="form-horizontal" method="post" id="addSubForm" role="form">
 			<input type="hidden" name="_csrf" value="{_csrf}" />
 			<div class="form-group">
-				<label for="companyName" class="col-sm-1 control-label">公司名称<span class="required-indicator">*</span></label>
+				<label for="companyName" class="col-sm-1 control-label">公司名称{tttt}<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
 					<input type="text" name="branch[name]" class="form-control" id="companyName" value="{branch.name}" required>
 				</div>
@@ -73,9 +73,10 @@
 				<div class="col-sm-2">
 					<input type="text" name="branch[zip]" class="form-control" id="branchZip" value="{branch.zip}" required>
 				</div>
-				<label for="telephone" class="col-sm-1 control-label">电话<span class="required-indicator">*</span></label>
+				<label for="branchTelephone" class="col-sm-1 control-label">电话<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<input type="text" name="branch[telephone]" class="form-control" id="telephone" value="{branch.telephone}" required>
+					<input type="text" name="branch[telephone]" class="form-control" id="branchTelephone" value="{branch.telephone}" required>
+					<p class="help-block">固定电话格式：021-0000000</p>
 				</div>
 			</div>
             <div class="form-group">
@@ -233,7 +234,6 @@
         },
         focusCleanup:true
 	});
-	
 
 	var dataOptions = {
 			format : "yyyy-mm-dd",
@@ -254,6 +254,15 @@
 		businesslicenceStartDate.datepicker('update');
 	});
 	
+	
+    function showErrors() {
+    	var errorMessages = '{errorMessages|js|s}';
+    	
+    	alert(errorMessages);
+
+		
+    };
     
+    showErrors();
 </script> 
 {/script}
