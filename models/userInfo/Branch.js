@@ -7,10 +7,10 @@ var branchSchema = new mongoose.Schema({
 	code			:	{type: String, unique: true, required: true },
 	name			:	{type: String, required: true },
 	abbrName		: 	{type: String, required: true },
-	typeId			:	{type : Number, required: true},
+	typeId			:	{type : String, required: true},
 	parent			:	{type : ObjectId, required : true},
-	levelId			:	{type : Number, required: true},
-	typeLevelId		:	{type : Number, required: true},
+	levelId			:	{type : String, required: true},
+	typeLevelId		:	{type : String, required: true},
 	bizScope		:	String,
 	establishDate	:	{type : Date, required : true},
 	revokeDate		:	Date,
@@ -70,17 +70,46 @@ branchSchema.plugin(updatedTimestamp);
 //添加自定义校验
 branchSchema.pre('save', function (next) {
 	var errMsg = {};
-	if (!validator.isTeleNO(this.telephone)) {
+	var self = this;
+	if (!validator.isTeleNO(self.telephone)) {
 		//key为页面上输入元素的id,value为错误信息
-		errMsg.branchTelephone = '电话号码格式不正确！';
+		errMsg.branchTelephone = '电话号码格式不正确';
 	}
 	
-	if (errMsg) {
-		var err = new Error(JSON.stringify(errMsg));
-		next(err);
-	} else {
-		next();
+	if (!validator.isZipCode(self.zip)) {
+		errMsg.branchZip = '邮政编码格式不正确';
 	}
+	
+	//var model = this.model(this.constructor.modelName);
+	var db = mongoose.connection.db;
+	db.collection('branches', function(err, collection){
+		if (!err) {
+			collection.findOne({_id : self.parent}, function(err, level){
+				if (!err) {
+					if (self.levelId == level.levelId) {
+						errMsg.branchLevel = '所选公司级别不能等于上级机构';
+					}
+					if (errMsg) {
+						var err = new Error(JSON.stringify(errMsg));
+						next(err);
+					} else {
+						next();
+					}
+				}
+			});
+		} else {
+			next();
+		}
+	});
+
+	
+	//因为判断机构级别是异步方式，所以将调用next也放到find的callback中
+//	if (errMsg) {
+//		var err = new Error(JSON.stringify(errMsg));
+//		next(err);
+//	} else {
+//		next();
+//	}
 });
 
 module.exports = mongoose.model('Branch', branchSchema);

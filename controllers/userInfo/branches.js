@@ -22,7 +22,7 @@ module.exports = function(app) {
 					pageCount : pageCount
 				};			
 			res.render('userInfo/branches/index', model);
-		});
+		}, { sortBy : { code : 1 } });
 	});
 
 	app.get('/branches/:id/addSub', function(req, res, next) {

@@ -14,9 +14,9 @@
 				<div class="col-sm-2">
 					<input type="text" name="branch[abbrName]" class="form-control" id="companyAbbr" value="{branch.abbrName}" required>
 				</div>
-				<label for="companyLevel" class="col-sm-1 control-label">公司级别<span class="required-indicator">*</span></label>
+				<label for="branchLevel" class="col-sm-1 control-label">公司级别<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<select class="form-control" id="companyLevel"  name="branch[levelId]" required>
+					<select class="form-control" id="branchLevel"  name="branch[levelId]" required>
 						<option />
 						{#branchLevel}
 							<option value="{key}" {@eq key=key value=branch.levelId}  selected="true"{/eq}>{value}</option>
@@ -256,22 +256,6 @@
 	
 	
 
-	function showErrors() {
-		var errorMessages = '{errorMessages|js|s}';
-		if (errorMessages) {
-			var obj = JSON.parse(errorMessages);
-			for ( var f in obj) {
-				var element = $("#" + f);
-				if (element) {
-					element.removeClass('valid').addClass('error');
-					var label = $("<label/>").attr("for", f + '').addClass(
-							'error').html(obj[f]);
-					label.insertAfter(element);
-				}
-			}
-		}
-	};
 
-	showErrors();
 </script> 
 {/script}
