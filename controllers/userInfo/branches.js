@@ -54,16 +54,19 @@ module.exports = function(app) {
 		
 		var branchModel = new Branch(branch);
 		branchModel.save(function(err){
-			res.locals.err = err;
-			next();//调用下一个错误处理middlewear
-			var model = {
-					branch : branch,
-					parent : {id : id, abbrName : req.body.parentAbbr},
-					branchLevel : baseCode.branchLevel(),
-					branchTypeLevel : baseCode.branchTypeLevel(),
-					branchType:baseCode.branchType()
-			};
-			res.render('userInfo/branches/addSub', model);
+			if(err) {
+				res.locals.err = err;
+				next();//调用下一个错误处理middlewear
+				var model = {
+						branch : branch,
+						parent : {id : id, abbrName : req.body.parentAbbr},
+						branchLevel : baseCode.branchLevel(),
+						branchTypeLevel : baseCode.branchTypeLevel(),
+						branchType:baseCode.branchType()
+				};
+				res.render('userInfo/branches/addSub', model);
+			}
+
 		});
 	});
 };
