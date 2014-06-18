@@ -13,7 +13,6 @@ module.exports = function(app) {
 			if (err) {
 				return next(err);
 			}
-			console.log(branches);
 			var model = {
 					title : '机构列表',
 					isAdmin : true,

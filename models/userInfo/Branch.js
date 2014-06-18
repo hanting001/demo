@@ -59,7 +59,7 @@ var branchSchema = new mongoose.Schema({
 	districtCode	:	String,
 	originalCode	:	String,
 	status			:	{type : String, enum : ['0', '1']},
-	remarks			:	{type : String, required : true},
+	remarks			:	{type : String},
 	createdAt		: 	{ type: Date, default: Date.now }
 }, { collection: 'branches' });
 
@@ -89,15 +89,17 @@ branchSchema.pre('save', function (next) {
 					if (self.levelId == level.levelId) {
 						errMsg.branchLevel = '所选公司级别不能等于上级机构';
 					}
-					if (errMsg) {
+					if (Object.keys(errMsg).length > 0) {
 						var err = new Error(JSON.stringify(errMsg));
 						next(err);
 					} else {
+						console.log(2222);
 						next();
 					}
 				}
 			});
 		} else {
+			console.log(3333);
 			next();
 		}
 	});
