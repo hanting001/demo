@@ -86,8 +86,13 @@ branchSchema.pre('save', function (next) {
 		if (!err) {
 			collection.findOne({_id : self.parent}, function(err, level){
 				if (!err) {
-					if (self.levelId == level.levelId) {
-						errMsg.branchLevel = '所选公司级别不能等于上级机构';
+					var parentLevel = new Number(level.levelId);
+					var currentLevel = new Number(self.levelId);
+					if (currentLevel >= parentLevel) {
+						errMsg.branchLevel = '所选公司级别不能等于或高于上级机构';
+					}
+					if ((parentLevel - currentLevel) > 1) {
+						errMsg.branchLevel = '所选公司级别不能低于上级机构两级以上';
 					}
 					if (Object.keys(errMsg).length > 0) {
 						var err = new Error(JSON.stringify(errMsg));

@@ -70,4 +70,20 @@ module.exports = function(app) {
 			}
 		});
 	});
+	
+	app.get('/branches/:id/edit', function(req, res, next) {
+		var id = req.params.id;
+		Branch.findById(new ObjectId(id), function(err, branch) {
+			if (err) {
+				return next(err);
+			}
+			var model = {
+					title : '编辑机构信息',
+					isAdmin : true,
+					branch : branch
+				};			
+			res.render('userInfo/branches/edit', model);
+		});
+	});
+	
 };

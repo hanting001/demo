@@ -21,6 +21,7 @@ var numCPUs = os.cpus().length;
 	    errorMessages = require('./lib/middlewear/errorMessages'),
 	    _app = {};
 	require('./lib/helper-dateFormat');
+	require('./lib/helper-baseCode');
 	_app.configure = function configure(nconf, next) {
 	    // Async method run on startup.
 		// Configure the database
