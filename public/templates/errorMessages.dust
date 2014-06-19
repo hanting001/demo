@@ -11,3 +11,16 @@
 	bootbox.alert(some_html);
 </script>
 {/showErrorMessage} 
+
+{?showMessage}
+<script type="text/javascript">
+	var some_html = '<br><div class="alert alert-success fade in">';
+	some_html += '<ul id="showMessage">';
+	{#showMessage}
+	some_html += '<li>{.}</li>';
+	{/showMessage}
+	some_html += '</ul>';
+	some_html += '</div>';
+	bootbox.alert(some_html);
+</script>
+{/showMessage} 

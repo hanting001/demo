@@ -27,6 +27,7 @@
 				<div class="col-sm-2">
 					<p class="form-control">{parent.abbrName}</p>
 					<input name="parentAbbr" type="hidden" value="{parent.abbrName}">
+					<input name="parentId" type="hidden" value="{parent.id}">
 				</div>
 				<label for="companyLevel" class="col-sm-1 control-label">机构性质<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
@@ -99,7 +100,7 @@
 			                </div>
 			                <label for="businesslicenceDate" class="col-sm-1 control-label">发证日期</label>
 			                <div class="col-sm-2">
-			                	<div class="input-group date" id="businesslicenceDate">
+			                	<div class="input-group date date-default" id="businesslicenceDate">
                         			<input class="form-control" size="16" name="branch[businesslicence][licenceDate]"  type="text" value='{@formatDate date="{branch.businesslicence.licenceDate}" format="YYYY-MM-DD"/}' readonly>
                         			<span class="input-group-addon"><i class="icon-th icon-large"></i></span>
                    				</div>
@@ -190,8 +191,7 @@
 						<button type="submit" class="btn btn-primary">提交</button>
 					</div>
 					<div class="btn-group">
-						<button type="button" class="btn btn-default">返回</button>
+						<a href="/branches" class="btn btn-default">返回</button>
 					</div>
 			</div>
-
 		</form>

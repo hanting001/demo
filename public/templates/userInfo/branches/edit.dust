@@ -3,7 +3,39 @@
 <div class="panel panel-primary">
   <div class="panel-heading">信息编辑</div>
   <div class="panel-body">
-		{>"/userInfo/branches/_addForm"/}
+		{>"/userInfo/branches/_form" edit="true" /}
 	</div>
 </div>
 {/content}
+{<script}
+<script type="text/javascript">
+	$("#addSubForm").validate({
+		submitHandler:function(form){
+			$(":button").attr("disabled","true");  
+			form.action = '/branches/{branch.id}/edit';
+            form.submit();
+        },
+        focusCleanup:true
+	});
+	var dataOptions = {
+			format : "yyyy-mm-dd",
+			autoclose : true,
+			language : 'zh-CN',
+			todayHighlight : true
+	};
+	$('.date-default').datepicker(dataOptions);	
+	
+	var businesslicenceStartDate = $('#businesslicenceStartDate').
+	datepicker(dataOptions).on('changeDate', function(e) {
+		businesslicenceEndDate.datepicker('setStartDate', e.date);
+		businesslicenceEndDate.datepicker('update');
+		businesslicenceEndDate.datepicker('show');
+
+	});
+	var businesslicenceEndDate = $('#businesslicenceEndDate').
+	datepicker(dataOptions).on('changeDate', function (e) {
+		businesslicenceStartDate.datepicker('setEndDate', e.date);
+		businesslicenceStartDate.datepicker('update');
+	});
+</script> 
+{/script}

@@ -9,12 +9,6 @@
 {/content}
 {<script}
 <script type="text/javascript">
-	$('.date-default').datepicker({
-		format : "yyyy-mm-dd",
-		autoclose : true,
-		language : 'zh-CN',
-		todayHighlight : true
-	});
 	$("#addSubForm").validate({
 		submitHandler:function(form){
 			$(":button").attr("disabled","true");  
@@ -23,12 +17,13 @@
         },
         focusCleanup:true
 	});
-
 	var dataOptions = {
 			format : "yyyy-mm-dd",
 			autoclose : true,
-			language : 'zh-CN'
+			language : 'zh-CN',
+			todayHighlight : true
 	};
+	$('.date-default').datepicker(dataOptions);	
 	
 	var businesslicenceStartDate = $('#businesslicenceStartDate').
 	datepicker(dataOptions).on('changeDate', function(e) {

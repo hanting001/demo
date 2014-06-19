@@ -52,7 +52,7 @@
 			      <td class="col-md-2">{.address}</td>
 			      <td class="col-md-2">{@formatDate date="{.establishDate}" format="YYYY-MM-DD"/}</td>
 			      <td class="col-md-1">{.chief}</td>
-			      <td class="col-md-1">{.status}</td>
+			      <td class="col-md-1">{@baseCode code="{.status}" base="valid"/}</td>
 			      <td class="col-md-2">
 			          {?isAdmin}
 			          <div class="btn-group btn-group-sm">
