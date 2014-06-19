@@ -26,13 +26,7 @@
 			<div class="form-group">
 				<label for="branchTypeLevel" class="col-sm-1 control-label">公司类别<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					{@baseCode id="branchTypeLevel" name="branch[typeLevelId]" base="branchTypeLevel" blank="true"/}
-					<select class="form-control" id="branchTypeLevel" name="branch[typeLevelId]" required>
-						<option />
-						{#branchTypeLevel}
-							<option value="{.key}" {@eq key=key value=branch.typeLevelId}  selected="true"{/eq}>{.value}</option>
-						{/branchTypeLevel}
-					</select>
+					{@baseCode id="branchTypeLevel" name="branch[typeLevelId]" base="branchTypeLevel" value="{branch.typeLevelId}" blank="true"/}
 				</div>
 				<label for="companyAbbr" class="col-sm-1 control-label">上级机构<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">

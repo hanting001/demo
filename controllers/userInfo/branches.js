@@ -33,10 +33,7 @@ module.exports = function(app) {
 			var model = {
 					title : '新增机构',
 					isAdmin : true,
-					parent : {abbrName:branch.abbrName, id:id},
-					branchLevel : baseCode.branchLevel(),
-					branchTypeLevel : baseCode.branchTypeLevel(),
-					branchType:baseCode.branchType()
+					parent : {abbrName:branch.abbrName, id:id}
 				};
 			res.render('userInfo/branches/addSub', model);	
 			
@@ -56,10 +53,7 @@ module.exports = function(app) {
 			if(err) {
 				var model = {
 						branch : branch,
-						parent : {id : id, abbrName : req.body.parentAbbr},
-						branchLevel : baseCode.branchLevel(),
-						branchTypeLevel : baseCode.branchTypeLevel(),
-						branchType:baseCode.branchType()
+						parent : {id : id, abbrName : req.body.parentAbbr}
 				};
 				res.locals.err = err;
 				res.locals.url = 'userInfo/branches/addSub';
