@@ -88,7 +88,7 @@ branchSchema.pre('save', function (next) {
 				if (!err) {
 					var parentLevel = new Number(level.levelId);
 					var currentLevel = new Number(self.levelId);
-					if (currentLevel >= parentLevel) {
+					if (currentLevel <= parentLevel) {
 						errMsg.branchLevel = '所选公司级别不能等于或高于上级机构';
 					}
 					if ((parentLevel - currentLevel) > 1) {

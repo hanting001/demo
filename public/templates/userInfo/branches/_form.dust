@@ -11,12 +11,7 @@
 				</div>
 				<label for="branchLevel" class="col-sm-1 control-label">公司级别<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<select class="form-control" id="branchLevel"  name="branch[levelId]" required>
-						<option />
-						{#branchLevel}
-							<option value="{key}" {@eq key=key value=branch.levelId}  selected="true"{/eq}>{value}</option>
-						{/branchLevel}
-					</select>
+				    {@baseCode id="branchLevel"  selectValue="{branch.levelId}" name="branch[levelId]" base="branchLevel" blank="true" required="true"/}
 				</div>
 				<label for="code" class="col-sm-1 control-label">机构代码<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
@@ -26,7 +21,7 @@
 			<div class="form-group">
 				<label for="branchTypeLevel" class="col-sm-1 control-label">公司类别<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					{@baseCode id="branchTypeLevel" name="branch[typeLevelId]" base="branchTypeLevel" value="{branch.typeLevelId}" blank="true"/}
+					{@baseCode id="branchTypeLevel" selectValue="{branch.typeLevelId}" name="branch[typeLevelId]" base="branchTypeLevel" blank="true" required="true"/}
 				</div>
 				<label for="companyAbbr" class="col-sm-1 control-label">上级机构<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
@@ -35,12 +30,7 @@
 				</div>
 				<label for="companyLevel" class="col-sm-1 control-label">机构性质<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
-					<select class="form-control" id="companyLevel" name="branch[typeId]" required>
-						<option />
-						{#branchType}
-							<option value="{.key}" {@eq key=key value=branch.typeId}  selected="true"{/eq}>{.value}</option>
-						{/branchType}
-					</select>
+				    {@baseCode id="companyLevel" selectValue="{branch.typeId}" name="branch[typeId]" base="branchType" blank="true" required="true"/}
 				</div>
 				<label for="businessAddress" class="col-sm-1 control-label">经营地址<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
