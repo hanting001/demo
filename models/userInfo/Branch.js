@@ -8,7 +8,8 @@ var branchSchema = new mongoose.Schema({
 	name			:	{type: String, required: true },
 	abbrName		: 	{type: String, required: true },
 	typeId			:	{type : String, required: true},
-	parent			:	{type : ObjectId, required : true},
+	parent			:	{type : ObjectId, required : true},/* 直接上级机构 */
+	subs			: 	[ObjectId],/* 直接下级机构 */
 	levelId			:	{type : String, required: true},
 	typeLevelId		:	{type : String, required: true},
 	bizScope		:	String,
@@ -91,14 +92,13 @@ branchSchema.pre('save', function (next) {
 					if (currentLevel <= parentLevel) {
 						errMsg.branchLevel = '所选公司级别不能等于或高于上级机构';
 					}
-					if ((parentLevel - currentLevel) > 1) {
-						errMsg.branchLevel = '所选公司级别不能低于上级机构两级以上';
+					if ((currentLevel - parentLevel) > 1) {
+						errMsg.branchLevel = '所选公司级别应该是上级机构的直属下级';
 					}
 					if (Object.keys(errMsg).length > 0) {
 						var err = new Error(JSON.stringify(errMsg));
 						next(err);
 					} else {
-						console.log(2222);
 						next();
 					}
 				}

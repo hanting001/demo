@@ -44,9 +44,9 @@
 			{#branches} 
 			    <tr>
 			      <td class="col-md-2">
-			      <a  data-toggle="tooltip" data-placement="top" title="显示上级机构"  href="/tool/{.id}/download" ><i class="icon-angle-left icon-large"></i></a>
+			      <a  data-toggle="tooltip" data-placement="top" title="显示上级机构"  href="/branches/{.id}/up" ><i class="icon-angle-left icon-large"></i></a>
 			      	{.name}
-			      <a  data-toggle="tooltip" data-placement="top" title="显示下级机构" href="/tool/{.id}/download"><i class="icon-angle-right icon-large"></i></a></td>
+			      <a  data-toggle="tooltip" data-placement="top" title="显示下级机构" href="/branches/{.id}/down"><i class="icon-angle-right icon-large"></i></a></td>
 			      <td class="col-md-1">{@baseCode code="{.levelId}" base="branchLevel"/}</td>
 			      <td class="col-md-1">{@baseCode code="{.typeLevelId}" base="branchTypeLevel"/}</td>
 			      <td class="col-md-2">{.address}</td>

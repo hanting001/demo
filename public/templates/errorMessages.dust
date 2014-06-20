@@ -21,6 +21,10 @@
 	{/showMessage}
 	some_html += '</ul>';
 	some_html += '</div>';
-	bootbox.alert(some_html);
+	var box = bootbox.alert(some_html);
+	
+	setTimeout(function(){
+		box.modal('hide');
+	},1000);
 </script>
 {/showMessage} 
