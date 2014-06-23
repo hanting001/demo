@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var updatedTimestamp = require('mongoose-updated_at');
+var uniqueValidator = require('mongoose-unique-validator');
 var validator = require('../../lib/validator');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var Error = mongoose.Error;
@@ -67,7 +68,8 @@ var branchSchema = new mongoose.Schema({
 
 //添加create、update字段
 branchSchema.plugin(updatedTimestamp);
-
+//添加唯一字段校验
+branchSchema.plugin(uniqueValidator, { message: '出错拉, {PATH}不能同已有值重复' });
 //添加自定义校验
 branchSchema.pre('save', function (next) {
 	var errMsg = {};
@@ -106,7 +108,6 @@ branchSchema.pre('save', function (next) {
 				}
 			});
 		} else {
-			console.log(3333);
 			next();
 		}
 	});

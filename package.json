@@ -28,7 +28,8 @@
     "passport": "^0.2.0",
     "passport-local": "^1.0.0",
     "socket.io": "^0.9.16",
-    "validator": "^3.16.0"
+    "validator": "^3.16.0",
+    "mongoose-unique-validator": "^0.3.0"
   },
   "devDependencies": {
     "mocha": "^1.17.0",

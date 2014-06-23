@@ -3,17 +3,17 @@
 <div class="panel panel-primary">
   <div class="panel-heading">信息录入</div>
   <div class="panel-body">
-		{>"/userInfo/branches/_form" addTop="true"/}
+		{>"/system/branches/_form" addTop="true"/}
 	</div>
 </div>
 {/content}
 {<script}
 <script type="text/javascript">
-	$("#returnButton").attr("href", "/branches");
+	$("#returnButton").attr("href", "/system/branches");
 	$("#addSubForm").validate({
 		submitHandler:function(form){
 			$(":button").attr("disabled","true");  
-			form.action = '/branches/add';
+			form.action = '/system/branches/add';
             form.submit();
         },
         focusCleanup:true

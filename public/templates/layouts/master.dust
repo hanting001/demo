@@ -157,8 +157,8 @@ pre code {
             $(function(){
                var path = window.location.pathname;
                $("[data-toggle='tooltip']").tooltip();
-               /* $('li').removeClass('active'); */
-               /* $('li a[href="'+path+'"]').parent().addClass('active'); */ 
+               $('li').removeClass('active');
+               $('li a[href="'+path+'"]').parent().addClass('active'); 
             }); 
         	function showErrors() {
         		var errorMessages = '{errorMessages|js|s}';

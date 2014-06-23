@@ -1,19 +1,19 @@
 {>"layouts/master" /} 
 {<content}
 <div class="panel panel-primary">
-  <div class="panel-heading">信息录入</div>
+  <div class="panel-heading">信息编辑</div>
   <div class="panel-body">
-		{>"/userInfo/branches/_form"/}
+		{>"/system/branches/_form" edit="true" /}
 	</div>
 </div>
 {/content}
 {<script}
 <script type="text/javascript">
-	$("#returnButton").attr("href", "/branches/return?id={parent.id}");
+	$("#returnButton").attr("href", "/system/branches/return?id={branch.id}");
 	$("#addSubForm").validate({
 		submitHandler:function(form){
 			$(":button").attr("disabled","true");  
-			form.action = '/branches/{parent.id}/addSub';
+			form.action = '/system/branches/{branch.id}/edit';
             form.submit();
         },
         focusCleanup:true

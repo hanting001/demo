@@ -1,10 +1,10 @@
-var Branch = require('../../models/userInfo/Branch');
-var BranchCounter = require('../../models/userInfo/BranchCounter');
+var Branch = require('../../models/user/Branch');
+var BranchCounter = require('../../models/user/BranchCounter');
 var baseCode = require('../../lib/baseCode');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
 module.exports = function(app) {
-	app.get('/branches', function(req, res, next) {
+	app.get('/system/branches', function(req, res, next) {
 		var page = 1;
 		if (req.query.page) {
 			page = req.query.page;
@@ -26,18 +26,18 @@ module.exports = function(app) {
 					pageCount : pageCount,
 					showMessage : req.flash('showMessage')
 				};
-			res.render('userInfo/branches/index', model);
+			res.render('system/branches/index', model);
 		}, { sortBy : { code : 1 } });
 	});
 
-	app.get('/branches/add', function(req, res, next) {
+	app.get('/system/branches/add', function(req, res, next) {
 		var model = {};
 		model.branch = {levelId : '0'};
-		res.render('userInfo/branches/add', model);						
+		res.render('system/branches/add', model);						
 	});
-	app.post('/branches/add', function(req, res, next) {
+	app.post('/system/branches/add', function(req, res, next) {
 		var branchInput = req.body.branch;
-		branchInput.parent = branchInput.code;
+		branchInput.parent = 'top';
 		branchInput.status = '1';
 		var branchModel = new Branch(branchInput);
 		branchModel.save(function(err, branch){
@@ -46,16 +46,16 @@ module.exports = function(app) {
 						branch : branchInput
 				};
 				res.locals.err = err;
-				res.locals.view = 'userInfo/branches/add';
+				res.locals.view = 'system/branches/add';
 				res.locals.model = model;
 				next();//调用下一个错误处理middlewear
 			} else {
 				req.flash('showMessage', '创建成功');
-				res.redirect('/branches');
+				res.redirect('/system/branches');
 			}
 		});				
 	});
-	app.get('/branches/:parentId/addSub', function(req, res, next) {
+	app.get('/system/branches/:parentId/addSub', function(req, res, next) {
 		var parentId = req.params.parentId;
 		Branch.findById(new ObjectId(parentId), 'name code levelId', function(err, parent){
 			if (err) {
@@ -67,11 +67,11 @@ module.exports = function(app) {
 					branch  : {levelId : (new Number(parent.levelId) + 1).toString()},
 					parent : {abbrName:parent.name + '-' + parent.code, code:parent.code, id:parent.id}
 				};
-			res.render('userInfo/branches/addSub', model);						
+			res.render('system/branches/addSub', model);						
 		});
 	});
 	
-	app.post('/branches/:parentId/addSub', function(req, res, next) {
+	app.post('/system/branches/:parentId/addSub', function(req, res, next) {
 		var parentId = req.params.parentId;
 		var parent = req.body.parent;
 		parent.id = parentId;
@@ -93,7 +93,7 @@ module.exports = function(app) {
 								parent : parent
 						};
 						res.locals.err = err;
-						res.locals.view = 'userInfo/branches/addSub';
+						res.locals.view = 'system/branches/addSub';
 						res.locals.model = model;
 						next();//调用下一个错误处理middlewear
 					} else {
@@ -102,7 +102,7 @@ module.exports = function(app) {
 								next(err);
 							} else {
 								req.flash('showMessage', '创建成功');
-								res.redirect('/branches/'+parentId +'/down');
+								res.redirect('/system/branches/'+parentId +'/down');
 							}
 						});
 					}
@@ -111,7 +111,7 @@ module.exports = function(app) {
 		});
 	});
 	
-	app.get('/branches/:id/edit', function(req, res, next) {
+	app.get('/system/branches/:id/edit', function(req, res, next) {
 		var id = req.params.id;
 		Branch.findById(new ObjectId(id), function(err, branch) {
 			if (err) {
@@ -126,11 +126,11 @@ module.exports = function(app) {
 					parent : parent,
 					showMessage : req.flash('showMessage')
 				};			
-				res.render('userInfo/branches/edit', model);
+				res.render('system/branches/edit', model);
 			});
 		});
 	});
-	app.post('/branches/:id/edit', function(req, res, next) {
+	app.post('/system/branches/:id/edit', function(req, res, next) {
 		var id = req.params.id;
 		Branch.findOne({_id : new ObjectId(id)}, function(err, branch){
 			if (!err) {
@@ -146,18 +146,18 @@ module.exports = function(app) {
 								parent : {id : req.body.parentId, abbrName : req.body.parentAbbr}
 						};
 						res.locals.err = err;
-						res.locals.view = 'userInfo/branches/edit';
+						res.locals.view = 'system/branches/edit';
 						res.locals.model = model;
 						next();//调用下一个错误处理middlewear
 					} else {
 						req.flash('showMessage', '修改成功');
-						res.redirect('/branches/' + branch.id + '/edit');
+						res.redirect('/system/branches/' + branch.id + '/edit');
 					}					
 				});					
 			}			
 		});
 	});
-	app.get('/branches/:id/down', function(req, res, next) {
+	app.get('/system/branches/:id/down', function(req, res, next) {
 		var page = 1;
 		if (req.query.page) {
 			page = req.query.page;
@@ -179,12 +179,12 @@ module.exports = function(app) {
 							pageCount : pageCount,
 							showMessage : req.flash('showMessage')
 						};			
-					res.render('userInfo/branches/index', model);
+					res.render('system/branches/index', model);
 				}, { sortBy : { code : 1 } });					
 			}			
 		});
 	});
-	app.get('/branches/:id/up', function(req, res, next) {
+	app.get('/system/branches/:id/up', function(req, res, next) {
 		var page = 1;
 		if (req.query.page) {
 			page = req.query.page;
@@ -205,13 +205,13 @@ module.exports = function(app) {
 							pageCount : pageCount,
 							showMessage : req.flash('showMessage')
 						};			
-					res.render('userInfo/branches/index', model);
+					res.render('system/branches/index', model);
 				}, { sortBy : { code : 1 } });					
 			}			
 		});
 	});
 	
-	app.get('/branches/return', function(req, res, next){
+	app.get('/system/branches/return', function(req, res, next){
 		console.log(11111111111111);
 		var id = req.query.id;
 		console.log(id);
@@ -219,7 +219,7 @@ module.exports = function(app) {
 			if (err) {
 				return next(err);
 			}
-			res.redirect('/branches?parent=' + branch.parent);
+			res.redirect('/system/branches?parent=' + branch.parent);
 		});
 	});
 };
