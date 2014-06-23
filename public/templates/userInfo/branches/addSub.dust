@@ -9,6 +9,7 @@
 {/content}
 {<script}
 <script type="text/javascript">
+	$("#returnButton").attr("href", "/branches/return?id={parent.id}");
 	$("#addSubForm").validate({
 		submitHandler:function(form){
 			$(":button").attr("disabled","true");  

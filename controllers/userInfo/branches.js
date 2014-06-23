@@ -1,4 +1,5 @@
 var Branch = require('../../models/userInfo/Branch');
+var BranchCounter = require('../../models/userInfo/BranchCounter');
 var baseCode = require('../../lib/baseCode');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
@@ -8,9 +9,12 @@ module.exports = function(app) {
 		if (req.query.page) {
 			page = req.query.page;
 		}
-		console.log(111111111111);
-		//查询1级机构列表
-		Branch.paginate({levelId:'1'}, page, 10, function(err, pageCount, branches) {
+		var parent = '';
+		if (req.query.parent) {
+			parent = req.query.parent;
+		}
+		//查询各个总公司
+		Branch.paginate({parent:parent}, page, 10, function(err, pageCount, branches) {
 			if (err) {
 				return next(err);
 			}
@@ -21,54 +25,63 @@ module.exports = function(app) {
 					page : page,
 					pageCount : pageCount,
 					showMessage : req.flash('showMessage')
-				};			
+				};
 			res.render('userInfo/branches/index', model);
 		}, { sortBy : { code : 1 } });
 	});
 
-	app.get('/branches/:id/addSub', function(req, res, next) {
-		var id = req.params.id;
-		Branch.findById(new ObjectId(id), 'abbrName', function(err, branch){
+	app.get('/branches/:parentId/addSub', function(req, res, next) {
+		var parentId = req.params.parentId;
+		Branch.findById(new ObjectId(parentId), 'name code levelId', function(err, parent){
 			if (err) {
 				return next(err);
 			}
 			var model = {
 					title : '新增机构',
 					isAdmin : true,
-					parent : {abbrName:branch.abbrName, id:id}
+					branch  : {levelId : (new Number(parent.levelId) + 1).toString()},
+					parent : {abbrName:parent.name + '-' + parent.code, code:parent.code, id:parent.id}
 				};
-			res.render('userInfo/branches/addSub', model);	
-			
+			res.render('userInfo/branches/addSub', model);						
 		});
 	});
 	
-	app.post('/branches/:id/addSub', function(req, res, next) {
-		var id = req.params.id;
+	app.post('/branches/:parentId/addSub', function(req, res, next) {
+		var parentId = req.params.parentId;
+		var parent = req.body.parent;
+		parent.id = parentId;
 		var branchInput = req.body.branch;
-		branchInput.parent = new ObjectId(id);
+		branchInput.parent = parent.code;
 		branchInput.status = '1';
 		//添加其它信息省略
 		//...
-		var branchModel = new Branch(branchInput);
-		branchModel.save(function(err, branch){
-			if(err) {
-				var model = {
-						branch : branchInput,
-						parent : {id : id, abbrName : req.body.parentAbbr}
-				};
-				res.locals.err = err;
-				res.locals.view = 'userInfo/branches/addSub';
-				res.locals.model = model;
-				next();//调用下一个错误处理middlewear
+		BranchCounter.getNextSeq(parent.code, branchInput.levelId, function(err, nextSeq){
+			if (err) {
+				next(err);
 			} else {
-				Branch.findByIdAndUpdate(branch.parent, {$push:{subs:branch.id}}, function(err){
-					if (err){
-						next(err);
+				branchInput.code = parent.code + nextSeq;
+				var branchModel = new Branch(branchInput);
+				branchModel.save(function(err, branch){
+					if(err) {
+						var model = {
+								branch : branchInput,
+								parent : parent
+						};
+						res.locals.err = err;
+						res.locals.view = 'userInfo/branches/addSub';
+						res.locals.model = model;
+						next();//调用下一个错误处理middlewear
 					} else {
-						req.flash('showMessage', '创建成功');
-						res.redirect('/branches');
+						Branch.findByIdAndUpdate(new ObjectId(parentId), {$push:{subs:branch.code}}, function(err){
+							if (err){
+								next(err);
+							} else {
+								req.flash('showMessage', '创建成功');
+								res.redirect('/branches/'+parentId +'/down');
+							}
+						});
 					}
-				});
+				});				
 			}
 		});
 	});
@@ -79,7 +92,7 @@ module.exports = function(app) {
 			if (err) {
 				return next(err);
 			}
-			Branch.findById(branch.parent, 'abbrName', function(err, parent){
+			Branch.findOne({code:branch.parent}, 'abbrName code', function(err, parent){
 				console.log(parent);
 				var model = {
 					title : '编辑机构信息',
@@ -94,8 +107,6 @@ module.exports = function(app) {
 	});
 	app.post('/branches/:id/edit', function(req, res, next) {
 		var id = req.params.id;
-		//var branchNew = req.body.branch;
-		//console.log(branch);
 		Branch.findOne({_id : new ObjectId(id)}, function(err, branch){
 			if (!err) {
 				var newBranch = req.body.branch;
@@ -132,7 +143,7 @@ module.exports = function(app) {
 				next(err)
 			} else {
 				var condition = {};
-				condition.parent = branch.id;
+				condition.parent = branch.code;
 				condition.levelId = (new Number(branch.levelId) + 1).toString();
 				Branch.paginate(condition, page, 10, function(err, pageCount, branches){
 					var model = {
@@ -159,12 +170,7 @@ module.exports = function(app) {
 				next(err)
 			} else {
 				var condition = {};
-				condition._id = branch.parent;
-				console.log(condition._id);
-				var upLevel = new Number(branch.levelId) - 1;
-				if (upLevel > 0) {
-					condition.levelId = upLevel.toString();
-				}
+				condition.code = branch.parent;
 				Branch.paginate(condition, page, 10, function(err, pageCount, branches){
 					var model = {
 							title : '机构列表',
@@ -177,6 +183,18 @@ module.exports = function(app) {
 					res.render('userInfo/branches/index', model);
 				}, { sortBy : { code : 1 } });					
 			}			
+		});
+	});
+	
+	app.get('/branches/return', function(req, res, next){
+		console.log(11111111111111);
+		var id = req.query.id;
+		console.log(id);
+		Branch.findById(new ObjectId(id), 'parent', function(err, branch) {
+			if (err) {
+				return next(err);
+			}
+			res.redirect('/branches?parent=' + branch.parent);
 		});
 	});
 };

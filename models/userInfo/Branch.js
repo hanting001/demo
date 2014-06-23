@@ -6,10 +6,10 @@ var Error = mongoose.Error;
 var branchSchema = new mongoose.Schema({
 	code			:	{type: String, unique: true, required: true },
 	name			:	{type: String, required: true },
-	abbrName		: 	{type: String, required: true },
+	abbrName		: 	{type: String},
 	typeId			:	{type : String, required: true},
-	parent			:	{type : ObjectId, required : true},/* 直接上级机构 */
-	subs			: 	[ObjectId],/* 直接下级机构 */
+	parent			:	{type : String, required : true},/* 直接上级机构代码 */
+	subs			: 	[String],/* 直接下级机构代码 */
 	levelId			:	{type : String, required: true},
 	typeLevelId		:	{type : String, required: true},
 	bizScope		:	String,
@@ -85,7 +85,7 @@ branchSchema.pre('save', function (next) {
 	var db = mongoose.connection.db;
 	db.collection('branches', function(err, collection){
 		if (!err) {
-			collection.findOne({_id : self.parent}, function(err, level){
+			collection.findOne({code : self.parent}, function(err, level){
 				if (!err) {
 					var parentLevel = new Number(level.levelId);
 					var currentLevel = new Number(self.levelId);
