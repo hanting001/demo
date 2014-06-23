@@ -3,7 +3,11 @@
 <div class="panel-group" id="mainContent">
 	<div class="panel panel-default">
 	  	<div class="panel-heading">
-	  		<a data-toggle="collapse" data-toggle="collapse" data-parent="#mainContent" href="#condition">查询条件</a>
+	  		<div class="btn-group">
+	  			<a data-toggle="collapse" class="btn btn-default" data-toggle="collapse" data-parent="#mainContent" href="#condition">查询条件</a>
+	  			<a class="btn btn-default" href="/branches/add">增加一级机构</a>
+	  		</div>
+	  		
 	  	</div>
 		<div id="condition" class="panel-collapse collapse">
 		  	<div class="panel-body">
@@ -44,9 +48,11 @@
 			{#branches} 
 			    <tr>
 			      <td class="col-md-2">
-			      {?parent}
-			      	<a  data-toggle="tooltip" data-placement="top" title="显示上级机构"  href="/branches/{.id}/up" ><i class="icon-angle-left icon-large"></i></a>
-			      {/parent}
+			      {@select key=parent}
+			      {@ne value="top"}
+			      	<a  data-toggle="tooltip" data-placement="top" title="显示上级机构"  href="/branches/{id}/up" ><i class="icon-angle-left icon-large"></i></a>
+			      {/ne}
+			      {/select}
 			      	{.name}
 			      {?subs}
 			      <a  data-toggle="tooltip" data-placement="top" title="显示下级机构" href="/branches/{.id}/down"><i class="icon-angle-right icon-large"></i></a></td>

@@ -27,12 +27,20 @@
 				<div class="col-sm-2">
 					{@baseCode id="branchTypeLevel" selectValue="{branch.typeLevelId}" name="branch[typeLevelId]" base="branchTypeLevel" blank="true" required="true"/}
 				</div>
+				{?addTop}
+				<label for="companyAbbr" class="col-sm-1 control-label">机构缩写<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					<input type="text" name="branch[code]" class="form-control" id="branchCode" value="{branch.code}" required>
+				</div>
+				{:else}
 				<label for="companyAbbr" class="col-sm-1 control-label">上级机构<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
 					<p class="form-control">{parent.abbrName}</p>
 					<input name="parent[abbr]" type="hidden" value="{parent.abbrName}">
 					<input name="parent[code]" type="hidden" value="{parent.code}">
 				</div>
+				{/addTop}
+
 				<label for="companyLevel" class="col-sm-1 control-label">机构性质<span class="required-indicator">*</span></label>
 				<div class="col-sm-2">
 				    {@baseCode id="companyLevel" selectValue="{branch.typeId}" name="branch[typeId]" base="branchType" blank="true" required="true"/}

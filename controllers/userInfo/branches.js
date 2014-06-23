@@ -9,7 +9,7 @@ module.exports = function(app) {
 		if (req.query.page) {
 			page = req.query.page;
 		}
-		var parent = '';
+		var parent = 'top';
 		if (req.query.parent) {
 			parent = req.query.parent;
 		}
@@ -30,6 +30,31 @@ module.exports = function(app) {
 		}, { sortBy : { code : 1 } });
 	});
 
+	app.get('/branches/add', function(req, res, next) {
+		var model = {};
+		model.branch = {levelId : '0'};
+		res.render('userInfo/branches/add', model);						
+	});
+	app.post('/branches/add', function(req, res, next) {
+		var branchInput = req.body.branch;
+		branchInput.parent = branchInput.code;
+		branchInput.status = '1';
+		var branchModel = new Branch(branchInput);
+		branchModel.save(function(err, branch){
+			if(err) {
+				var model = {
+						branch : branchInput
+				};
+				res.locals.err = err;
+				res.locals.view = 'userInfo/branches/add';
+				res.locals.model = model;
+				next();//调用下一个错误处理middlewear
+			} else {
+				req.flash('showMessage', '创建成功');
+				res.redirect('/branches');
+			}
+		});				
+	});
 	app.get('/branches/:parentId/addSub', function(req, res, next) {
 		var parentId = req.params.parentId;
 		Branch.findById(new ObjectId(parentId), 'name code levelId', function(err, parent){

@@ -86,7 +86,7 @@ branchSchema.pre('save', function (next) {
 	db.collection('branches', function(err, collection){
 		if (!err) {
 			collection.findOne({code : self.parent}, function(err, level){
-				if (!err) {
+				if (!err && level) {
 					var parentLevel = new Number(level.levelId);
 					var currentLevel = new Number(self.levelId);
 					if (currentLevel <= parentLevel) {
@@ -101,6 +101,8 @@ branchSchema.pre('save', function (next) {
 					} else {
 						next();
 					}
+				} else {
+					next();
 				}
 			});
 		} else {
