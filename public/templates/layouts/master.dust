@@ -173,16 +173,14 @@ pre code {
             $(function(){
                var path = window.location.pathname;
                $("[data-toggle='tooltip']").tooltip();
-               alert(path);
+               
                $('ul.menu li').removeClass('active');
                var lias = $("ul.menu li a");
                for (var i = 0, l = lias.length; i < l; i++){
-            	   if (lias[i].href.indexOf(path) > 0) {
-            		   alert($(lias[i]).attr('href'));
-            		   $(lias[i]).parent.addClass('active');
+            	   if (path.indexOf($(lias[i]).attr('href')) >= 0) {
+            		   $(lias[i]).parent().addClass('active');
             	   }
                }
-               
             }); 
         	function showErrors() {
         		var errorMessages = '{errorMessages|js|s}';
