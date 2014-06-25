@@ -17,7 +17,7 @@ var numCPUs = os.cpus().length;
 	    passport = require('passport'),
 	    auth = require('./lib/auth'),
 	    flash = require('connect-flash'),
-	    User = require('./models/User'),
+	    User = require('./models/user/User'),
 	    errorMessages = require('./lib/middlewear/errorMessages'),
 	    _app = {};
 	require('./lib/helper-dateFormat');

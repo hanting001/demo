@@ -5,7 +5,7 @@
 	  	<div class="panel-heading">
 	  		<div class="btn-group">
 	  			<a data-toggle="collapse" class="btn btn-default" data-toggle="collapse" data-parent="#mainContent" href="#condition">查询条件</a>
-	  			<a class="btn btn-default" href="/branches/add">增加一级机构</a>
+	  			<a class="btn btn-default" href="/system/branches/add">增加一级机构</a>
 	  		</div>
 	  		
 	  	</div>

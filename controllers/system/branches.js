@@ -3,8 +3,9 @@ var BranchCounter = require('../../models/user/BranchCounter');
 var baseCode = require('../../lib/baseCode');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
+var auth = require('../../lib/auth');
 module.exports = function(app) {
-	app.get('/system/branches', function(req, res, next) {
+	app.get('/system/branches', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var page = 1;
 		if (req.query.page) {
 			page = req.query.page;
@@ -30,12 +31,12 @@ module.exports = function(app) {
 		}, { sortBy : { code : 1 } });
 	});
 
-	app.get('/system/branches/add', function(req, res, next) {
+	app.get('/system/branches/add', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var model = {};
 		model.branch = {levelId : '0'};
 		res.render('system/branches/add', model);						
 	});
-	app.post('/system/branches/add', function(req, res, next) {
+	app.post('/system/branches/add', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var branchInput = req.body.branch;
 		branchInput.parent = 'top';
 		branchInput.status = '1';
@@ -55,7 +56,7 @@ module.exports = function(app) {
 			}
 		});				
 	});
-	app.get('/system/branches/:parentId/addSub', function(req, res, next) {
+	app.get('/system/branches/:parentId/addSub', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var parentId = req.params.parentId;
 		Branch.findById(new ObjectId(parentId), 'name code levelId', function(err, parent){
 			if (err) {
@@ -71,7 +72,7 @@ module.exports = function(app) {
 		});
 	});
 	
-	app.post('/system/branches/:parentId/addSub', function(req, res, next) {
+	app.post('/system/branches/:parentId/addSub', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var parentId = req.params.parentId;
 		var parent = req.body.parent;
 		parent.id = parentId;
@@ -111,7 +112,7 @@ module.exports = function(app) {
 		});
 	});
 	
-	app.get('/system/branches/:id/edit', function(req, res, next) {
+	app.get('/system/branches/:id/edit', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var id = req.params.id;
 		Branch.findById(new ObjectId(id), function(err, branch) {
 			if (err) {
@@ -130,7 +131,7 @@ module.exports = function(app) {
 			});
 		});
 	});
-	app.post('/system/branches/:id/edit', function(req, res, next) {
+	app.post('/system/branches/:id/edit', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var id = req.params.id;
 		Branch.findOne({_id : new ObjectId(id)}, function(err, branch){
 			if (!err) {
@@ -157,7 +158,7 @@ module.exports = function(app) {
 			}			
 		});
 	});
-	app.get('/system/branches/:id/down', function(req, res, next) {
+	app.get('/system/branches/:id/down', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var page = 1;
 		if (req.query.page) {
 			page = req.query.page;
@@ -184,7 +185,7 @@ module.exports = function(app) {
 			}			
 		});
 	});
-	app.get('/system/branches/:id/up', function(req, res, next) {
+	app.get('/system/branches/:id/up', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var page = 1;
 		if (req.query.page) {
 			page = req.query.page;
@@ -211,8 +212,7 @@ module.exports = function(app) {
 		});
 	});
 	
-	app.get('/system/branches/return', function(req, res, next){
-		console.log(11111111111111);
+	app.get('/system/branches/return', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next){
 		var id = req.query.id;
 		console.log(id);
 		Branch.findById(new ObjectId(id), 'parent', function(err, branch) {

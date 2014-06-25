@@ -1,13 +1,19 @@
-{>"layouts/master" /}
-{<content}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<!-- Meta, title, CSS, favicons, etc. -->
+<title>{+title}Kraken Demo{/title}</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="HuiBao - 综合交易业务服务平台。">
+<meta name="author" content="HuiBao">
+<link href="http://cdn.bootcss.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+</head>
+<body>
 <div class="container">
-    <h1>{title}</h1>
-    {?message}
-    <div class="alert alert-warning fade in">
-        <button class="close" type="button" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>{message}</strong>
-    </div>
-    {/message}    
+    <h1>{title}</h1>   
     <form id="userform" method="post" role="form" class="form-horizontal">
         <div id="nameFiled" class="form-group">
             <label for="inputUsername" class="col-sm-2 control-label">用户名</label>
@@ -31,16 +37,19 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <input id="submitbtn" type="button" value="注册"
-                    class="btn btn-default">
+            <div class="col-sm-offset-2 col-sm-1">
+                <input id="submitbtn" type="submit" value="注册" class="btn btn-info">
             </div>
+			<div class="col-sm-1">
+				<a href="/" role="button" class="btn btn-default">返回 </a>
+			</div>
         </div>
         <input type="hidden" name="_csrf" value="{_csrf}"/>
     </form>
 </div>
-{/content}
-{<script}
+
+<script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script type="text/javascript">
         $("#submitbtn").click(function(){
             var username = $("#username").val();
@@ -79,4 +88,5 @@
             $("#userform").submit();
         });
 </script>
-{/script}
+</body>
+</html>
