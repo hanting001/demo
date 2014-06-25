@@ -1,0 +1,54 @@
+{>"layouts/master" /}
+<script src="/js/jquery.js"></script>
+<script src="/js/jquery.autocomplete.js"></script>
+<link href="/css/jquery.autocomplete.css" rel="stylesheet">
+{<content}
+<div class="panel panel-primary">
+  <div class="panel-heading">信息录入</div>
+  <div class="panel-body">
+		{>"/biz/contract/_form" addTop="true"/}
+	</div>
+</div>
+{/content}
+{<script}
+    <script type="text/javascript">
+        function getagentinfo(){
+        if($('#agentcode').val()===''){
+             alert('请输入营销人员工号');
+        }else{
+            $.ajax({
+                url:'/biz/getbrokerinfo',
+                type:'get',
+                data:{agentcode:$('#agentcode').val()},
+                dataType:'json',
+                timeout:2000,
+                error: function(){ alert('服务器错误, 请与管理员联系!', '提示信息'); },
+                success: function(result) {
+                    if(result.length==0){
+                          alert('营销人员工号不存在');
+                          $('#agentid').val('');
+                          $('#agentname').val('');
+                          $('#agentidNo').val('');
+                     }else{
+                            $('#agentid').val(result[0]['_id']);
+                            $('#agentname').val(result[0]['agentname']);
+                            $('#agentidNo').val(result[0]['idno']);
+                     }
+                }
+             });
+           }
+        }
+
+        function goback(){
+            window.location.href="/bizaccept";
+        }
+        $("#addSubForm").validate({
+            submitHandler:function(form){
+                $(":button").attr("disabled","true");
+                form.action = '/biz/add';
+                form.submit();
+            },
+            focusCleanup:true
+        });
+    </script>
+{/script}

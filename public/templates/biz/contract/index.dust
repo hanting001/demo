@@ -1,0 +1,103 @@
+{>"layouts/master" /} 
+{<content}
+<ul class="nav nav-tabs">
+  	<li class="dropdown">
+  		<a href="#" class="dropdown-toggle" data-toggle="dropdown">首期管理<b class="caret"></b></a>
+  		<ul class="dropdown-menu" role="menu" >
+			<li><a href="/bizaccept" tabindex="-1" >保单受理</a></li>
+			<li><a href="#" tabindex="-1" data-toggle="tab">保单录入</a></li>
+			<li><a href="#" tabindex="-1" data-toggle="tab">保单回执</a></li>
+			<li><a href="#" tabindex="-1" data-toggle="tab">保单承保</a></li>
+		</ul>
+  	</li>
+  	<li><a href="#">续期管理</a></li>
+</ul>
+<div class="panel panel-default">
+	  	<div class="panel-heading">
+	  		<a data-toggle="collapse" data-toggle="collapse" data-parent="#mainContent" href="#condition">查询条件</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div style="display: inline;"><a href="/biz/add">新增</a></div>
+	  	</div>
+		<div id="condition" class="panel-collapse collapse">
+		  	<div class="panel-body">
+				<form class="form-inline" role="form" action="/tools" method="post">
+					<div class="form-group">
+						<label class="sr-only" for="inputName">类型</label>
+						<select class="form-control" id="inputType" name="tool[type]">
+							<option />
+							<option>开发工具</option>
+							<option>版本管理</option>
+							<option>开发服务器</option>
+							<option>数据库工具</option>
+						</select>
+					</div>
+					<button class="btn btn-default" type="submit">查询</button>
+					<input type="hidden" name="_csrf" value="{_csrf}" />
+				</form>
+			</div>
+		</div>
+	</div>
+<div class="panel panel-primary">
+  	<div class="panel-heading">查询结果</div>
+	<table class="table table-hover table-condensed">
+		<thead>
+			<tr>
+			    <th class="col-md-2">投保单号</th>
+				<th class="col-md-2">受理人证件号</th>
+				<th class="col-md-1">供应商</th>
+				<th class="col-md-1">受理保费</th>
+				<th class="col-md-1">客户证件号</th>
+				<th class="col-md-2">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		{#Bizaccepts}
+		    <tr>
+		      <td class="col-md-2">{.applicationno}</td>
+		      <td class="col-md-2">{.agentidNo}</td>
+		      <td class="col-md-1">{.providerCode}</td>
+		      <td class="col-md-1">{.acceptNum}</td>
+		      <td class="col-md-1">{.customeridNo}</td>
+		      <td class="col-md-2">
+		          <a class="btn btn-default btn-xs " href="/biz/{.id}/delete">删除</a>
+		          <a class="btn btn-default btn-xs " href="/contract/{.id}/addContract">录入</a>
+		      </td>
+		    </tr>
+		{/Bizaccepts}
+		</tbody>
+	</table>
+</div>
+<div class="container-fluid">
+    <ul class="pagination"></ul>
+</div>
+{/content}
+{<script}
+<script type="text/javascript">
+	var options = {
+	    currentPage: {page},
+	    bootstrapMajorVersion : 3,
+	    totalPages: {pageCount},
+	    pageUrl : function(type, page, current){
+	        return '/bizaccept?page='+page;
+	    },
+	    itemContainerClass: function (type, page, current) {
+	        return (page === current) ? "disabled" : "pointer-cursor";
+	    },
+	    itemTexts: function (type, page, current) {
+	        switch (type) {
+	            case "first":
+	                return "<<";
+	            case "prev":
+	                return "<";
+	            case "next":
+	                return ">";
+	            case "last":
+	                return ">>";
+	            case "page":
+	                return page;
+	        }
+	    }
+	};
+	$('.pagination').bootstrapPaginator(options);
+</script> 
+{/script}

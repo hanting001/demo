@@ -5,7 +5,6 @@ var Bizaccept = require('../../models/biz/Bizaccept');
 var Agentbroker = require('../../models/agent/Agentbroker');
 var Provider = require('../../models/product/Provider');
 var baseCode = require('../../lib/baseCode');
-var base = require('../../lib/base');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
 module.exports = function(app) {

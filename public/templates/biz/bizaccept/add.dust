@@ -1,0 +1,125 @@
+{>"layouts/master" /}
+<script src="/js/jquery.js"></script>
+<script src="/js/jquery.autocomplete.js"></script>
+<link href="/css/jquery.autocomplete.css" rel="stylesheet">
+<script type="text/javascript">
+        var providerinfo = [{"_id":"53a8e0e03039f3c02741c4c7","code":"TACX","name":"天安财险","type":"1"}];
+        $('#Providerid').autocomplete(providerinfo,{
+            minChars: 0,
+            max:200,
+            width: 196,
+            matchContains: "word",
+            autoFill: true,
+            formatItem: function(row, i, max) {
+                return row.code + ":" + row.name ;
+            },
+            formatMatch: function(row, i, max) {
+                return row.code + ":" + row.name ;
+            }
+        });
+       function findProviderType(){
+            var code = $("#Providerid").val().split(":")[0];
+            for(var i=0;i<providerinfo.length;i++){
+                var p = providerinfo[i];
+                if(p.code == code)
+                 return p.ptype;
+            }
+        }
+</script>
+{<content}
+<div class="panel panel-primary">
+  <div class="panel-heading">信息录入</div>
+  <div class="panel-body">
+		<form class="form-horizontal" method="post" id="addSubForm" role="form">
+			<input type="hidden" name="_csrf" value="{_csrf}" />
+			<input type="hidden" name= "bizaccept[agentId]" id='agentid' />
+            {!  受理单信息!}
+			    <div class="form-group">
+                <label for="applicationno" class="col-sm-1 control-label">投保单号<span class="required-indicator">*</span></label>
+            	<div class="col-sm-2">
+            	<input type="text" name="bizaccept[applicationno]" class="form-control" id="applicationno" value="{bizaccept.applicationno}" required>
+            	</div>
+                <label for="agentcode" class="col-sm-1 control-label">销售代码<span class="required-indicator">*</span></label>
+                <div class="col-sm-2">
+                    <input  type="text" name="agentcode" class="form-control" id="agentcode"  onBlur="getagentinfo()"    required>
+                </div>
+                <label for="agentname" class="col-sm-1 control-label">营销员姓名</label>
+                <div class="col-sm-2">
+                    <input type="text" name="bizaccept[agentname]" class="form-control" id="agentname" required>
+                </div>
+                <label for="agentidNo" class="col-sm-1 control-label">营销员证件<span class="required-indicator">*</span></label>
+                <div class="col-sm-2">
+                        <input type="text" name="bizaccept[agentidNo]" class="form-control" id="agentidNo" value="{bizaccept.agentidNo}" required>
+                </div>
+			</div>
+            <div class="form-group">
+                <label for="customeridNo" class="col-sm-1 control-label">客户证件<span class="required-indicator">*</span></label>
+                <div class="col-sm-2">
+                    <input type="text" name="bizaccept[customeridNo]" class="form-control" id="customeridNo" value="{bizaccept.customeridNo}" required>
+                </div>
+                <label for="providerCode" class="col-sm-1 control-label">供应商代码<span class="required-indicator">*</span></label>
+                <div class="col-sm-2">
+                    <input type="text" name="bizaccept[providerCode]" class="form-control" id="Providerid" value="{bizaccept.providerCode}" required>
+                </div>
+                <label for="acceptNum" class="col-sm-1 control-label">受理金额<span class="required-indicator">*</span></label>
+                <div class="col-sm-2">
+                    <input type="text" name="bizaccept[acceptNum]" class="form-control" id="acceptNum" value="{bizaccept.acceptNum}" required>
+                </div>
+            </div>
+			<div class="form-group">
+            				<div class="col-sm-12">
+            				<div class="btn-toolbar" role="toolbar">
+            				<div class="btn-toolbar" role="toolbar">
+            					<div class="btn-group">
+            						<button type="submit" class="btn btn-primary">提交</button>
+            					</div>
+            					<div class="btn-group">
+            						<button id="returnButton" onclick="goback()" type="button" class="btn btn-default">返回</button>
+            					</div>
+            			</div>
+		</form>
+	</div>
+</div>
+{/content}
+{<script}
+    <script type="text/javascript">
+        function getagentinfo(){
+        if($('#agentcode').val()===''){
+             alert('请输入营销人员工号');
+        }else{
+            $.ajax({
+                url:'/biz/getbrokerinfo',
+                type:'get',
+                data:{agentcode:$('#agentcode').val()},
+                dataType:'json',
+                timeout:2000,
+                error: function(){ alert('服务器错误, 请与管理员联系!', '提示信息'); },
+                success: function(result) {
+                    if(result.length==0){
+                          alert('营销人员工号不存在');
+                          $('#agentid').val('');
+                          $('#agentname').val('');
+                          $('#agentidNo').val('');
+                     }else{
+                            $('#agentid').val(result[0]['_id']);
+                            $('#agentname').val(result[0]['agentname']);
+                            $('#agentidNo').val(result[0]['idno']);
+                     }
+                }
+             });
+           }
+        }
+
+        function goback(){
+            window.location.href="/bizaccept";
+        }
+        $("#addSubForm").validate({
+            submitHandler:function(form){
+                $(":button").attr("disabled","true");
+                form.action = '/biz/add';
+                form.submit();
+            },
+            focusCleanup:true
+        });
+    </script>
+{/script}

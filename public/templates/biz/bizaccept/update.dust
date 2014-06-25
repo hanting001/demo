@@ -1,0 +1,155 @@
+{>"layouts/master" /} 
+{<content}
+<div class="panel panel-primary">
+  <div class="panel-heading">信息录入</div>
+  <div class="panel-body">
+            {#provider}
+		<form class="form-horizontal" method="post" id="addSubForm"  role="form"  action = '/provider/{.id}/update'>
+
+        			<input type="hidden" name="_csrf" value="{_csrf}" />
+                    {!  供应商信息  !}
+        			<div class="form-group">
+        				<label for="name" class="col-sm-1 control-label">供应商名称<span class="required-indicator">*</span></label>
+        				<div class="col-sm-2">
+        					<input type="text" name="provider[name]" class="form-control" id="name" value="{provider.name}" required>
+        				</div>
+        				<label for="abbr" class="col-sm-1 control-label">供应商简称<span class="required-indicator">*</span></label>
+        				<div class="col-sm-2">
+        					<input type="text" name="provider[abbr]" class="form-control" id="abbr" value="{provider.abbr}" required>
+        				</div>
+                        <label for="code" class="col-sm-1 control-label">供应商代码<span class="required-indicator">*</span></label>
+                        <div class="col-sm-2">
+                            <input type="text" name="provider[code]" class="form-control" id="code" value="{provider.code}" required>
+                        </div>
+        				<label for="status" class="col-sm-1 control-label">供应商状态<span class="required-indicator">*</span></label>
+        				<div class="col-sm-2">
+        					<input type="text" name="provider[status]" class="form-control" id="status" value="{provider.status}" required>
+        				</div>
+        			</div>
+
+                    <div class="form-group">
+                        <label for="type" class="col-sm-1 control-label">供应商类别<span class="required-indicator">*</span></label>
+                        <div class="col-sm-2">
+                            <input type="text" name="provider[type]" class="form-control" id="type" value="{provider.type}" required>
+                        </div>
+                        <label for="perantid" class="col-sm-1 control-label">上级供应商<span class="required-indicator">*</span></label>
+                        <div class="col-sm-2">
+                            <input type="text" name="provider[perantid]" class="form-control" id="perantid" value="{provider.perantid}" required>
+                        </div>
+                        <label for="flag_z" class="col-sm-1 control-label">是否总公司<span class="required-indicator">*</span></label>
+                        <div class="col-sm-2">
+                            <input type="text" name="provider[flag_z]" class="form-control" id="flag_z" value="{provider.flag_z}" required>
+                        </div>
+                        <label for="level" class="col-sm-1 control-label">供应商级别<span class="required-indicator">*</span></label>
+                         <div class="col-sm-2">
+                         <select class="form-control" id="level"  name="provider[level]" required>
+                                <option />
+                                {#branchLevel}
+                                    <option value="{key}" {@eq key=key value=provider.level}  selected="true"{/eq}>{value}</option>
+                                {/branchLevel}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="country" class="col-sm-1 control-label">国家<span class="required-indicator">*</span></label>
+                        <div class="col-sm-2">
+                            <input type="text" name="provider[country]" class="form-control" id="country" value="{provider.country}" required>
+                        </div>
+                        <label for="city" class="col-sm-1 control-label">省市<span class="required-indicator">*</span></label>
+                        <div class="col-sm-2">
+                            <input type="text" name="provider[city]" class="form-control" id="city" value="{provider.city}" required>
+                        </div>
+                        <label for="proaddr" class="col-sm-1 control-label">供应商地址<span class="required-indicator">*</span></label>
+                        <div class="col-sm-2">
+                            <input type="text" name="provider[proaddr]" class="form-control" id="proaddr" value="{provider.proaddr}" required>
+                        </div>
+                        <label for="zipcode" class="col-sm-1 control-label">邮编<span class="required-indicator">*</span></label>
+                        <div class="col-sm-2">
+                            <input type="text" name="provider[zipcode]" class="form-control" id="zipcode" value="{provider.zipcode}" required>
+                        </div>
+                    </div>
+                     {!联系人信息!}
+                        <div class="form-group">
+                            <label for="contractperson" class="col-sm-1 control-label">联系人<span class="required-indicator">*</span></label>
+                            <div class="col-sm-2">
+                                <input type="text" name="provider[contractperson]" class="form-control" id="contractperson" value="{provider.contractperson}" required>
+                            </div>
+                            <label for="duties" class="col-sm-1 control-label">职务<span class="required-indicator">*</span></label>
+                            <div class="col-sm-2">
+                                <input type="text" name="provider[duties]" class="form-control" id="duties" value="{provider.duties}" required>
+                            </div>
+                            <label for="call" class="col-sm-1 control-label">电话<span class="required-indicator">*</span></label>
+                            <div class="col-sm-2">
+                                <input type="text" name="provider[call]" class="form-control" id="call" value="{provider.call}" required>
+                            </div>
+                            <label for="cellphone" class="col-sm-1 control-label">手机<span class="required-indicator">*</span></label>
+                            <div class="col-sm-2">
+                                <input type="text" name="provider[cellphone]" class="form-control" id="cellphone" value="{provider.cellphone}" required>
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label for="portraiture" class="col-sm-1 control-label">传真<span class="required-indicator">*</span></label>
+                            <div class="col-sm-2">
+                                <input type="text" name="provider[portraiture]" class="form-control" id="portraiture" value="{provider.portraiture}" required>
+                            </div>
+                            <label for="contractaddr" class="col-sm-1 control-label">地址<span class="required-indicator">*</span></label>
+                            <div class="col-sm-2">
+                                <input type="text" name="provider[contractaddr]" class="form-control" id="contractaddr" value="{provider.contractaddr}" required>
+                            </div>
+                            <label for="conzipcode" class="col-sm-1 control-label">邮编<span class="required-indicator">*</span></label>
+                            <div class="col-sm-2">
+                                <input type="text" name="provider[conzipcode]" class="form-control" id="conzipcode" value="{provider.conzipcode}" required>
+                            </div>
+                        </div>
+
+                       {! 机构信息 !}
+                        <div class="form-group">
+                          <label for="branchs" class="col-sm-1 control-label">机构信息<span class="required-indicator">*</span></label>
+                               {#branch}
+                                 {@if cond="{.__v} == 1"}
+                                   <label class="checkbox-inline">
+                                     <input type="checkbox" id="inlineCheckbox1" name =provider[branchs] checked  value="{.id}"> {.name}
+                                   </label>
+                                 {:else}
+                                   <label class="checkbox-inline">
+                                    <input type="checkbox" id="inlineCheckbox1" name =provider[branchs]  value="{.id}"> {.name}
+                                  </label>
+                                {/if}
+                               {/branch}
+                        </div>
+
+
+
+        			<div class="form-group">
+                    				<div class="col-sm-12">
+                    				<div class="btn-toolbar" role="toolbar">
+                    					<div class="btn-group">
+                    						<button type="submit" class="btn btn-primary">提交</button>
+                    					</div>
+                    					<div class="btn-group">
+                    						<button type="button" class="btn btn-default">返回</button>
+                    					</div>
+                    			</div>
+        		</form>
+        		  {/provider}
+	</div>
+</div>
+{/content}
+{<script}
+<script type="text/javascript">
+	$('.date').datepicker({
+		format : "yyyy-mm-dd",
+		autoclose : true,
+		language : 'zh-CN',
+		todayHighlight : true
+	});
+	$("#addSubForm").validate({
+		submitHandler:function(form){
+			$(":button").attr("disabled","true");  
+            form.submit();
+        },
+        focusCleanup:true
+	});
+</script> 
+{/script}

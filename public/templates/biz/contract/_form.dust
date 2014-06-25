@@ -1,0 +1,201 @@
+	<form class="form-horizontal" method="post" id="addSubForm" role="form">
+			<input type="hidden" name="_csrf" value="{_csrf}" />
+			{#bizaccept}
+			<div class="form-group">
+				<label for="providername" class="col-sm-1 control-label">供应商<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					<input type="text" name="branch[name]" class="form-control" id="providername" value="{providerCode}" readonly>
+				</div>
+				<label for="agentname" class="col-sm-1 control-label">营销员<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+				    <input type="text" name="contract[agentname]" class="form-control" id="agentname" value="{agentname}" readonly>
+				    <input type="hidden" name="contract[levelId]" value="{agentId}">
+				</div>
+                <label for="acceptdate" class="col-sm-1 control-label">受理日期</label>
+                <div class="col-sm-2">
+                    <input type="text" name="contract[acceptdate]" class="form-control" value="{@formatDate date="{acceptdAd}" format="YYYY-MM-DD" required="true"/}" id="acceptdate" >
+                </div>
+                <label for="applicationno" class="col-sm-1 control-label">投保单号<span class="required-indicator">*</span></label>
+                <div class="col-sm-2">
+                    <input type="text" name="contract[applicationno]" class="form-control" id="applicationno" value="{applicationno}" required>
+                </div>
+                {/bizaccept}
+			</div>
+			<div class="form-group">
+				<label for="initialchargemode" class="col-sm-1 control-label">首缴费方式<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					{@baseCode id="chagermode" selectValue="{contract.initialchargemode}" name="contract[initialchargemode]" base="chargemode" blank="true" required="true"/}
+				</div>
+				<label for="companyAbbr" class="col-sm-1 control-label">续缴费方式<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+					{@baseCode id="chagermode" selectValue="{contract.renewalchargemode}" name="contract[renewalchargemode]" base="chargemode" blank="true" required="true"/}
+				</div>
+				<label for="premiumpreiod" class="col-sm-1 control-label">缴别<span class="required-indicator">*</span></label>
+				<div class="col-sm-2">
+				    {@baseCode id="premiumpreiod" selectValue="{contract.premiumMode}" name="contract[premiumMode]" base="premiumpreiod" blank="true" required="true"/}
+				</div>
+
+
+			</div>
+
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a href="#applicant" data-toggle="tab">投保人</a></li>
+                      <li><a href="#policy" data-toggle="tab">被保人</a></li>
+                      <li><a href="#Beneficiary" data-toggle="tab">收益人</a></li>
+                      <li><a href="#coverage" data-toggle="tab">险种</a></li>
+                    </ul>
+                </div>
+           </div>
+            <div class="form-group">
+                <div class="col-sm-12 tab-content">
+                    {! 投保人 !}
+		            <div class="tab-pane active" id="applicant">
+			            <div class="form-group">
+			                    <label for="idtype" class="col-sm-1 control-label">证件类型</label>
+                                <div class="col-sm-2">
+					                {@baseCode id="idtype" selectValue="{contract.idtype}" name="contract[idtype]" base="idtype" blank="true" required="true"/}
+                                </div>
+                                <label for="businesslicenceLicenceNO" class="col-sm-1 control-label">证件号码</label>
+                                <div class="col-sm-2">
+                                    <input type="text" name="branch[businesslicence][licenceNO]" class="form-control" value="{branch.businesslicence.licenceNO}" id="businesslicenceLicenceNO" >
+                                </div>
+			                    <label for="businesslicenceStartDate" class="col-sm-1 control-label">姓名</label>
+			                     <div class="col-sm-2">
+			                	    <input type="text" name="branch[businesslicence][licenceNO]" class="form-control" value="{branch.businesslicence.licenceNO}" id="businesslicenceLicenceNO" >
+                                 </div>
+			                    <label for="businesslicenceEndDate" class="col-sm-1 control-label">性别</label>
+                                <div class="col-sm-2">
+                                       <input type="text" name="branch[businesslicence][licenceNO]" class="form-control" value="{branch.businesslicence.licenceNO}" id="businesslicenceLicenceNO" >
+                                </div>
+			            </div>
+			            <div class="form-group">
+			                <label for="businesslicenceAuthority" class="col-sm-1 control-label">生日</label>
+			                <div class="col-sm-2">
+			                    <input type="text" name="branch[businesslicence][authority]" class="form-control" value="{branch.businesslicence.authority}" id="businesslicenceAuthority" >
+			                </div>
+                            <label for="businesslicenceAuthority" class="col-sm-1 control-label">电子邮件</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="branch[businesslicence][authority]" class="form-control" value="{branch.businesslicence.authority}" id="businesslicenceAuthority" >
+                            </div>
+                             <label for="businesslicenceAuthority" class="col-sm-1 control-label">生日</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="branch[businesslicence][authority]" class="form-control" value="{branch.businesslicence.authority}" id="businesslicenceAuthority" >
+                            </div>
+                            <label for="businesslicenceAuthority" class="col-sm-1 control-label">电子邮件</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="branch[businesslicence][authority]" class="form-control" value="{branch.businesslicence.authority}" id="businesslicenceAuthority" >
+                            </div>
+			            </div>
+			            <div class="form-group">
+                            <label for="businesslicenceAuthority" class="col-sm-1 control-label">手机</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="branch[businesslicence][authority]" class="form-control" value="{branch.businesslicence.authority}" id="businesslicenceAuthority" >
+                            </div>
+                            <label for="businesslicenceAuthority" class="col-sm-1 control-label">电话</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="branch[businesslicence][authority]" class="form-control" value="{branch.businesslicence.authority}" id="businesslicenceAuthority" >
+                            </div>
+                             <label for="businesslicenceAuthority" class="col-sm-1 control-label">联系地址</label>
+                            <div class="col-sm-5">
+                                <input type="text" name="branch[businesslicence][authority]" class="form-control" value="{branch.businesslicence.authority}" id="businesslicenceAuthority" >
+                            </div>
+                        </div>
+                	</div>
+                	{! 被保人 !}
+                    <div class="tab-pane" id="policy">
+ 			            <div class="form-group">
+			                <label for="orgLicenceStartDate" class= "col-sm-1 control-label">投保人关系</label>
+			                <div class="col-sm-2">
+                            {@baseCode id="idtype" selectValue="{policy.idtype}" name="policy[idtype]" base="idtype" blank="true" required="true"/}
+			                </div>
+			                <label for="orgLicenceEndDate" class="col-sm-1 control-label">证件类型</label>
+			                <div class="col-sm-2">
+			                 {@baseCode id="idtype" selectValue="{policy.idtype}" name="policy[idtype]" base="idtype" blank="true" required="true"/}
+			                </div>
+			                <label for="orgLicenceCode" class="col-sm-1 control-label">证件号</label>
+			                <div class="col-sm-2">
+								<input type="text" name="orgLicence[orgCode]" class="form-control" id="orgLicenceCode" >
+			                </div>
+                            <label for="orgLicenceType" class=" col-sm-1 control-label">姓名</label>
+                            <div class="col-sm-2">
+                                <input type="text" name="orgLicence[orgType]" class="form-control" id="orgLicenceType" >
+                            </div>
+			            </div>
+                    </div>
+                    <div class="tab-pane" id="Beneficiary">
+                    	<div class="form-group">
+                            <label for="orgLicenceStartDate" class= "col-sm-1 control-label">投保人关系</label>
+                              <div class="col-sm-2">
+                              {@baseCode id="idtype" selectValue="{policy.idtype}" name="policy[idtype]" base="idtype" blank="true" required="true"/}
+                              </div>
+                              <label for="orgLicenceEndDate" class="col-sm-1 control-label">证件类型</label>
+                              <div class="col-sm-2">
+                               {@baseCode id="idtype" selectValue="{policy.idtype}" name="policy[idtype]" base="idtype" blank="true" required="true"/}
+                              </div>
+                              <label for="orgLicenceCode" class="col-sm-1 control-label">证件号</label>
+                              <div class="col-sm-2">
+                                  <input type="text" name="orgLicence[orgCode]" class="form-control" id="orgLicenceCode" >
+                              </div>
+                              <label for="orgLicenceType" class=" col-sm-1 control-label">姓名</label>
+                              <div class="col-sm-2">
+                                  <input type="text" name="orgLicence[orgType]" class="form-control" id="orgLicenceType" >
+                              </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="orgLicenceStartDate" class= "col-sm-1 control-label">收益类型</label>
+                          <div class="col-sm-2">
+                          {@baseCode id="idtype" selectValue="{policy.idtype}" name="policy[idtype]" base="idtype" blank="true" required="true"/}
+                          </div>
+
+                    </div>
+					</div>
+                    <div class="tab-pane" id="coverage">
+                        <div class="form-group" style=" margin-right: 0px;">
+                                    <table class="table" style="margin-left: 37px;width: 96%">
+                                        <tr>
+                                            <th class="col-md-2">商品名称</th>
+                                            <th class="col-md-1">保险金额</th>
+                                            <th class="col-md-1">保费</th>
+                                            <th class="col-md-1">年期</th>
+                                            <th class="col-md-1">价保</th>
+                                            <th class="col-md-1"><a class="btn btn-default btn-xs " href="/biz/{.id}/delete">新增</a></th>
+                                        </tr>
+                                        <tr>
+                                          <td class="col-md-2">
+                                            <input type="text" name="orgLicence[orgCode]" class="form-control" id="orgLicenceCode" >
+                                          </td>
+                                          <td class="col-md-1">
+                                            <input type="text" name="orgLicence[orgCode]" class="form-control" id="orgLicenceCode" >
+                                          </td>
+                                          <td class="col-md-1">
+                                            <input type="text" name="orgLicence[orgCode]" class="form-control" id="orgLicenceCode" >
+                                          </td>
+                                          <td class="col-md-1">
+                                            <input type="text" name="orgLicence[orgCode]" class="form-control" id="orgLicenceCode" >
+                                          </td>
+                                          <td class="col-md-1">
+                                            <input type="text" name="orgLicence[orgCode]" class="form-control" id="orgLicenceCode" >
+                                          </td>
+                                          <td class="col-md-1">
+                                              <a class="btn btn-default btn-xs " href="/biz/{.id}/delete">删除</a>
+                                          </td>
+                                        </tr>
+
+                                </table>
+                        </div>
+                    </div>
+                </div>
+           </div>
+			<div class="form-group">
+				<div class="col-sm-12">
+				<div class="btn-toolbar" role="toolbar">
+					<div class="btn-group">
+						<button type="submit" class="btn btn-primary">提交</button>
+					</div>
+					<div class="btn-group">
+						<a id="returnButton"  class="btn btn-default">返回</button>
+					</div>
+			</div>
+		</form>
