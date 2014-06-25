@@ -2,17 +2,16 @@
 
 
 var passport = require('passport');
-
+var auth = require('../lib/auth');
 
 module.exports = function (app) {
 
-    app.get('/', function (req, res) {
-        res.render('index',{
-			title: '天安开发'});
+    app.get('/', auth.isAuthenticated(), function (req, res) {
+        res.render('index',{title: '慧宝科技'});
     });
     
 	app.get('/login', function(req, res){
-		res.render('login', { title: '登陆',message: req.flash('error') });
+		res.render('login', { title: '请登陆',message: req.flash('error') });
 	});
 	app.post('/login', function (req, res) {
 		
@@ -24,7 +23,7 @@ module.exports = function (app) {
 	});
 			
 	
-	app.get('/logout', function(req, res) {
+	app.get('/logout', auth.isAuthenticated(), function(req, res) {
 		req.logout();
 		res.redirect('/');
 	});

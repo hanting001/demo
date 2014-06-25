@@ -11,7 +11,8 @@ var menuSchema = new mongoose.Schema({
 	parent			:	{type : String, required : true},/* 直接上级菜单 */
 	subs			: 	[String],/* 直接下级机构菜单 */
 	levelId			:	{type : String, required: true},
-	sortKey			:	{type : Number, default : 0}
+	sortKey			:	{type : Number, default : 0},
+	createdAt		: 	{ type: Date, default: Date.now }
 }, { collection: 'menus' });
 
 

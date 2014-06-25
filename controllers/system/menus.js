@@ -2,9 +2,9 @@ var Menu = require('../../models/user/Menu');
 var baseCode = require('../../lib/baseCode');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
-
+var auth = require('../../lib/auth');
 module.exports = function(app) {
-	app.get('/system/menus', function(req, res, next) {
+	app.get('/system/menus', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var page = 1;
 		if (req.query.page) {
 			page = req.query.page;
@@ -29,13 +29,13 @@ module.exports = function(app) {
 		}, { sortBy : { sortKey : 1 } });		
 	});
 	
-	app.get('/system/menus/add', function(req, res, next) {
+	app.get('/system/menus/add', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var model = {};
 		model.menu = {levelId : '1'};
 		model.parent = {url : '/', fullUrl: '/'};
 		res.render('system/menus/add', model);		
 	});
-	app.post('/system/menus/add', function(req, res, next) {
+	app.post('/system/menus/add', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var menu = req.body.menu;
 		var parent = req.body.parent;
 		var menuModel = new Menu(menu);
@@ -58,7 +58,7 @@ module.exports = function(app) {
 		});
 	});
 	
-	app.get('/system/menus/:parentId/addSub', function(req, res, next) {
+	app.get('/system/menus/:parentId/addSub', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var parentId = req.params.parentId;
 		Menu.findById(new ObjectId(parentId), 'fullUrl url levelId', function(err, parent){
 			if (err) {
@@ -74,7 +74,7 @@ module.exports = function(app) {
 			res.render('system/menus/addSub', model);						
 		});
 	});	
-	app.post('/system/menus/:parentId/addSub', function(req, res, next) {
+	app.post('/system/menus/:parentId/addSub', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var parentId = req.params.parentId;
 		Menu.findById(new Object(parentId), function(err, parent){
 			var menuInput = req.body.menu;
@@ -110,7 +110,7 @@ module.exports = function(app) {
 	});	
 	
 	
-	app.get('/system/menus/:id/edit', function(req, res, next) {
+	app.get('/system/menus/:id/edit', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var id = req.params.id;
 		console.log(id);
 		Menu.findById(new ObjectId(id), function(err, menu) {
@@ -135,7 +135,7 @@ module.exports = function(app) {
 			});
 		});		
 	});
-	app.post('/system/menus/:id/edit', function(req, res, next) {
+	app.post('/system/menus/:id/edit', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var id = req.params.id;
 		Menu.findById(new ObjectId(id), function(err, menu){
 			if (err) {
@@ -164,7 +164,7 @@ module.exports = function(app) {
 		});		
 	});
 	
-	app.get('/system/menus/:id/down', function(req, res, next) {
+	app.get('/system/menus/:id/down', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var page = 1;
 		if (req.query.page) {
 			page = req.query.page;
@@ -190,7 +190,7 @@ module.exports = function(app) {
 			}, { sortBy : { sortKey : 1 } });								
 		});
 	});
-	app.get('/system/menus/:id/up', function(req, res, next) {
+	app.get('/system/menus/:id/up', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var page = 1;
 		if (req.query.page) {
 			page = req.query.page;
@@ -216,7 +216,7 @@ module.exports = function(app) {
 		});
 	});	
 	
-	app.get('/system/menus/return', function(req, res, next){
+	app.get('/system/menus/return', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next){
 		var id = req.query.id;
 		Menu.findById(new ObjectId(id), 'parent', function(err, branch) {
 			if (err) {
