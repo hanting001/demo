@@ -1,5 +1,5 @@
-var Branch = require('../../models/user/Branch');
-var BranchCounter = require('../../models/user/BranchCounter');
+var Branch = require('../../models/system/Branch');
+var BranchCounter = require('../../models/system/BranchCounter');
 var baseCode = require('../../lib/baseCode');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
