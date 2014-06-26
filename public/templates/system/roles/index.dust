@@ -1,130 +1,133 @@
-{>"layouts/master" /} 
+{>"layouts/master" /}
 {<content}
 <div class="panel-group" id="mainContent">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="btn-group">
                 <a data-toggle="collapse" class="btn btn-default" data-toggle="collapse" data-parent="#mainContent" href="#condition">查询条件</a>
-                <a class="btn btn-default" href="#" data-toggle="modal" data-target="#addModel">增加角色</a>
+                <a class="btn btn-default" id="addNewBtn" href="#" data-toggle="modal" data-target="#addModel">增加角色</a>
             </div>
         </div>
         <div id="condition" class="panel-collapse collapse">
             <div class="panel-body">
                 <form class="form-inline" role="form" action="#" method="post">
                     <div class="form-group">
-                        <label class="sr-only" for="inputName">类型</label> 
+                        <label class="sr-only" for="inputName">类型</label>
                         <select class="form-control" id="inputType" name="tool[type]">
                             <option />
-                            <option>开发工具</option>
-                            <option>版本管理</option>
-                            <option>开发服务器</option>
-                            <option>数据库工具</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-default" type="submit">查询</button>
-                    <input type="hidden" name="_csrf" value="{_csrf}" />
-                </form>
+                                <option>开发工具</option>
+                                <option>版本管理</option>
+                                <option>开发服务器</option>
+                                <option>数据库工具</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-default" type="submit">查询</button>
+                        <input type="hidden" name="_csrf" value="{_csrf}" />
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel panel-primary">
+            <div class="panel-heading">查询结果</div>
+            <table class="table table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th class="col-md-3">名称</th>
+                        <th class="col-md-3">代码</th>
+                        <th class="col-md-3">状态</th>
+                        <th class="col-md-3">操作选项</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#roles}
+                    <tr>
+                        <td class="col-md-3">{.name}</td>
+                        <td class="col-md-3">{.code}</td>
+                        <td class="col-md-3">{@baseCode code="{.isValid}" base="valid"/}</td>
+                        <td class="col-md-3">
+                            <div class="btn-group btn-group-sm">
+                                <a class="btn btn-default" data-toggle="tooltip" data-placement="top" id="editBtn" title="编辑" href="#"><i class="icon-edit icon-large"></i></a>
+                                <a class="btn btn-default" href="/system/menus/{.id}/addSub" data-toggle="tooltip" data-placement="top" title="新增下级"><i class="icon-plus icon-large"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {/roles}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="container-fluid">
+    <ul class="pagination"></ul>
+</div>
+<div class="modal fade" id="addModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">增加角色</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" id="submitBtn" class="btn btn-primary">提交</button>
             </div>
         </div>
     </div>
-    
-    <div class="panel panel-primary">
-        <div class="panel-heading">查询结果</div>
-        <table class="table table-hover table-condensed">
-            <thead>
-                <tr>
-                    <th class="col-md-3">名称</th>
-                    <th class="col-md-3">代码</th>
-                    <th class="col-md-3">状态</th>
-                    <th class="col-md-3">操作选项</th>
-                </tr>
-            </thead>
-            <tbody>
-            {#roles} 
-                <tr>
-                  <td class="col-md-3">{.name}</td>    
-                  <td class="col-md-3">{.code}</td>
-                  <td class="col-md-3">{@baseCode code="{.isValid}" base="valid"/}</td>
-                  <td class="col-md-3">
-                      <div class="btn-group btn-group-sm">
-                        <a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="编辑" href="/system/menus/{.id}/edit"><i class="icon-edit icon-large"></i></a>
-                        <a class="btn btn-default {@select key=levelId}{@gte value=3}disabled{/gte}{/select}"  href="/system/menus/{.id}/addSub" data-toggle="tooltip" data-placement="top" title="新增下级"><i class="icon-plus icon-large"></i></a>
-                      </div>
-                  </td>
-                </tr>
-            {/roles}
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="container-fluid">
-    <ul class="pagination"></ul>
-</div>
-
-<div class="modal fade" id="addModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">增加角色</h4>
-      </div>
-      <div class="modal-body">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-        <button type="button" id="submitBtn" class="btn btn-primary">提交</button>
-      </div>
-    </div>
-  </div>
 </div>
 {/content}
 {<script}
 <script type="text/javascript" src="/js/duster/clientBaseHelper.js"></script>
 <script type="text/javascript" src="/js/duster/roleForm.js"></script>
 <script type="text/javascript">
-	var formData = {'_csrf':'{_csrf}', 'role':{'name':'1111'}};
-	dust.render('roleForm', formData, function(err, out){
-	    $("div.modal-body").html(out);
-		$("#roleForm").validate({
-			submitHandler:function(form){
-				$(":button").attr("disabled","true");  
-				form.action = '/system/roles/add';
-		        form.submit();
-		    },
-		    focusCleanup:true
-		});
-		$("#submitBtn").click(function(){
-			$("#roleForm").submit();
-		});
-	});
-	
-
-	
-    var options = {
-        currentPage: {page},
-        bootstrapMajorVersion : 3,
-        totalPages: {pageCount},
-        pageUrl : function(type, page, current){
-            return '/menus?page='+page;
-        },
-        itemContainerClass: function (type, page, current) {
-            return (page === current) ? "disabled" : "pointer-cursor";
-        },
-        itemTexts: function (type, page, current) {
-            switch (type) {
-                case "first":
-                    return "<<";
-                case "prev":
-                    return "<";
-                case "next":
-                    return ">";
-                case "last":
-                    return ">>";
-                case "page":
-                    return page;
-            }
-        }
+$("#addNewBtn").click(function() {
+    var formData = {
+        '_csrf': '{_csrf}'
     };
-    $('.pagination').bootstrapPaginator(options);
-</script> 
+    dust.render('roleForm', formData, function(err, out) {
+        $("div.modal-body").html(out);
+        $("#roleForm").validate({
+            submitHandler: function(form) {
+                $(":button").attr("disabled", "true");
+                form.action = '/system/roles/add';
+                form.submit();
+            },
+            focusCleanup: true
+        });
+        $("#submitBtn").click(function() {
+            $("#roleForm").submit();
+        });
+    });
+});
+$("#editBtn").click(function() {
+    alert(11);
+});
+var options = {
+    currentPage: {page},
+    bootstrapMajorVersion: 3,
+    totalPages: {pageCount},
+    pageUrl: function(type, page, current) {
+        return '/menus?page=' + page;
+    },
+    itemContainerClass: function(type, page, current) {
+        return (page === current) ? "disabled" : "pointer-cursor";
+    },
+    itemTexts: function(type, page, current) {
+        switch (type) {
+            case "first":
+                return "<<";
+            case "prev":
+                return "<";
+            case "next":
+                return ">";
+            case "last":
+                return ">>";
+            case "page":
+                return page;
+        }
+    }
+};
+$('.pagination').bootstrapPaginator(options);
+</script>
 {/script}
