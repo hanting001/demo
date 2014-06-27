@@ -13,10 +13,11 @@ module.exports = function(app) {
 		if (req.query.parent) {
 			parent = req.query.parent;
 		}
-		Menu.paginate({parent:parent}, page, 10, function(err, pageCount, menus) {
+		Menu.paginate({url:{$ne:'/'}}, page, 10, function(err, pageCount, menus) {
 			if (err) {
 				return next(err);
 			}
+			console.log(menus);
 			var model = {
 					title : '菜单列表',
 					isAdmin : true,
@@ -36,25 +37,43 @@ module.exports = function(app) {
 		res.render('system/menus/add', model);		
 	});
 	app.post('/system/menus/add', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		//找到根菜单
 		var menu = req.body.menu;
-		var parent = req.body.parent;
-		var menuModel = new Menu(menu);
-		menuModel.parent = parent.url;
-		menuModel.fullUrl = menuModel.url
-		console.log(menuModel);
-		menuModel.save(function(err){
+		Menu.findOne({url:'/'}, function(err, root){
 			if (err) {
-				var model = {
-						menu : menu,
-						parent : parent
-				};
-				res.locals.err = err;
-				res.locals.view = 'system/menus/add';
-				res.locals.model = model;
-				return next();			
+				return next(err);
 			}
-			req.flash('showMessage', '创建成功');
-			res.redirect('/system/menus');
+			if (!root) {
+				res.locals.showErrorMessage = ['菜单的根节点还没有建立！'];
+				var model = {
+					menu : menu,
+					parent : {url : '/', fullUrl: '/'}
+				};
+				return res.render('system/menus/add', model);				
+			}
+			var parent = root;
+			var menuModel = new Menu(menu);
+			menuModel.parentId = parent.id;
+			menuModel.fullUrl = menuModel.url
+			console.log(menuModel);
+			menuModel.save(function(err){
+				if (err) {
+					var model = {
+							menu : menu,
+							parent : parent
+					};
+					res.locals.err = err;
+					res.locals.view = 'system/menus/add';
+					res.locals.model = model;
+					return next();			
+				}
+				req.flash('showMessage', '创建成功');
+				res.redirect('/system/menus');
+				//rebuild菜单树结构
+				Menu.rebuildTree(root, 1, function(){
+					console.log('rebuild tree for % sucess', root.url);
+				});
+			});
 		});
 	});
 	

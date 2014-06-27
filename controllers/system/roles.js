@@ -46,4 +46,55 @@ module.exports = function(app) {
 			res.redirect('/system/roles');
 		});
 	});
+
+	app.get('/system/roles/:id/load', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		var id = req.params.id;
+		console.log(id);
+		Role.findById(new ObjectId(id), function(err, role) {
+			if (err) {
+				return next(err);
+			}
+			res.json(role);
+		});
+	});
+	app.post('/system/roles/:id/save', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		var id = req.params.id;
+		var roleInput = req.body.role;
+		console.log(roleInput);
+		Role.findById(new ObjectId(id), function(err, role) {
+			if (err) {
+				return next(err);
+			}
+			for (var o in roleInput) {
+				role[o] = roleInput[o];
+			}
+			role.save(function(err, role) {
+				if (err) {
+					var model = {
+						role: roleInput
+					};
+					res.locals.err = err;
+					res.locals.view = 'system/roles';
+					res.locals.model = model;
+					return next(); //调用下一个错误处理middlewear
+				}
+				req.flash('showMessage', '修改成功');
+				res.redirect('/system/roles');
+			});
+		});
+	});
+	app.get('/system/roles/:id/delete', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		var id = req.params.id;
+		Role.findByIdAndRemove(new ObjectId(id), function(err, role) {
+			if (err) {
+				return next(err);
+			}
+			res.json({
+				message: 'OK'
+			});
+		});
+	});
+	app.get('/system/rolses/:id/addMenus', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		res.render('system/menus/menuTree');
+	});
 };

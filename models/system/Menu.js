@@ -2,21 +2,22 @@ var mongoose = require('mongoose');
 var updatedTimestamp = require('mongoose-updated_at');
 var validator = require('../../lib/validator');
 var uniqueValidator = require('mongoose-unique-validator');
+var nestedSetPlugin = require('mongoose-nested-set');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var Error = mongoose.Error;
 var menuSchema = new mongoose.Schema({
 	url				:	{type: String, required: true },
 	fullUrl			:	{type: String, unique: true, required: true },
 	name			:	{type: String, required: true },
-	parent			:	{type : String, required : true},/* 直接上级菜单 */
-	subs			: 	[String],/* 直接下级机构菜单 */
+	//parent			:	{type : String, required : true},/* 直接上级菜单 */
+	//subs			: 	[String],/* 直接下级机构菜单 */
 	levelId			:	{type : String, required: true},
 	sortKey			:	{type : Number, default : 0},
 	createdAt		: 	{ type: Date, default: Date.now }
 }, { collection: 'menus' });
 
 
-
+menuSchema.plugin(nestedSetPlugin);
 //添加create、update字段
 menuSchema.plugin(updatedTimestamp);
 //添加唯一字段校验
