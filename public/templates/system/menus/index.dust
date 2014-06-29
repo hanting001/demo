@@ -5,7 +5,7 @@
         <div class="panel-heading">
             <div class="btn-group">
                 <a data-toggle="collapse" class="btn btn-default" data-toggle="collapse" data-parent="#mainContent" href="#condition">查询条件</a>
-                <a class="btn btn-default" href="/system/menus/add">增加一级菜单</a>
+                <a class="btn btn-default" href="/system/menus/add">新增一级菜单</a>
             </div>
         </div>
         <div id="condition" class="panel-collapse collapse">
@@ -42,9 +42,17 @@
             {#menus} 
             <tr>
                 <td class="col-md-3">
-                    <a  data-toggle="tooltip" data-placement="top" title="显示上级菜单"  href="/system/menus/{id}/up" ><i class="icon-angle-left icon-large"></i></a>
+                    {@select key=parentUrl}
+                        {@ne value="/"}
+                    <a data-toggle="tooltip" data-placement="top" title="显示上层菜单"  href="/system/menus/{parentId}/up" ><i class="icon-angle-left icon-large"></i></a>
+                        {/ne}
+                    {/select}
                     {.name}
-                    <a  data-toggle="tooltip" data-placement="top" title="显示下级机构" href="/system/menus/{.id}/down"><i class="icon-angle-right icon-large"></i></a>
+                    {@select key=subs.count}
+                        {@gt value=0}
+                    <a  data-toggle="tooltip" data-placement="top" title="显示下级机构" href="/system/menus/{id}/down"><i class="icon-angle-right icon-large"></i></a>                        
+                        {/gt}
+                    {/select}
                 </td>
                 <td class="col-md-3">{.fullUrl}</td>
                 <td class="col-md-3">{@baseCode code="{.levelId}" base="menuLevel"/}</td>

@@ -1,4 +1,5 @@
 var auth = require('../../lib/auth');
+var menuHelper = require('../../lib/menuHelper');
 var Role = require('../../models/system/Role');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
@@ -94,7 +95,22 @@ module.exports = function(app) {
 			});
 		});
 	});
-	app.get('/system/rolses/:id/addMenus', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
-		res.render('system/menus/menuTree');
+	app.get('/system/roles/:id/addMenus', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		var model = {};
+		var menuTree = menuHelper.menuTree;
+		for (var i = 0, l = menuTree.length; i < l; i ++) {
+			var menuInfo = menuTree[i];
+			console.log('一级：%s', menuInfo.menu.name);
+			for (var i1 = 0, l1 = menuInfo.subs.length; i1 < l1; i1 ++) {
+				var mi = menuInfo.subs[i1];
+				console.log('二级：%s', mi.menu.name);
+				for (var i2 = 0, l2 = mi.subs.length; i2 < l2; i2 ++) {
+					var mi1 = mi.subs[i2];
+					console.log('三级：%s', mi1.menu.name);
+				}
+			}
+		}
+		model.title = '分配用户菜单';
+		res.render('system/menus/menuTree', model);
 	});
 };

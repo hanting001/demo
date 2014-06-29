@@ -49,7 +49,7 @@
                             <div class="btn-group btn-group-sm">
                                 <a class="btn btn-default" data-toggle="tooltip"  value="{.id}" data-placement="top" name="editBtn" title="编辑" href="#"><i class="icon-edit icon-large"></i></a>
                                 <a class="btn btn-default" href="#" value="{.id}" data-toggle="tooltip" data-placement="top" name="deleteBtn" title="删除"><i class="icon-remove icon-large"></i></a>
-                                <a class="btn btn-default" href="/system/rolses/{.id}/addMenus" data-toggle="tooltip" data-placement="top" title="添加权限"><i class="icon-ok icon-large"></i></a>
+                                <a class="btn btn-default" href="/system/roles/{.id}/addMenus" data-toggle="tooltip" data-placement="top" title="添加权限"><i class="icon-ok icon-large"></i></a>
                             </div>
                         </td>
                     </tr>

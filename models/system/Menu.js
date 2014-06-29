@@ -7,7 +7,8 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 var Error = mongoose.Error;
 var menuSchema = new mongoose.Schema({
 	url				:	{type: String, required: true },
-	fullUrl			:	{type: String, unique: true, required: true },
+	fullUrl			:	{type: String, unique: true},
+	parentUrl		: 	{type: String, required: true},
 	name			:	{type: String, required: true },
 	//parent			:	{type : String, required : true},/* 直接上级菜单 */
 	//subs			: 	[String],/* 直接下级机构菜单 */
@@ -23,6 +24,13 @@ menuSchema.plugin(updatedTimestamp);
 //添加唯一字段校验
 menuSchema.plugin(uniqueValidator, { message: '出错拉, {PATH}不能同已有值重复' });
 
+menuSchema.virtual('subs.count').get(function() {
+	if ((this.rgt - this.lft - 1) > 0) {
+		return (this.rgt - this.lft - 1) / 2;
+	}
+	return 0;
+});
+
 //添加自定义校验
 menuSchema.pre('save', function (next) {
 	var errMsg = {};
@@ -31,9 +39,8 @@ menuSchema.pre('save', function (next) {
 	if (self.url.indexOf('/') != 0) {
 		self.url = '/' + self.url;
 	}
-	if (self.fullUrl.indexOf('/') != 0) {
-		self.fullUrl = '/' + self.fullUrl;
-	}
+	self.fullUrl = self.parentUrl + self.url;
+	
 	if (Object.keys(errMsg).length > 0) {
 		var err = new Error(JSON.stringify(errMsg));
 		next(err);

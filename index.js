@@ -65,10 +65,10 @@ var numCPUs = os.cpus().length;
 	        if (err) {
 	            console.error(err.stack);
 	        }
-	        global.socketio = require('socket.io').listen(server);
-	    	var SIO = require('./lib/sio');
-	    	var sio = SIO.createNew();
-	    	sio.init(global.socketio);
+	        //global.socketio = require('socket.io').listen(server);
+	    	//var SIO = require('./lib/sio');
+	    	//var sio = SIO.createNew();
+	    	//sio.init(global.socketio);
 	    });   
 	}
 //}
