@@ -234,4 +234,44 @@ module.exports = function(app) {
 			res.redirect('/system/menus?parentId=' + menu.parentId);
 		});
 	});
+
+	app.get('/system/menus/:id/delete', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		var id = req.params.id;
+		Menu.findById(new ObjectId(id), function(err, menu) {
+			if (err) {
+				return next(err);
+			}
+			Menu.findById(menu.parentId, function(err, parent) {
+				if (err) {
+					return err;
+				}
+				Menu.remove({
+					lft: {
+						$gt: menu.lft
+					},
+					rgt: {
+						$lt: menu.rgt
+					},
+					parentId: {
+						$ne: menu.parentId
+					}
+				}, function(err) {
+					if (err) {
+						return next(err);
+					}
+					menu.remove(function(err, menu) {
+						if (err) {
+							return next(err);
+						}
+						res.json({
+							message: 'OK'
+						});
+						Menu.rebuildTree(parent, parent.lft, function() {
+							console.log('rebuild tree for % sucess', parent.url);
+						});
+					});
+				});
+			});
+		});
+	});
 };

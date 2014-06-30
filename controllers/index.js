@@ -25,6 +25,7 @@ module.exports = function (app) {
 	
 	app.get('/logout', auth.isAuthenticated(), function(req, res) {
 		req.logout();
+		req.session.roleMenuTree = null;
 		res.redirect('/');
 	});
 };
