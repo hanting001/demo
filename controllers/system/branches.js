@@ -5,6 +5,9 @@ var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
 var auth = require('../../lib/auth');
 module.exports = function(app) {
+	app.get('/system', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		res.redirect('/system/branches');
+	});
 	app.get('/system/branches', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var page = 1;
 		if (req.query.page) {

@@ -1,9 +1,18 @@
-<div class="tree well">
+<div class="tree">
     <ul>
         {#menuTree}
         {?.subs}
             <li>
-                <input type="checkbox" value="{.menu.id}"><span><i class="glyphicon glyphicon-folder-open"></i>{.menu.name}</span>
+                {?select}
+                    {?.selected}
+                    <input type="checkbox" value="{.menu.id}" checked><span class="active">
+                    {:else}
+                    <input type="checkbox" value="{.menu.id}"><span>
+                    {/.selected}
+                    <i class="glyphicon glyphicon-folder-open"></i>{.menu.name}</span>
+                {:else}
+                    <span><i class="glyphicon glyphicon-folder-open"></i>{.menu.name}</span>
+                {/select}
                 <ul>
                 {#.subs}
                     {?.subs}
@@ -21,8 +30,19 @@
                 {/.subs}
                 </ul>
             </li> 
-        {:else}   
-            <li><span><i class="glyphicon glyphicon-leaf"></i>{.menu.name}</span></li>    
+        {:else} 
+            <li>  
+            {?select}
+                {?.selected}
+                <input type="checkbox" value="{.menu.id}" checked><span class="active">
+                {:else}  
+                <input type="checkbox" value="{.menu.id}"><span>
+                {/.selected}
+                <i class="glyphicon glyphicon-leaf"></i>{.menu.name}</span>
+            {:else}
+                <span><i class="glyphicon glyphicon-leaf"></i>{.menu.name}</span>
+            {/select}
+            </li>
         {/.subs}
         {/menuTree}
     </ul>

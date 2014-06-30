@@ -1,11 +1,11 @@
 var mongoose = require('mongoose');
 var updatedTimestamp = require('mongoose-updated_at');
 var uniqueValidator = require('mongoose-unique-validator');
-
+var ObjectId = mongoose.Schema.Types.ObjectId;
 var roleSchema = new mongoose.Schema({
 	code		: {type : String, unique : true, required : true},
 	name		: {type : String, required : true},
-	menus		: [String],
+	menus		: [ObjectId],
 	isValid		: {type:String, default:'1'},
 	createdAt	: {type: Date, default: Date.now }
 });

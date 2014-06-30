@@ -36,10 +36,15 @@ menuSchema.pre('save', function (next) {
 	var errMsg = {};
 	var self = this;
 	var reg = /(^\/)(\w|\d)+$/;
+	self.url = self.url.replace(/ /g, '');
 	if (self.url.indexOf('/') != 0) {
 		self.url = '/' + self.url;
 	}
-	self.fullUrl = self.parentUrl + self.url;
+	if (self.parentUrl != '/') {
+		self.fullUrl = self.parentUrl + self.url;
+	} else {
+		self.fullUrl = self.url;
+	}
 	
 	if (Object.keys(errMsg).length > 0) {
 		var err = new Error(JSON.stringify(errMsg));

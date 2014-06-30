@@ -10,12 +10,9 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav menu">
-				<li class="active"><a href="/system">系统管理</a></li>
-				<li><a href="/tools">工具</a></li>
-                <li><a href="/plugins">插件</a></li>
-                <li><a href="/upload">上载</a></li>
-                <li><a href="/books">图书服务</a></li>
-                <li><a href="//10.100.133.101:8082/wiki/en/%E9%A6%96%E9%A1%B5">知识库</a></li>
+                {#roleMenuTree}
+                    <li class="active"><a href="{.menu.fullUrl}">{.menu.name}</a></li>
+                {/roleMenuTree}
             </ul>
             <ui class="nav navbar-nav navbar-right">
                 {?user}
@@ -30,13 +27,35 @@
     </div>                
 </div>
 <ul class="nav nav-pills menu">
-  	<li><a href="/system/branches">机构管理</a></li>
-  	<li><a href="/system/menus">菜单管理</a></li>
-	<li class="dropdown">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown">权限管理<b class="caret"></b></a>
-		<ul class="dropdown-menu" role="menu" >
-			<li><a href="/system/users" tabindex="-1" >用户管理</a></li>
-			<li><a href="/system/roles" tabindex="-1" >角色管理</a></li>
-		</ul>
-	</li>
+    {?subIndex}
+        {#roleMenuTree[subIndex].subs}
+            {?.subs}
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{.menu.name}<b class="caret"></b></a>
+                <ul class="dropdown-menu" role="menu" >
+                    {#.subs}
+                        <li><a href="{.menu.fullUrl}" tabindex="-1" >{.menu.name}</a></li>
+                    {/.subs}
+                </ul> 
+            </li>   
+            {:else}
+                <li><a href="{.menu.fullUrl}">{.menu.name}</a></li>
+            {/.subs}
+        {/roleMenuTree[subIndex].subs} 
+    {:else}
+        {#roleMenuTree[0].subs}
+            {?.subs}
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{.menu.name}<b class="caret"></b></a>
+                <ul class="dropdown-menu" role="menu" >
+                    {#.subs}
+                        <li><a href="{.menu.fullUrl}" tabindex="-1" >{.menu.name}</a></li>
+                    {/.subs}
+                </ul> 
+            </li>   
+            {:else}
+                <li><a href="{.menu.fullUrl}">{.menu.name}</a></li>
+            {/.subs}
+        {/roleMenuTree[0].subs}   
+    {/subIndex}
 </ul>
