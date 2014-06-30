@@ -22,15 +22,17 @@
     "moment": "^2.6.0",
     "mongodb": "^1.4.5",
     "mongoose": "^3.8.9",
+    "mongoose-nested-set": "0.0.5",
     "mongoose-paginate": "^2.2.0",
+    "mongoose-unique-validator": "^0.3.0",
     "mongoose-updated_at": "0.0.2",
     "nconf": "^0.6.8",
+    "node-promise": "^0.5.10",
     "passport": "^0.2.0",
     "passport-local": "^1.0.0",
     "socket.io": "^0.9.16",
     "validator": "^3.16.0",
-    "mongoose-unique-validator": "^0.3.0",
-    "node-promise": "^0.5.10"
+    "watch": "*"
   },
   "devDependencies": {
     "mocha": "^1.17.0",

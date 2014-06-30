@@ -1,31 +1,75 @@
-/**
- * Created by lmarkus on 1/5/14.
- */
+function isString(arg) {
+	  return typeof arg === 'string';
+}
 
-// Load the MomentJS Library
-var moment = require('moment');
-// Load the project's configuration
-var baseCode = require('./baseCode');
-var util = require('util');
-//We require that dustjs, and the dustjs-helpers have been loaded. The way we invoke this function will ensure that.
-(function (dust) {
+var baseCode = {
+	_validBase : [{"key":"1", "value":"有效"}, {"key":"0", "value":"无效"}],
+	valid : function (key) {
+		if (key) {
+			var returnValue = '未定义';
+			for (var i = 0, l = this._validBase.length; i < l; i++) {
+				var o = this._validBase[i];
+				if (o.key === key) {
+					return o.value;
+				}
+			}
+			return returnValue;
+		}
+		return this._validBase;
+	}
+}; 
 
-    //Create a helper called 'formatDate'
-    dust.helpers.baseCode = function (chunk, context, bodies, params) {
+var util = {
+	formatRegExp : /%[sdj%]/g,
 
-        //Retrieve the fallback language from the configuration
-        //var fallbackLang = nconf.get('i18n').fallback || 'en-US';
+	format : function(f) {
+		var formatRegExp = this.formatRegExp;
+		if (!isString(f)) {
+			var objects = [];
+			for (var i = 0; i < arguments.length; i++) {
+				objects.push(inspect(arguments[i]));
+			}
+			return objects.join(' ');
+		}
 
-        //Dig the current language out of the context, or go to the fallback.
-//        var lang = (context && context.stack && context.stack.head && context.stack.head.context && context.stack.head.context.locality) 
-//            || (context.stack && context.stack.tail && context.stack.tail.head.context && context.stack.tail.head.context.locality)
-//            || (context.stack && context.stack.tail && context.stack.tail.tail && context.stack.tail.tail.head.context && context.stack.tail.tail.head.context.locality)
-//            || fallbackLang;
+		var i = 1;
+		var args = arguments;
+		var len = args.length;
+		var str = String(f).replace(formatRegExp, function(x) {
+			if (x === '%%')
+				return '%';
+			if (i >= len)
+				return x;
+			switch (x) {
+			case '%s':
+				return String(args[i++]);
+			case '%d':
+				return Number(args[i++]);
+			case '%j':
+				try {
+					return JSON.stringify(args[i++]);
+				} catch (_) {
+					return '[Circular]';
+				}
+			default:
+				return x;
+			}
+		});
+		for (var x = args[i]; i < len; x = args[++i]) {
+			if (isNull(x) || !isObject(x)) {
+				str += ' ' + x;
+			} else {
+				str += ' ' + inspect(x);
+			}
+		}
+		return str;
+	}
+};
 
-        //Retrieve the date value from the template parameters.
+(function() {
+	dust.helpers.isValidBaseCode = function (chunk, context, bodies, params) {
         var code = dust.helpers.tap(params.code, chunk, context);
         var base = dust.helpers.tap(params.base, chunk, context);
-        //Parse the date object using MomentJS
         var output = '';
         if (code) {
         	output = baseCode[base](code);
@@ -69,5 +113,4 @@ var util = require('util');
         }
         return chunk.write(output);
     };
-
-})(typeof exports !== 'undefined' ? module.exports = require('dustjs-helpers') : dust);
+})();

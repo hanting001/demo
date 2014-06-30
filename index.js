@@ -17,7 +17,7 @@ var numCPUs = os.cpus().length;
 	    passport = require('passport'),
 	    auth = require('./lib/auth'),
 	    flash = require('connect-flash'),
-	    User = require('./models/user/User'),
+	    User = require('./models/system/User'),
 	    errorMessages = require('./lib/middlewear/errorMessages'),
 	    _app = {};
 	require('./lib/helper-dateFormat');
@@ -65,10 +65,10 @@ var numCPUs = os.cpus().length;
 	        if (err) {
 	            console.error(err.stack);
 	        }
-	        global.socketio = require('socket.io').listen(server);
-	    	var SIO = require('./lib/sio');
-	    	var sio = SIO.createNew();
-	    	sio.init(global.socketio);
+	        //global.socketio = require('socket.io').listen(server);
+	    	//var SIO = require('./lib/sio');
+	    	//var sio = SIO.createNew();
+	    	//sio.init(global.socketio);
 	    });   
 	}
 //}

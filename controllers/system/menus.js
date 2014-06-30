@@ -1,4 +1,4 @@
-var Menu = require('../../models/user/Menu');
+var Menu = require('../../models/system/Menu');
 var baseCode = require('../../lib/baseCode');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
@@ -9,11 +9,13 @@ module.exports = function(app) {
 		if (req.query.page) {
 			page = req.query.page;
 		}
-		var parent = '/';
-		if (req.query.parent) {
-			parent = req.query.parent;
+		var condition = {url:{$ne:'/'}};
+		if (req.query.parentId) {
+			condition.parentId = new ObjectId(req.query.parentId);
+		} else {
+			condition.levelId = '1';
 		}
-		Menu.paginate({parent:parent}, page, 10, function(err, pageCount, menus) {
+		Menu.paginate(condition, page, 10, function(err, pageCount, menus) {
 			if (err) {
 				return next(err);
 			}
@@ -32,29 +34,48 @@ module.exports = function(app) {
 	app.get('/system/menus/add', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var model = {};
 		model.menu = {levelId : '1'};
+		model.title = '新增一级菜单';
 		model.parent = {url : '/', fullUrl: '/'};
 		res.render('system/menus/add', model);		
 	});
 	app.post('/system/menus/add', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		//找到根菜单
 		var menu = req.body.menu;
-		var parent = req.body.parent;
-		var menuModel = new Menu(menu);
-		menuModel.parent = parent.url;
-		menuModel.fullUrl = menuModel.url
-		console.log(menuModel);
-		menuModel.save(function(err){
+		Menu.findOne({url:'/'}, function(err, root){
 			if (err) {
-				var model = {
-						menu : menu,
-						parent : parent
-				};
-				res.locals.err = err;
-				res.locals.view = 'system/menus/add';
-				res.locals.model = model;
-				return next();			
+				return next(err);
 			}
-			req.flash('showMessage', '创建成功');
-			res.redirect('/system/menus');
+			if (!root) {
+				res.locals.showErrorMessage = ['菜单的根节点还没有建立，请联系管理员！'];
+				var model = {
+					menu : menu,
+					parent : {url : '/', fullUrl: '/'}
+				};
+				return res.render('system/menus/add', model);				
+			}
+			var parent = root;
+			var menuModel = new Menu(menu);
+			menuModel.parentId = parent.id;
+			menuModel.parentUrl = parent.url;
+			menuModel.fullUrl = menuModel.url
+			menuModel.save(function(err){
+				if (err) {
+					var model = {
+							menu : menu,
+							parent : parent
+					};
+					res.locals.err = err;
+					res.locals.view = 'system/menus/add';
+					res.locals.model = model;
+					return next();			
+				}
+				req.flash('showMessage', '创建成功');
+				res.redirect('/system/menus');
+				//rebuild菜单树结构，在返回页面后执行
+				Menu.rebuildTree(root, 1, function(){
+					console.log('rebuild tree for % sucess', root.url);
+				});
+			});
 		});
 	});
 	
@@ -78,8 +99,8 @@ module.exports = function(app) {
 		var parentId = req.params.parentId;
 		Menu.findById(new Object(parentId), function(err, parent){
 			var menuInput = req.body.menu;
-			menuInput.parent = parent.fullUrl;
-			menuInput.fullUrl = parent.fullUrl + menuInput.url;
+			menuInput.parentId = parent.id;
+			menuInput.parentUrl = parent.fullUrl;
 			var menuModel = new Menu(menuInput);
 			menuModel.save(function(err, menu){
 				if(err) {
@@ -92,18 +113,11 @@ module.exports = function(app) {
 					res.locals.model = model;
 					return next();//调用下一个错误处理middlewear
 				} 
-				Menu.findByIdAndUpdate(new ObjectId(parentId), {$push:{subs:menu.url}}, function(err){
-					if (err){
-						//如果此步出错，将已经新增的菜单回滚
-						menu.remove(function(err){
-							if (err) {
-								return next(err);
-							}
-						});
-						return next(err);
-					}
-					req.flash('showMessage', '创建成功');
-					res.redirect('/system/menus/'+parentId +'/down');
+				req.flash('showMessage', '创建成功');
+				//res.redirect('/system/menus/'+parentId +'/down');	
+				res.redirect('/system/menus?parentId=' + parent.parentId);			
+				Menu.rebuildTree(parent, parent.lft, function(){
+					console.log('rebuild tree for % sucess', parent.url);
 				});
 			});				
 		});			
@@ -117,13 +131,14 @@ module.exports = function(app) {
 			if (err) {
 				return next(err);
 			}
-			Menu.findOne({url:menu.parent}, 'fullUrl', function(err, parent){
+			Menu.findById(menu.parentId, 'fullUrl', function(err, parent){
 				if(err) {
 					return next(err);
 				}
 				if (!parent) {
 					parent = {url:'/'};
 				}
+				console.log(parent);
 				var model = {
 					title : '编辑菜单信息',
 					isAdmin : true,
@@ -174,8 +189,14 @@ module.exports = function(app) {
 			if (err){
 				return next(err)
 			}
-			var condition = {};
-			condition.parent = menu.fullUrl;
+			var condition = {
+				lft: {
+					$gt: menu.lft
+				},
+				rgt: {
+					$lt: menu.rgt
+				}
+			};
 			condition.levelId = (new Number(menu.levelId) + 1).toString();
 			Menu.paginate(condition, page, 10, function(err, pageCount, menus){
 				var model = {
@@ -190,39 +211,28 @@ module.exports = function(app) {
 			}, { sortBy : { sortKey : 1 } });								
 		});
 	});
+
 	app.get('/system/menus/:id/up', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var page = 1;
 		if (req.query.page) {
 			page = req.query.page;
 		}
 		var id = req.params.id;
-		Menu.findById(new ObjectId(id), function(err, menu){
-			if (err){
+		Menu.findById(new ObjectId(id), function(err, menu) {
+			if (err) {
 				return next(err)
-			}	
-			var condition = {};
-			condition.fullUrl = menu.parent;
-			Menu.paginate(condition, page, 10, function(err, pageCount, menus){
-				var model = {
-						title : '菜单列表',
-						isAdmin : true,
-						menus : menus,
-						page : page,
-						pageCount : pageCount,
-						showMessage : req.flash('showMessage')
-					};			
-				res.render('system/menus/index', model);
-			}, { sortBy : { sortKey : 1 } });								
+			}
+			res.redirect('/system/menus?parentId=' + menu.parentId);
 		});
-	});	
+	});
 	
 	app.get('/system/menus/return', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next){
 		var id = req.query.id;
-		Menu.findById(new ObjectId(id), 'parent', function(err, branch) {
+		Menu.findById(new ObjectId(id), 'parentId', function(err, menu) {
 			if (err) {
 				return next(err);
 			}
-			res.redirect('/system/menus?parent=' + branch.parent);
+			res.redirect('/system/menus?parentId=' + menu.parentId);
 		});
 	});
 };

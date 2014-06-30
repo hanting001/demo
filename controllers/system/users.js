@@ -1,6 +1,6 @@
 var passport = require('passport');
 var auth = require('../../lib/auth');
-var User = require('../../models/user/User');
+var User = require('../../models/system/User');
 module.exports = function (app) {
 	app.get('/system/users/signup', function(req, res) {
 		// render the page and pass in any flash data if it exists
