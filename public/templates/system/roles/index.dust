@@ -43,13 +43,13 @@
                     {#roles}
                     <tr>
                         <td class="col-md-3">{.name}</td>
-                        <td class="col-md-3">{.code}</td>
+                        <td class="col-md-2">{.code}</td>
                         <td class="col-md-3">{@baseCode code="{.isValid}" base="valid"/}</td>
                         <td class="col-md-3">
-                            <div class="btn-group btn-group-sm">
-                                <a class="btn btn-default" data-toggle="tooltip"  value="{.id}" data-placement="top" name="editBtn" title="编辑" href="#"><i class="icon-edit icon-large"></i></a>
+                            <div class="btn-group btn-group-md">
+                                <a class="btn btn-default" data-toggle="tooltip"  value="{.id}" data-placement="left" name="editBtn" title="编辑" href="#"><i class="icon-edit icon-large"></i></a>
                                 <a class="btn btn-default" href="#" value="{.id}" data-toggle="tooltip" data-placement="top" name="deleteBtn" title="删除"><i class="icon-remove icon-large"></i></a>
-                                <a class="btn btn-default" href="/system/auth/roles/{.id}/addMenus" data-toggle="tooltip" data-placement="top" title="分配菜单"><i class="icon-ok icon-large"></i></a>
+                                <a class="btn btn-default" href="/system/auth/roles/{.id}/addMenus" data-toggle="tooltip" data-placement="right" title="分配菜单"><i class="icon-ok icon-large"></i></a>
                             </div>
                         </td>
                     </tr>

@@ -175,6 +175,7 @@ pre code {
         <script src="/js/additional-methods.min.js"></script>
         <script src="/js/bootstrap-tree.js"></script>
         <script src="/js/bootbox.min.js"></script>
+        
         <script type="text/javascript">
             $(function(){
                var path = window.location.pathname;

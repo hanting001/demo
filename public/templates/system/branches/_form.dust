@@ -35,7 +35,7 @@
 		{:else}
 		<label for="companyAbbr" class="col-sm-1 control-label">上级机构<span class="required-indicator">*</span></label>
 		<div class="col-sm-2">
-			<p class="form-control">{parent.abbrName}</p>
+			<p class="form-control">{parent.code}</p>
 			<input name="parent[abbr]" type="hidden" value="{parent.abbrName}">
 			<input name="parent[code]" type="hidden" value="{parent.code}">
 		</div>

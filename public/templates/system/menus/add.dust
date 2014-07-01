@@ -18,5 +18,15 @@
         },
         focusCleanup:true
 	});
+    $.get("/address/provinces" + new Date().getTime(), function(data, status, xhr) {
+        if (status === 'success') {
+            alert('ok');
+        } else {
+            var some_html = '<br><div class="alert alert-danger fade in">';
+            some_html += '<label>调用后台出错：' + xhr.statusText + '</label>';
+            some_html += '</div>';
+            bootbox.alert(some_html);           
+        }
+    });	
 </script> 
 {/script}

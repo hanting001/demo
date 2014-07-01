@@ -33,6 +33,16 @@
 			</div>
 		</div>
 		<div class="form-group">
+			<label for="menuName" class="col-sm-1 control-label">菜单名<span class="required-indicator">*</span></label>
+				<div class="col-sm-5">
+					<select id="provinceDiv" class="form-control" onchange="loadCity()"><option  value='0'>请选择</option></select>
+					<select id="cityDiv" class="form-control" onchange="loadCounty()"><option value='0'>请选择</option></select>
+					<select id="countyDiv" class="form-control" onchange="loadTown()"><option value='0'>请选择</option></select>
+					<select id="townDiv" class="form-control" onchange="fillTownName()"><option>请选择</option value='0'></select>
+					<span class="error-msg" id="areaNote"></span>
+				</div>	
+		</div>
+		<div class="form-group">
 			<div class="col-sm-12">
 				<div class="btn-toolbar" role="toolbar">
 					<div class="btn-group">
