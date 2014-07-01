@@ -18,9 +18,16 @@
         },
         focusCleanup:true
 	});
-    $.get("/address/provinces" + new Date().getTime(), function(data, status, xhr) {
+    $.get("/address/provinces?" + new Date().getTime(), function(data, status, xhr) {
         if (status === 'success') {
-            alert('ok');
+            var provinces = data.provinces;
+            var options = '<option  value="0">请选择</option>';
+            for (var i = 0, l = provinces.length; i < l; i ++) {
+                for (var o in provinces[i]) {
+                    options += '<option  value="' + o + '">' + provinces[i][o] + '</option>';
+                }
+            }
+            $('#provinceDiv').html(options);
         } else {
             var some_html = '<br><div class="alert alert-danger fade in">';
             some_html += '<label>调用后台出错：' + xhr.statusText + '</label>';
