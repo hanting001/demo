@@ -1,5 +1,4 @@
 var Menu = require('../../models/system/Menu');
-var baseCode = require('../../lib/baseCode');
 var menuHelper = require('../../lib/menuHelper');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;

@@ -19,7 +19,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{user.name}<b class="caret"></b></a>
                         <ul class="dropdown-menu" role="menu" >
-                            <li><a href="/userInfo/add" tabindex="-1" >维护基本信息</a></li>
+                            <li><a href="/user/base" tabindex="-1" >维护基本信息</a></li>
                             <li><a href="#" tabindex="-1" >帮助中心</a></li>
                             <li><a href="/logout">登出</a></li>
                         </ul>
@@ -34,20 +34,22 @@
 </div>
 <ul class="nav nav-pills menu">
     {?subIndex}
-        {#roleMenuTree[subIndex].subs}
-            {?.subs}
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{.menu.name}<b class="caret"></b></a>
-                <ul class="dropdown-menu" role="menu" >
-                    {#.subs}
-                        <li><a href="{.menu.fullUrl}" tabindex="-1" >{.menu.name}</a></li>
-                    {/.subs}
-                </ul> 
-            </li>   
-            {:else}
-                <li><a href="{.menu.fullUrl}">{.menu.name}</a></li>
-            {/.subs}
-        {/roleMenuTree[subIndex].subs} 
+        {@gt key=subIndex value="-1"}
+            {#roleMenuTree[subIndex].subs}
+                {?.subs}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{.menu.name}<b class="caret"></b></a>
+                    <ul class="dropdown-menu" role="menu" >
+                        {#.subs}
+                            <li><a href="{.menu.fullUrl}" tabindex="-1" >{.menu.name}</a></li>
+                        {/.subs}
+                    </ul> 
+                </li>   
+                {:else}
+                    <li><a href="{.menu.fullUrl}">{.menu.name}</a></li>
+                {/.subs}
+            {/roleMenuTree[subIndex].subs} 
+        {/gt}
     {:else}
         {#roleMenuTree[0].subs}
             {?.subs}

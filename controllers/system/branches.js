@@ -52,6 +52,7 @@ module.exports = function(app) {
 				res.locals.err = err;
 				res.locals.view = 'system/branches/add';
 				res.locals.model = model;
+				console.log(err);
 				next();//调用下一个错误处理middlewear
 			} else {
 				req.flash('showMessage', '创建成功');
@@ -152,6 +153,7 @@ module.exports = function(app) {
 						res.locals.err = err;
 						res.locals.view = 'system/branches/edit';
 						res.locals.model = model;
+						console.log(err);
 						next();//调用下一个错误处理middlewear
 					} else {
 						req.flash('showMessage', '修改成功');
