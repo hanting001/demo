@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var updatedTimestamp = require('mongoose-updated_at');
 var uniqueValidator = require('mongoose-unique-validator');
 var validator = require('../lib/validator');
+var Error = mongoose.Error;
 var userInfoSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -16,7 +17,7 @@ var userInfoSchema = new mongoose.Schema({
     address: [{
         type: {
             type: String,
-            default: '1'
+            default: '默认'
         },
         value: String
     }],

@@ -42,6 +42,7 @@
 
     $('#provinceSlt').change(function() {
         var selected = $(this).val();
+        var text = $('#provinceSlt option:selected').text();
         $.get("/address/citys?province=" + selected + '&' + new Date().getTime(), function(data, status, xhr) {
             if (status === 'success') {
                 var citys = data.citys;
@@ -58,6 +59,9 @@
                 $('#citySlt').html(options);
                 $('#countySlt').html('<option  value="0">请选择</option>');
                 $('#townSlt').html('<option  value="0">请选择</option>');
+                if (selected != 0) {
+                    $('[name="userInfo[province]"]').val(text);
+                }
             } else {
                 var some_html = '<br><div class="alert alert-danger fade in">';
                 some_html += '<label>调用后台出错：' + xhr.statusText + '</label>';
@@ -68,6 +72,7 @@
     });
     $('#citySlt').change(function() {
         var selected = $(this).val();
+        var text = $('#citySlt option:selected').text();
         $.get("/address/countys?city=" + selected + '&' + new Date().getTime(), function(data, status, xhr) {
             if (status === 'success') {
                 var countys = data.countys;
@@ -83,6 +88,9 @@
                 }
                 $('#countySlt').html(options);
                 $('#townSlt').html('<option  value="0">请选择</option>');
+                if (selected != 0) {
+                    $('[name="userInfo[city]"]').val(text);
+                }
             } else {
                 var some_html = '<br><div class="alert alert-danger fade in">';
                 some_html += '<label>调用后台出错：' + xhr.statusText + '</label>';
@@ -93,6 +101,7 @@
     });
     $('#countySlt').change(function() {
         var selected = $(this).val();
+        var text = $('#countySlt option:selected').text();
         $.get("/address/towns?county=" + selected + '&' + new Date().getTime(), function(data, status, xhr) {
             if (status === 'success') {
                 var towns = data.towns;
@@ -107,6 +116,9 @@
                     }
                 }
                 $('#townSlt').html(options);
+                if (selected != 0) {
+                    $('[name="userInfo[county]"]').val(text);
+                }
             } else {
                 var some_html = '<br><div class="alert alert-danger fade in">';
                 some_html += '<label>调用后台出错：' + xhr.statusText + '</label>';
@@ -114,6 +126,13 @@
                 bootbox.alert(some_html);
             }
         });
+    });
+    $('#townSlt').change(function() {
+        var selected = $(this).val();
+        var text = $('#townSlt option:selected').text(); 
+        if (selected != 0) {
+            $('[name="userInfo[town]"]').val(text);
+        }               
     });
 </script> 
 {/script}

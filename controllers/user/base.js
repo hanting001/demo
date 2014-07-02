@@ -12,14 +12,35 @@ module.exports = function(app) {
         var model = {
             showMessage: req.flash('showMessage')
         };
-        model.user = user;
-        model.title = '维护用户信息';
-        res.render('userInfo/add', model);
+        UserInfo.findOne({
+            name: user.name
+        }, function(err, userInfo) {
+            if (err) {
+                return next(err);
+            }
+            var user = {};
+            for (var o in userInfo) {
+                user[o] = userInfo[o];
+            }
+            for (var i = 0, l = userInfo.address.length; i < l; i++) {
+                if (userInfo.address[i].type === '默认') {
+                    console.log(userInfo.address[i].value);
+                    user.address = userInfo.address[i].value;
+                    break;
+                }
+            }
+            model.userInfo = user;
+            model.title = '维护用户信息';
+            console.log(model);
+            res.render('userInfo/add', model);
+        });
+
     });
 
     app.post('/user/base', auth.isAuthenticated('ROLE_USER'), function(req, res, next) {
         var user = req.body.user;
-        var userInfo = req.body.userInfo;
+        var userInfoInput = req.body.userInfo;
+        console.log(userInfoInput);
         User.findOneAndUpdate({
             name: user.name
         }, {
@@ -30,13 +51,20 @@ module.exports = function(app) {
             if (err) {
                 return next(err);
             }
-            var userInfoModel = new UserInfo(userInfo);
-            userInfoModel.name = user.name;
+            var address = userInfoInput.province + userInfoInput.city + userInfoInput.county + userInfoInput.town;
+            address = address + ' ' + userInfoInput.address;
+            userInfoInput.address = [{
+                value: address
+            }];
+            userInfoInput.name = user.name;
+
+            var userInfoModel = new UserInfo(userInfoInput);
+            console.log(userInfoModel);
             userInfoModel.save(function(err, userInfo) {
                 if (err) {
                     var model = {
                         user: user,
-                        userInfo: userInfo
+                        userInfo: userInfoInput
                     };
                     res.locals.err = err;
                     res.locals.view = 'userInfo/add';

@@ -55,7 +55,7 @@
                     {/select}
                 </td>
                 <td class="col-md-3">{.fullUrl}</td>
-                <td class="col-md-3">{@baseCode code="{.levelId}" base="menuLevel"/}</td>
+                <td class="col-md-3">{@baseCode code="" base="menuLevel"/}</td>
                 <td class="col-md-3">
                     {?isAdmin}
                     <div class="btn-group btn-group-md">
