@@ -8,7 +8,7 @@ module.exports = function (app) {
 			title : '注册用户',
 			message: req.flash('error') });
 	});
-	
+
 	app.post('/system/auth/users/signup', passport.authenticate('local-signup', {
 		successRedirect : '/', // redirect to the secure profile section
 		failureRedirect : '/users', // redirect back to the signup page if there is an error
@@ -34,4 +34,5 @@ module.exports = function (app) {
 			res.render('system/users/index', model);
 		}, { sortBy : { createdAt : -1 } });
 	});
+
 };

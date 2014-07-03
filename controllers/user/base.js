@@ -1,13 +1,12 @@
 var User = require('../../models/system/User');
 var UserInfo = require('../../models/UserInfo');
-var menuHelper = require('../../lib/menuHelper');
 var auth = require('../../lib/auth');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
 
 module.exports = function(app) {
 
-    app.get('/userbase',  function(req, res, next) {
+    app.get('/user/baseInfo',  function(req, res, next) {
         var user = req.user;
         var model = {
             showMessage: req.flash('showMessage')
@@ -25,7 +24,6 @@ module.exports = function(app) {
                 }
                 for (var i = 0, l = userInfo.address.length; i < l; i++) {
                     if (userInfo.address[i].type === '默认') {
-                        console.log(userInfo.address[i].value);
                         user.address = userInfo.address[i].value;
                         break;
                     }
@@ -33,13 +31,11 @@ module.exports = function(app) {
                 model.userInfo = user;
             }
             model.title = '维护用户信息';
-            console.log(model);
-            res.render('userInfo/add', model);
+            res.render('user/add', model);
         });
-
     });
 
-    app.post('/userbase',  function(req, res, next) {
+    app.post('/user/baseInfo',  function(req, res, next) {
         var user = req.body.user;
         var userInfoInput = req.body.userInfo;
         User.findOneAndUpdate({
@@ -58,13 +54,14 @@ module.exports = function(app) {
                 var address = userInfoInput.province + userInfoInput.city + userInfoInput.county + userInfoInput.town;
                 address = address + ' ' + userInfoInput.address;
                 userInfoInput.address = [{
-                    value: address
+                    value: address.trim()
                 }];
                 userInfoInput.name = user.name;
-
+                console.log(userInfoInput);
                 for (var o in userInfoInput) {
-                    userInfoModel[0] = userInfoInput[0];
+                    userInfoModel[o] = userInfoInput[o];
                 }
+                console.log(userInfoModel);
                 userInfoModel.save(function(err, userInfo) {
                     if (err) {
                         var model = {
@@ -76,11 +73,11 @@ module.exports = function(app) {
                         res.locals.model = model;
                         return next();
                     }
-                    req.flash('showMessage', '创建成功');
-                    res.redirect('/userbase');
+                    req.flash('showMessage', '提交成功');
+                    res.redirect('/user/baseInfo');
                 });
             });
         });
   
     });
-}
+};

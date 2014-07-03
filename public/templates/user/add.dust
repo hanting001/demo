@@ -3,7 +3,7 @@
     <div class="panel panel-primary">
       <div class="panel-heading">{title}</div>
       <div class="panel-body">
-            {>"/userInfo/_form" add="true"/}
+            {>"/user/_form" add="true"/}
         </div>
     </div>
 {/content}
@@ -34,7 +34,7 @@
     $("#userInfoForm").validate({
         submitHandler:function(form){
             $(":button").attr("disabled","true");  
-            form.action = '/userbase';
+            form.action = '/user/baseInfo';
             form.submit();
         },
         focusCleanup:true
