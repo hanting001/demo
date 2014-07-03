@@ -34,7 +34,7 @@
     $("#userInfoForm").validate({
         submitHandler:function(form){
             $(":button").attr("disabled","true");  
-            form.action = '/user/base';
+            form.action = '/userbase';
             form.submit();
         },
         focusCleanup:true
@@ -59,6 +59,7 @@
                 $('#citySlt').html(options);
                 $('#countySlt').html('<option  value="0">请选择</option>');
                 $('#townSlt').html('<option  value="0">请选择</option>');
+                $('#userInfoAddress').val('');
                 if (selected != 0) {
                     $('[name="userInfo[province]"]').val(text);
                 }
@@ -88,6 +89,7 @@
                 }
                 $('#countySlt').html(options);
                 $('#townSlt').html('<option  value="0">请选择</option>');
+                $('#userInfoAddress').val('');
                 if (selected != 0) {
                     $('[name="userInfo[city]"]').val(text);
                 }
@@ -116,6 +118,7 @@
                     }
                 }
                 $('#townSlt').html(options);
+                $('#userInfoAddress').val('');
                 if (selected != 0) {
                     $('[name="userInfo[county]"]').val(text);
                 }
@@ -130,6 +133,7 @@
     $('#townSlt').change(function() {
         var selected = $(this).val();
         var text = $('#townSlt option:selected').text(); 
+        $('#userInfoAddress').val('');
         if (selected != 0) {
             $('[name="userInfo[town]"]').val(text);
         }               

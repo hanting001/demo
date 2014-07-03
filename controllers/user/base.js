@@ -7,7 +7,7 @@ var ObjectId = mongoose.Types.ObjectId;
 
 module.exports = function(app) {
 
-    app.get('/user/base', auth.isAuthenticated('ROLE_USER'), function(req, res, next) {
+    app.get('/userbase',  function(req, res, next) {
         var user = req.user;
         var model = {
             showMessage: req.flash('showMessage')
@@ -39,10 +39,9 @@ module.exports = function(app) {
 
     });
 
-    app.post('/user/base', auth.isAuthenticated('ROLE_USER'), function(req, res, next) {
+    app.post('/userbase',  function(req, res, next) {
         var user = req.body.user;
         var userInfoInput = req.body.userInfo;
-        console.log(userInfoInput);
         User.findOneAndUpdate({
             name: user.name
         }, {
@@ -53,31 +52,35 @@ module.exports = function(app) {
             if (err) {
                 return next(err);
             }
-            var address = userInfoInput.province + userInfoInput.city + userInfoInput.county + userInfoInput.town;
-            address = address + ' ' + userInfoInput.address;
-            userInfoInput.address = [{
-                value: address
-            }];
-            userInfoInput.name = user.name;
+            UserInfo.findOne({
+                name: user.name
+            }, function(err, userInfoModel) {
+                var address = userInfoInput.province + userInfoInput.city + userInfoInput.county + userInfoInput.town;
+                address = address + ' ' + userInfoInput.address;
+                userInfoInput.address = [{
+                    value: address
+                }];
+                userInfoInput.name = user.name;
 
-            var userInfoModel = new UserInfo(userInfoInput);
-            console.log(userInfoModel);
-            userInfoModel.save(function(err, userInfo) {
-                if (err) {
-                    var model = {
-                        user: user,
-                        userInfo: userInfoInput
-                    };
-                    res.locals.err = err;
-                    res.locals.view = 'userInfo/add';
-                    res.locals.model = model;
-                    console.log(err);
-                    return next();
+                for (var o in userInfoInput) {
+                    userInfoModel[0] = userInfoInput[0];
                 }
-                console.log('创建成功');
-                req.flash('showMessage', '创建成功');
-                res.redirect('/user/base');
+                userInfoModel.save(function(err, userInfo) {
+                    if (err) {
+                        var model = {
+                            user: user,
+                            userInfo: userInfoInput
+                        };
+                        res.locals.err = err;
+                        res.locals.view = 'userInfo/add';
+                        res.locals.model = model;
+                        return next();
+                    }
+                    req.flash('showMessage', '创建成功');
+                    res.redirect('/userbase');
+                });
             });
         });
+  
     });
 }
