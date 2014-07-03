@@ -49,24 +49,24 @@ module.exports = function(app) {
                         provinces: provinces
                     });
                 } else {
-                    // console.log('from web');
-                    // var options = {
-                    //     host: '10.1.1.104',
-                    //     port: 8080,
-                    //     path: 'http://trade.jd.com/dynamic/consignee/getProvinces.action',
-                    //     method: 'get',
-                    //     headers: {
-                    //         Host: "trade.jd.com"
-                    //     }
-                    // };
+                    console.log('from web');
                     var options = {
-                        host: 'trade.jd.com',
-                        path: '/dynamic/consignee/getProvinces.action',
+                        host: '10.1.1.104',
+                        port: 8080,
+                        path: 'http://trade.jd.com/dynamic/consignee/getProvinces.action',
                         method: 'get',
                         headers: {
                             Host: "trade.jd.com"
                         }
                     };
+                    // var options = {
+                    //     host: 'trade.jd.com',
+                    //     path: '/dynamic/consignee/getProvinces.action',
+                    //     method: 'get',
+                    //     headers: {
+                    //         Host: "trade.jd.com"
+                    //     }
+                    // };
                     var out = {};
                     var returnData = [];
                     getData(options, function(data) {
@@ -112,24 +112,24 @@ module.exports = function(app) {
                         citys: citys.value
                     });
                 } else {
-                    // console.log('from web');
-                    // var options = {
-                    //     host: '10.1.1.104',
-                    //     port: 8080,
-                    //     path: 'http://trade.jd.com/dynamic/consignee/getCitys.action?consigneeParam.provinceId=' + province,
-                    //     method: 'get',
-                    //     headers: {
-                    //         Host: "trade.jd.com"
-                    //     }
-                    // };
+                    console.log('from web');
                     var options = {
-                        host: 'trade.jd.com',
-                        path: '/dynamic/consignee/getCitys.action?consigneeParam.provinceId=' + province,
+                        host: '10.1.1.104',
+                        port: 8080,
+                        path: 'http://trade.jd.com/dynamic/consignee/getCitys.action?consigneeParam.provinceId=' + province,
                         method: 'get',
                         headers: {
                             Host: "trade.jd.com"
                         }
                     };
+                    // var options = {
+                    //     host: 'trade.jd.com',
+                    //     path: '/dynamic/consignee/getCitys.action?consigneeParam.provinceId=' + province,
+                    //     method: 'get',
+                    //     headers: {
+                    //         Host: "trade.jd.com"
+                    //     }
+                    // };
                     var out = {};
                     var returnData = [];
                     getData(options, function(data) {
@@ -178,24 +178,24 @@ module.exports = function(app) {
                         countys: countys.value
                     });
                 } else {
-                    // console.log('from web');
-                    // var options = {
-                    //     host: '10.1.1.104',
-                    //     port: 8080,
-                    //     path: 'http://trade.jd.com/dynamic/consignee/getCountys.action?consigneeParam.cityId=' + city,
-                    //     method: 'get',
-                    //     headers: {
-                    //         Host: "trade.jd.com"
-                    //     }
-                    // };
+                    console.log('from web');
                     var options = {
-                        host: 'trade.jd.com',
-                        path: '/dynamic/consignee/getCountys.action?consigneeParam.cityId=' + city,
+                        host: '10.1.1.104',
+                        port: 8080,
+                        path: 'http://trade.jd.com/dynamic/consignee/getCountys.action?consigneeParam.cityId=' + city,
                         method: 'get',
                         headers: {
                             Host: "trade.jd.com"
                         }
                     };
+                    // var options = {
+                    //     host: 'trade.jd.com',
+                    //     path: '/dynamic/consignee/getCountys.action?consigneeParam.cityId=' + city,
+                    //     method: 'get',
+                    //     headers: {
+                    //         Host: "trade.jd.com"
+                    //     }
+                    // };
                     var out = {};
                     var returnData = [];
                     getData(options, function(data) {
@@ -244,24 +244,24 @@ module.exports = function(app) {
                         towns: towns.value
                     });
                 } else {
-                    // console.log('from web');
-                    // var options = {
-                    //     host: '10.1.1.104',
-                    //     port: 8080,
-                    //     path: 'http://trade.jd.com/dynamic/consignee/getTowns.action?consigneeParam.countyId=' + county,
-                    //     method: 'get',
-                    //     headers: {
-                    //         Host: "trade.jd.com"
-                    //     }
-                    // };
+                    console.log('from web');
                     var options = {
-                        host: 'trade.jd.com',
-                        path: '/dynamic/consignee/getTowns.action?consigneeParam.countyId=' + county,
+                        host: '10.1.1.104',
+                        port: 8080,
+                        path: 'http://trade.jd.com/dynamic/consignee/getTowns.action?consigneeParam.countyId=' + county,
                         method: 'get',
                         headers: {
                             Host: "trade.jd.com"
                         }
                     };
+                    // var options = {
+                    //     host: 'trade.jd.com',
+                    //     path: '/dynamic/consignee/getTowns.action?consigneeParam.countyId=' + county,
+                    //     method: 'get',
+                    //     headers: {
+                    //         Host: "trade.jd.com"
+                    //     }
+                    // };
                     var out = {};
                     var returnData = [];
                     getData(options, function(data) {

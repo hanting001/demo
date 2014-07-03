@@ -18,18 +18,20 @@ module.exports = function(app) {
             if (err) {
                 return next(err);
             }
-            var user = {};
-            for (var o in userInfo) {
-                user[o] = userInfo[o];
-            }
-            for (var i = 0, l = userInfo.address.length; i < l; i++) {
-                if (userInfo.address[i].type === '默认') {
-                    console.log(userInfo.address[i].value);
-                    user.address = userInfo.address[i].value;
-                    break;
+            if (userInfo) {
+                var user = {};
+                for (var o in userInfo) {
+                    user[o] = userInfo[o];
                 }
+                for (var i = 0, l = userInfo.address.length; i < l; i++) {
+                    if (userInfo.address[i].type === '默认') {
+                        console.log(userInfo.address[i].value);
+                        user.address = userInfo.address[i].value;
+                        break;
+                    }
+                }
+                model.userInfo = user;
             }
-            model.userInfo = user;
             model.title = '维护用户信息';
             console.log(model);
             res.render('userInfo/add', model);
