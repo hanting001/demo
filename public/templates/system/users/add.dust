@@ -1,0 +1,14 @@
+{>"layouts/master" /} 
+{<content}
+<div class="panel panel-primary">
+  <div class="panel-heading">{title}</div>
+  <div class="panel-body">
+        {>"/user/_form" type="addNew"/}
+    </div>
+</div>
+{/content}
+{<script}
+<script type="text/javascript">
+
+</script>
+{/script}

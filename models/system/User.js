@@ -3,12 +3,13 @@ var mongoose = require('mongoose'),
 	nconf = require('nconf');
 var updatedTimestamp = require('mongoose-updated_at');
 var uniqueValidator = require('mongoose-unique-validator');
-
+var ObjectId = mongoose.Schema.Types.ObjectId;
 var userSchema = new mongoose.Schema({
 	name		: {type : String, unique : true, required : true},
 	password	: {type : String, unique : true},
     fullName    : String,
 	roles		: {type:[String], default:['ROLE_USER']},
+    userInfo    : {type:ObjectId, ref:'UserInfo'},
 	branchCode	: {type:String},
 	userType	: {type:String, default:'1'},
 	oprBranches	: [String],

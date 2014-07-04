@@ -6,7 +6,7 @@ var ObjectId = mongoose.Types.ObjectId;
 
 module.exports = function(app) {
 
-    app.get('/user/baseInfo',  function(req, res, next) {
+    app.get('/user/baseInfo', auth.isAuthenticated('ROLE_USER'), function(req, res, next) {
         var user = req.user;
         var model = {
             showMessage: req.flash('showMessage')
@@ -35,7 +35,7 @@ module.exports = function(app) {
         });
     });
 
-    app.post('/user/baseInfo',  function(req, res, next) {
+    app.post('/user/baseInfo', auth.isAuthenticated('ROLE_USER'), function(req, res, next) {
         var user = req.body.user;
         var userInfoInput = req.body.userInfo;
         User.findOneAndUpdate({
@@ -57,27 +57,37 @@ module.exports = function(app) {
                     value: address.trim()
                 }];
                 userInfoInput.name = user.name;
-                console.log(userInfoInput);
-                for (var o in userInfoInput) {
-                    userInfoModel[o] = userInfoInput[o];
+                if (userInfoModel) {
+                    for (var o in userInfoInput) {
+                        userInfoModel[o] = userInfoInput[o];
+                    }
+                } else {
+                    userInfoInput.user = user._id
+                    userInfoModel = new UserInfo(userInfoInput);
                 }
-                console.log(userInfoModel);
                 userInfoModel.save(function(err, userInfo) {
                     if (err) {
+                        userInfoInput.address = userInfoInput.address[0].value;
                         var model = {
                             user: user,
                             userInfo: userInfoInput
                         };
                         res.locals.err = err;
-                        res.locals.view = 'userInfo/add';
+                        res.locals.view = 'user/add';
                         res.locals.model = model;
                         return next();
                     }
-                    req.flash('showMessage', '提交成功');
-                    res.redirect('/user/baseInfo');
+
+                    user.userInfo = userInfo._id;
+                    user.save(function(err) {
+                        if (err) {
+                            return next(err);
+                        }
+                        req.flash('showMessage', '提交成功');
+                        res.redirect('/user/baseInfo');
+                    });
                 });
             });
         });
-  
     });
 };
