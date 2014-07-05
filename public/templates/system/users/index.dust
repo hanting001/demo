@@ -55,7 +55,7 @@
                     <td class="col-md-3">
                         {@security allowed="ROLE_ADMIN" roles="{user.roles}"}
                         <div class="btn-group btn-group-sm">
-                            <a class="btn btn-default" data-toggle="tooltip" data-placement="left" title="编辑" href="/system/menus/{.name}/edit"><i class="icon-edit icon-large"></i></a>
+                            <a class="btn btn-default" data-toggle="tooltip" data-placement="left" title="编辑" href="/system/auth/users/{.name}/edit"><i class="icon-edit icon-large"></i></a>
                             <a class="btn btn-default"  href="/system/menus/{.name}/addRoles" data-toggle="tooltip" data-placement="top" title="分配权限"><i class="icon-plus icon-large"></i></a>
                             <a class="btn btn-default"  href="/system/menus/{.name}/addRoles" data-toggle="tooltip" data-placement="top" title="分配机构"><i class="icon-plus icon-large"></i></a>
                             <a class="btn btn-default"  name="deleteBtn" value="{.name}" data-toggle="tooltip" data-placement="right" title="删除"><i class="icon-remove icon-large"></i></a>

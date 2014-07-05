@@ -145,6 +145,7 @@ pre code {
                var path = window.location.pathname;
                $("[data-toggle='tooltip']").tooltip();
                $('ul.menu li').removeClass('active');
+               $.fn.bootstrapSwitch.defaults.onColor = 'success';
                var lias = $("ul.menu li a");
                for (var i = 0, l = lias.length; i < l; i++){
             	   if (path.indexOf($(lias[i]).attr('href')) >= 0) {

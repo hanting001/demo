@@ -2,6 +2,7 @@ var passport = require('passport');
 var auth = require('../../lib/auth');
 var User = require('../../models/system/User');
 var UserInfo = require('../../models/UserInfo');
+var Role = require('../../models/system/Role');
 module.exports = function(app) {
 	app.get('/system/auth/users/signup', function(req, res) {
 		// render the page and pass in any flash data if it exists
@@ -66,6 +67,17 @@ module.exports = function(app) {
 			title: '新增用户',
 			showMessage: req.flash('showMessage')
 		};
-		res.render('system/users/add', model);
+
+		Role.find({}, function(err, roles) {
+			if (err) {
+				return next(err);
+			}
+			model.roles = roles;
+			console.log(roles);
+			res.render('system/users/add', model);
+		});
+
+
+		
 	});
 };
