@@ -2,12 +2,17 @@ var mongoose = require('mongoose');
 var updatedTimestamp = require('mongoose-updated_at');
 var uniqueValidator = require('mongoose-unique-validator');
 var validator = require('../lib/validator');
+var ObjectId = mongoose.Schema.Types.ObjectId;
 var Error = mongoose.Error;
 var userInfoSchema = new mongoose.Schema({
     name: {
         type: String,
         unique: true,
         required: true
+    },
+    user: {
+        type: ObjectId,
+        ref: 'User'
     },
     email: {
         type: String,
@@ -40,6 +45,20 @@ userInfoSchema.plugin(updatedTimestamp);
 //添加唯一字段校验
 userInfoSchema.plugin(uniqueValidator, {
     message: '出错拉, {PATH}不能同已有值重复'
+});
+
+userInfoSchema.virtual('defaultAddress').get(function() {
+    var defaultAddress = '';
+    for (var i = 0, l = this.address.length; i < l; i++) {
+        if (i == 0) {
+            defaultAddress = this.address[i].value;
+        }
+        if (this.address[i].type == '默认') {
+            defaultAddress = this.address[i].value;
+            break;
+        } 
+    }
+    return defaultAddress;
 });
 /**
  * Helper function that hooks into the 'save' method, and replaces plaintext passwords with a hashed version.

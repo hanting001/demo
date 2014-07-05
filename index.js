@@ -23,6 +23,7 @@ var numCPUs = os.cpus().length;
 	var showMenuMiddleware = require('./lib/middlewear/showMenu');
 	require('./lib/helper-dateFormat');
 	require('./lib/helper-baseCode');
+	require('./lib/helper-security');
 	_app.configure = function configure(nconf, next) {
 	    // Async method run on startup.
 		// Configure the database
