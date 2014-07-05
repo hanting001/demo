@@ -1,0 +1,200 @@
+{>"layouts/master" /}
+{<content}
+<div class="panel panel-primary">
+      <div class="panel-heading">信息录入</div>
+        <div class="panel-body">
+            {>"/biz/contract/_vehicleform" addTop="true"/}
+        </div>
+    </div>
+</div>
+{/content}
+<link href="/css/jquery.autocomplete.css" rel="stylesheet">
+<script src="/js/jquery.js"></script>
+<script src="/js/jquery.autocomplete.js"></script>
+{<script}
+<script type="text/javascript">
+        var dataOptions = {
+                    format : "yyyy-mm-dd",
+                    autoclose : true,
+                    language : 'zh-CN',
+                    todayHighlight : true
+            };
+        $('.date-default').datepicker(dataOptions);
+        var productinfo = [{"code":"TABYJ","name":"健康险"}];
+        var coverageinfo = [];
+        var $coverage_num = 0;
+        var $tab_flag = 'tab_1';
+        function getValueprem(obj){
+            $pname      = obj.find('td:eq(0)').find('input:eq(0)').val();
+            $Faceamout  = obj.find('td:eq(1)').find('input:eq(0)').val();
+            $modelPrem  = obj.find('td:eq(2)').find('input:eq(0)').val();
+            $period     = obj.find('td:eq(3)').find('input:eq(0)').val();
+            if($pname == '' || $modelPrem=='' || $period==''){
+                return;
+            }
+            $Product   = obj.find('td:eq(0)').find('input:eq(0)').val().split(':');
+            $Productcode = $Product[0];
+            $Premiumperiod = obj.find('td:eq(3)').find('input:eq(0)').val();
+            $providerid    = $('#providerId').val();
+            $Premiummode   = $('#premiumMode').val();
+            $modalprem     = obj.find('td:eq(2)').find('input:eq(0)').val();
+               $.ajax({
+                    url:"/biz/contract/getvalueprem",
+                        type:'get',
+                        data:{Productcode:$Productcode,
+                              Premiumperiod:$Premiumperiod,
+                              channeltype:'A' ,
+                              providerid:$providerid ,
+                              Premiummode:$Premiummode,
+                              modalprem: $modalprem},
+                        dataType:'json',
+                        timeout:50000,
+                        error: function(){
+                            alert('服务器错误, 请与管理员联系!');
+                        },
+                        success: function(result) {
+                            if(result.length > 0 ){
+                                obj.find('td:eq(4)').find('input:eq(0)').attr('value', result[0]['valuepremrate']*$modalprem/100);
+                                sumpremamount();
+                            }else{
+                             var some_html = '<br><div class="alert alert-danger fade in">';
+                                 some_html += '<label>获取费率失败,不存在详细费率</label>';
+                                 some_html += '</div>';
+                                 bootbox.alert(some_html);
+                            }
+                        }
+                });
+            }
+
+        function sumAmount(){
+        	   if(typeof(document.getElementById('CoverageList').getElementsByTagName('tr')) == "undefined"){
+        			alert('价保无法合计');
+        			return false;
+        	    }
+                var objs =  document.getElementById('CoverageList').getElementsByTagName('tr');
+               var len  =  objs.length;
+               var FaceamoutSum = 0;
+               var ModalpremSum = 0;
+               var valueprem = 0;
+
+               for(var i=0; i<len; i++){
+                   var Faceamout =  objs[i].getElementsByTagName('td');
+                   var inputval1  =  Faceamout[1].getElementsByTagName('input');
+                   var inputval2 =   Faceamout[2].getElementsByTagName('input');
+                   var inputval  =  Faceamout[4].getElementsByTagName('input');
+
+                   if(inputval1[0].value == '' || inputval1[0].value == 0) {
+                   		 inputval1[0].value = inputval2[0].value;
+                   }
+
+                   FaceamoutSum  += Number(inputval1[0].value);
+                   ModalpremSum  += Number(inputval2[0].value);
+                   valueprem  += Number(inputval[0].value);
+               }
+               $('#faceamount').attr('value',FaceamoutSum.toFixed(2));
+               $('#modalprem').attr('value',ModalpremSum.toFixed(2));
+               $('#valuepremsum').attr('value',valueprem.toFixed(2));
+            }
+
+            function sumpremamount(){
+               if(typeof(document.getElementById('CoverageList').getElementsByTagName('tr')) == "undefined"){
+                    alert('价保无法合计');
+                    return false;
+                }
+               var objs =  document.getElementById('CoverageList').getElementsByTagName('tr');
+               var len  =  objs.length;
+               var valueprem = 0;
+
+               for(var i=0; i<len; i++){
+                   var Faceamout =  objs[i].getElementsByTagName('td');
+                   var inputval  =  Faceamout[4].getElementsByTagName('input');
+                   valueprem  += Number(inputval[0].value);
+               }
+               $('#valuepremsum').attr('value',valueprem.toFixed(2));
+            }
+
+        function adds(){
+           if(10 == $coverage_num) {
+                return;
+           }
+           var obj = $('#tb_example').find('tr:eq(0)').clone();
+           $coverage_num += 1;
+           obj.find('td:eq(0)').find('input:eq(0)').attr('value', '');
+           obj.find('td:eq(0)').find('input:eq(0)').autocomplete(productinfo, {
+                minChars: 0,
+                    width: 310,
+                    matchContains: "word",
+					max:200,
+                    autoFill: true,
+                    formatItem: function(row, i, max) {
+                        return row.code + ":" + row.name;
+                    },
+                        formatMatch: function(row, i, max) {
+                            return row.code + ":" + row.name;
+                        },
+                            formatResult: function(row) {
+                                return row.code + ":" + row.name;
+                            }
+            });
+
+            obj.find('td:eq(2)').find('input:eq(0)').blur(
+                function(){
+                       getValueprem(obj);
+                       sumAmount();
+                       sumpremamount();
+                });
+
+            obj.find('td:eq(3)').find('input:eq(0)').blur(
+                function(){
+                       getValueprem(obj);
+                       sumAmount();
+                       sumpremamount();
+                });
+           obj.find('td:eq(5)').find('input:eq(0)').attr('value', '');
+           obj.find('td:eq(5)').find('input:eq(0)').attr('style', 'border:0;');
+           obj.find('td:eq(5)').find('a:eq(0)').unbind();
+           obj.find('td:eq(5)').find('a:eq(0)').click(
+              function() {
+                    deleteCoverage(obj);
+              }
+           );
+            obj.appendTo($('#CoverageList'));
+
+
+        };
+        function deleteCoverage(obj) {
+             if(1 == $coverage_num) {
+                 alert('请至少选填一个险种!');
+                 return;
+             }
+            obj.remove();
+            $coverage_num--;
+            sumAmount();
+            sumpremamount();
+        };
+
+        function initBind() {
+            flag = 5;
+            for(var i = 1; i <= flag ; i++) {
+                adds();
+            }
+        };
+
+        $(document).ready(function(){
+            initBind();
+        });
+
+        function goback(){
+            window.location.href="/biz/bizaccept/bizaccpetquery";
+        }
+
+        $("#addSubForm").validate({
+            submitHandler:function(form){
+                $(":button").attr("disabled","true");
+                form.action = '/biz/contract/addContract';
+                form.submit();
+            },
+            focusCleanup:true
+        });
+    </script>
+{/script}

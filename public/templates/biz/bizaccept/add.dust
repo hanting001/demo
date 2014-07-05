@@ -3,7 +3,8 @@
 <script src="/js/jquery.autocomplete.js"></script>
 <link href="/css/jquery.autocomplete.css" rel="stylesheet">
 <script type="text/javascript">
-        var providerinfo = [{"_id":"53a8e0e03039f3c02741c4c7","code":"TACX","name":"天安财险","type":"1"}];
+        var providerinfo = [{"_id":"53a8e0e03039f3c02741c4c7","code":"TACX","name":"天安财险"},
+                            {"_id":"53b4b7fe83da2d382c180829","code":"ZGRS","name":"中国人寿"}];
         $('#Providerid').autocomplete(providerinfo,{
             minChars: 0,
             max:200,
@@ -24,7 +25,40 @@
                 if(p.code == code)
                  return p.ptype;
             }
-        }
+       }
+       function checkno(){
+            if($('#applicationno').val()===''){
+                 alert('请输入投保单号');
+            }else{
+            var strDate = $.trim($('#applicationno').val());
+                var rex1 = /^[^\u4e00-\u9fa5]{0,}$/;
+                var rex2 = /^[^\'\"\,\/\\]{0,}$/;
+               if(!rex1.test(strDate)){
+                    alert("投保单号不能输入中文，请重新输入");
+                    $('#applicationno').val('');
+                    return false;
+               }else if(!rex2.test(strDate)){
+                    alert("投保单号不能输入非法字符，请重新输入");
+                    $('#applicationno').val('');
+                    return false;
+               }else{
+                    $.ajax({
+                            url:'/biz/bizaccept/checkapplicationno',
+                            type:'get',
+                            data:{applicationNo:strDate},
+                            dataType:'json',
+                            timeout:2000,
+                            error: function(){ alert('服务器错误, 请与管理员联系!', '提示信息'); },
+                            success: function(result) {
+                                if(result.length > 0){
+                                      alert('投保单号已存在');
+                                      $('#applicationno').val('');
+                                 }
+                            }
+                         });
+               }
+           }
+       }
 </script>
 {<content}
 <div class="panel panel-primary">
@@ -37,7 +71,7 @@
 			    <div class="form-group">
                 <label for="applicationno" class="col-sm-1 control-label">投保单号<span class="required-indicator">*</span></label>
             	<div class="col-sm-2">
-            	<input type="text" name="bizaccept[applicationno]" class="form-control" id="applicationno" value="{bizaccept.applicationno}" required>
+            	<input type="text" name="bizaccept[applicationNo]" class="form-control" id="applicationno"  value="{bizaccept.applicationNo}"  onBlur="checkno()" required>
             	</div>
                 <label for="agentcode" class="col-sm-1 control-label">销售代码<span class="required-indicator">*</span></label>
                 <div class="col-sm-2">
@@ -45,17 +79,17 @@
                 </div>
                 <label for="agentname" class="col-sm-1 control-label">营销员姓名</label>
                 <div class="col-sm-2">
-                    <input type="text" name="bizaccept[agentname]" class="form-control" id="agentname" required>
+                    <input type="text" name="bizaccept[agentName]" class="form-control" id="agentname" readonly>
                 </div>
-                <label for="agentidNo" class="col-sm-1 control-label">营销员证件<span class="required-indicator">*</span></label>
+                <label for="agentidNo" class="col-sm-1 control-label">营销员证件</label>
                 <div class="col-sm-2">
-                        <input type="text" name="bizaccept[agentidNo]" class="form-control" id="agentidNo" value="{bizaccept.agentidNo}" required>
+                        <input type="text" name="bizaccept[agentIdNo]" class="form-control" id="agentidNo" value="{bizaccept.agentIdNo}" readonly>
                 </div>
 			</div>
             <div class="form-group">
                 <label for="customeridNo" class="col-sm-1 control-label">客户证件<span class="required-indicator">*</span></label>
                 <div class="col-sm-2">
-                    <input type="text" name="bizaccept[customeridNo]" class="form-control" id="customeridNo" value="{bizaccept.customeridNo}" required>
+                    <input type="text" name="bizaccept[customerIdNo]" class="form-control" id="customeridNo" value="{bizaccept.customerIdNo}" required>
                 </div>
                 <label for="providerCode" class="col-sm-1 control-label">供应商代码<span class="required-indicator">*</span></label>
                 <div class="col-sm-2">
@@ -83,6 +117,7 @@
 {/content}
 {<script}
     <script type="text/javascript">
+
         function getagentinfo(){
         if($('#agentcode').val()===''){
              alert('请输入营销人员工号');
@@ -102,8 +137,8 @@
                           $('#agentidNo').val('');
                      }else{
                             $('#agentid').val(result[0]['_id']);
-                            $('#agentname').val(result[0]['agentname']);
-                            $('#agentidNo').val(result[0]['idno']);
+                            $('#agentname').val(result[0]['agentName']);
+                            $('#agentidNo').val(result[0]['idNo']);
                      }
                 }
              });
@@ -111,12 +146,12 @@
         }
 
         function goback(){
-            window.location.href="/bizaccept";
+            window.location.href="/biz/bizaccept/bizacceptquery";
         }
         $("#addSubForm").validate({
             submitHandler:function(form){
                 $(":button").attr("disabled","true");
-                form.action = '/biz/add';
+                form.action = '/biz/bizaccept/addBizaccept';
                 form.submit();
             },
             focusCleanup:true

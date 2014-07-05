@@ -1,27 +1,15 @@
 {>"layouts/master" /} 
 {<content}
-
-<ul class="nav nav-tabs">
-  	<li class="dropdown">
-  		<a href="#" class="dropdown-toggle" data-toggle="dropdown">首期管理<b class="caret"></b></a>
-  		<ul class="dropdown-menu" role="menu" >
-			<li><a href="/bizaccept" tabindex="-1" >保单受理</a></li>
-			<li><a href="#" tabindex="-1" data-toggle="tab">保单录入</a></li>
-			<li><a href="#" tabindex="-1" data-toggle="tab">保单回执</a></li>
-			<li><a href="#" tabindex="-1" data-toggle="tab">保单承保</a></li>
-		</ul>
-  	</li>
-  	<li><a href="#">续期管理</a></li>
-</ul>
 <div class="panel panel-default">
 	  	<div class="panel-heading">
-	  		<a data-toggle="collapse" data-toggle="collapse" data-parent="#mainContent" href="#condition">查询条件</a>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <div style="display: inline;"><a href="/biz/add">新增</a></div>
+        <div class="btn-group">
+                <a data-toggle="collapse" class="btn btn-default" data-toggle="collapse" data-parent="#mainContent" href="#condition">查询条件</a>
+                <a class="btn btn-default" href="/biz/bizaccept/addBizaccept">新增受理单</a>
+        </div>
 	  	</div>
 		<div id="condition" class="panel-collapse collapse">
 		  	<div class="panel-body">
-				<form class="form-inline" role="form" action="/tools" method="post">
+				<form class="form-inline" role="form" action="/biz/bizaccept/bizacceptquery" method="get">
 					<div class="form-group">
 						<label class="sr-only" for="inputName">类型</label>
 						<select class="form-control" id="inputType" name="tool[type]">
@@ -45,23 +33,25 @@
 			<tr>
 			    <th class="col-md-2">投保单号</th>
 				<th class="col-md-2">受理人证件号</th>
-				<th class="col-md-1">供应商</th>
-				<th class="col-md-1">受理保费</th>
-				<th class="col-md-1">客户证件号</th>
+				<th class="col-md-2">供应商</th>
+				<th class="col-md-2">受理保费</th>
+				<th class="col-md-2">客户证件号</th>
 				<th class="col-md-2">操作</th>
 			</tr>
 		</thead>
 		<tbody>
 		{#Bizaccepts}
 		    <tr>
-		      <td class="col-md-2">{.applicationno}</td>
-		      <td class="col-md-2">{.agentidNo}</td>
-		      <td class="col-md-1">{.providerCode}</td>
-		      <td class="col-md-1">{.acceptNum}</td>
-		      <td class="col-md-1">{.customeridNo}</td>
+		      <td class="col-md-2">{.applicationNo}</td>
+		      <td class="col-md-2">{.agentIdNo}</td>
+		      <td class="col-md-2">{.providerCode}</td>
+		      <td class="col-md-2">{.acceptNum}</td>
+		      <td class="col-md-2">{.customerIdNo}</td>
 		      <td class="col-md-2">
-		          <a class="btn btn-default btn-xs " href="/biz/{.id}/delete">删除</a>
-		          <a class="btn btn-default btn-xs " href="/contract/{.id}/addContract">录入</a>
+                  <div class="btn-group btn-group-sm">
+                      <a class="btn btn-default" href="#" value="{.id}" data-toggle="tooltip" data-placement="right" name="deleteBtn" title="删除"><i class="icon-remove icon-large"></i></a>
+                      <a class="btn btn-default"  href="/biz/contract/{.id}/addContract" data-toggle="tooltip" data-placement="top" title="录入"><i class="icon-plus icon-large"></i></a>
+                  </div>
 		      </td>
 		    </tr>
 		{/Bizaccepts}
@@ -79,7 +69,7 @@
 	    bootstrapMajorVersion : 3,
 	    totalPages: {pageCount},
 	    pageUrl : function(type, page, current){
-	        return '/bizaccept?page='+page;
+	        return '/biz/bizaccept/bizacceptquery?page='+page;
 	    },
 	    itemContainerClass: function (type, page, current) {
 	        return (page === current) ? "disabled" : "pointer-cursor";
@@ -99,6 +89,30 @@
 	        }
 	    }
 	};
+
+	$("a[name='deleteBtn']").click(function() {
+            var id = $(this).attr('value');
+            bootbox.confirm("确定删除？", function(result) {
+                if (result) {
+                    $.get("/biz/bizaccept/" + id + "/delete?" + new Date().getTime(), function(data, status) {
+                        if (status === 'success') {
+                            var some_html = '<br><div class="alert alert-success fade in">';
+                            some_html += '<label>成功删除</label>';
+                            some_html += '</div>';
+                            var box = bootbox.alert(some_html);
+                            box.on('hidden.bs.modal', function(e) {
+                                window.location.reload();
+                            });
+                        } else {
+                            var some_html = '<br><div class="alert alert-danger fade in">';
+                            some_html += '<label>调用后台出错：' + xhr.statusText + '</label>';
+                            some_html += '</div>';
+                            bootbox.alert(some_html);
+                        }
+                    });
+                }
+            });
+        });
 	$('.pagination').bootstrapPaginator(options);
 </script> 
 {/script}

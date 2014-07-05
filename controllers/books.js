@@ -7,30 +7,7 @@ module.exports = function(app) {
 	
 	
 
-	app.get('/provider', function(req, res) {
 
-		var page = 1;
-		if (req.query.page) {
-			page = req.query.page;
-		}
-		Provider.paginate({}, page, 10, function(err, pageCount, providers) {
-			if (err) {
-				return next(err);
-			}
-			console.log(providers);
-			var model = {
-				title : '供应商列表',
-				isAdmin : true,
-				providers : providers,
-				provider : {
-					name : 'dfdfdf'
-				},
-				page : page,
-				pageCount : pageCount
-			};
-			res.render('product/provider/index', model);
-		});
-	});
 	
 	
 	app.get('/books', function(req, res, next) {

@@ -5,7 +5,6 @@
   <div class="panel-body">
             {#provider}
 		<form class="form-horizontal" method="post" id="addSubForm"  role="form"  action = '/provider/{.id}/update'>
-
         			<input type="hidden" name="_csrf" value="{_csrf}" />
                     {!  供应商信息  !}
         			<div class="form-group">

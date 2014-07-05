@@ -1,38 +1,41 @@
 {>"layouts/master" /} 
 {<content}
-<ul class="nav nav-tabs">
-  	<li class="dropdown">
-  		<a href="#" class="dropdown-toggle" data-toggle="dropdown">首期管理<b class="caret"></b></a>
-  		<ul class="dropdown-menu" role="menu" >
-			<li><a href="/bizaccept" tabindex="-1" >保单受理</a></li>
-			<li><a href="#" tabindex="-1" data-toggle="tab">保单录入</a></li>
-			<li><a href="#" tabindex="-1" data-toggle="tab">保单回执</a></li>
-			<li><a href="#" tabindex="-1" data-toggle="tab">保单承保</a></li>
-		</ul>
-  	</li>
-  	<li><a href="#">续期管理</a></li>
-</ul>
 <div class="panel panel-default">
 	  	<div class="panel-heading">
-	  		<a data-toggle="collapse" data-toggle="collapse" data-parent="#mainContent" href="#condition">查询条件</a>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <div style="display: inline;"><a href="/biz/add">新增</a></div>
+	    	<div class="btn-group">
+	  	        <a data-toggle="collapse" class="btn btn-default" data-toggle="collapse" data-parent="#mainContent" href="#condition">查询条件</a>
+                <a class="btn btn-default" href="/biz/bizaccept/addBizaccept">新增受理单</a>
+            </div>
 	  	</div>
 		<div id="condition" class="panel-collapse collapse">
 		  	<div class="panel-body">
-				<form class="form-inline" role="form" action="/tools" method="post">
+				<form class="form-inline" role="form" action="/biz/contract/query" method="get">
 					<div class="form-group">
-						<label class="sr-only" for="inputName">类型</label>
-						<select class="form-control" id="inputType" name="tool[type]">
-							<option />
-							<option>开发工具</option>
-							<option>版本管理</option>
-							<option>开发服务器</option>
-							<option>数据库工具</option>
-						</select>
+                        <label for="applicationno" class="col-sm-1 control-label">投保单号</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" name="applicationNo"  id="applicationno" value="{.applicationNo}" >
+                        </div>
+                        <label for="applicationname" class="col-sm-1 control-label">投保人</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" name="applicationName"  id="applicationname" value="{.applicationName}" >
+                        </div>
+                        <label for="insurename" class="col-sm-1 control-label">被保人</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" name="insureName"  id="insurename" value="{.insureName}" >
+                        </div>
+                        <label for="agentname" class="col-sm-1 control-label">代理人</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" name="agentName"  id="agentname" value="{.agentName}" >
+                        </div>
 					</div>
-					<button class="btn btn-default" type="submit">查询</button>
-					<input type="hidden" name="_csrf" value="{_csrf}" />
+					<div class="form-group">
+					<div class="col-sm-10">
+					</div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-default" type="submit">查询</button>
+                            <input type="hidden" name="_csrf" value="{_csrf}" />
+                        </div>
+					</div>
 				</form>
 			</div>
 		</div>
@@ -42,28 +45,39 @@
 	<table class="table table-hover table-condensed">
 		<thead>
 			<tr>
-			    <th class="col-md-2">投保单号</th>
-				<th class="col-md-2">受理人证件号</th>
+			    <th class="col-md-1">投保单号</th>
+			    <th class="col-md-1">保单号码</th>
+				<th class="col-md-1">营销员</th>
 				<th class="col-md-1">供应商</th>
-				<th class="col-md-1">受理保费</th>
-				<th class="col-md-1">客户证件号</th>
+				<th class="col-md-1">投保人</th>
+				<th class="col-md-1">被保人</th>
+				<th class="col-md-1">受益人</th>
+				<th class="col-md-1">保费合计</th>
+				<th class="col-md-1">代理费合计</th>
+				<th class="col-md-1">价保合计计</th>
 				<th class="col-md-2">操作</th>
 			</tr>
 		</thead>
 		<tbody>
-		{#Bizaccepts}
+		{#contract}
 		    <tr>
-		      <td class="col-md-2">{.applicationno}</td>
-		      <td class="col-md-2">{.agentidNo}</td>
-		      <td class="col-md-1">{.providerCode}</td>
-		      <td class="col-md-1">{.acceptNum}</td>
-		      <td class="col-md-1">{.customeridNo}</td>
-		      <td class="col-md-2">
-		          <a class="btn btn-default btn-xs " href="/biz/{.id}/delete">删除</a>
-		          <a class="btn btn-default btn-xs " href="/contract/{.id}/addContract">录入</a>
+		      <td class="col-md-2"><a href="/biz/contract/{.id}/info">{.applicationNo}</a></td>
+		      <td class="col-md-1">{.contractNo}</td>
+		      <td class="col-md-1">{.agentName}</td>
+		      <td class="col-md-1">{.providerId.name}</td>
+		      <td class="col-md-1">{.applicant.applicantname}</td>
+		      <td class="col-md-1">{.policy.insurename}</td>
+              <td class="col-md-1">{.beneficiary.binsurename}</td>
+              <td class="col-md-1">{.totalModalPrem}</td>
+              <td class="col-md-1">{.agencyfee}</td>
+              <td class="col-md-1">{.valuePrem}</td>
+		      <td class="col-md-1">
+		      <div class="btn-group btn-group-sm">
+                  <a class="btn btn-default" href="#" value="{.id}" data-toggle="tooltip" data-placement="right" name="deleteBtn" title="删除"><i class="icon-remove icon-large"></i></a>
+              </div>
 		      </td>
 		    </tr>
-		{/Bizaccepts}
+		{/contract}
 		</tbody>
 	</table>
 </div>
@@ -78,7 +92,7 @@
 	    bootstrapMajorVersion : 3,
 	    totalPages: {pageCount},
 	    pageUrl : function(type, page, current){
-	        return '/bizaccept?page='+page;
+	        return '/biz/contract/query?page='+page;
 	    },
 	    itemContainerClass: function (type, page, current) {
 	        return (page === current) ? "disabled" : "pointer-cursor";
@@ -98,6 +112,29 @@
 	        }
 	    }
 	};
+	$("a[name='deleteBtn']").click(function() {
+                var id = $(this).attr('value');
+                bootbox.confirm("确定删除？", function(result) {
+                    if (result) {
+                        $.get("/biz/contract/" + id + "/delete?" + new Date().getTime(), function(data, status) {
+                            if (status === 'success') {
+                                var some_html = '<br><div class="alert alert-success fade in">';
+                                some_html += '<label>成功删除</label>';
+                                some_html += '</div>';
+                                var box = bootbox.alert(some_html);
+                                box.on('hidden.bs.modal', function(e) {
+                                    window.location.reload();
+                                });
+                            } else {
+                                var some_html = '<br><div class="alert alert-danger fade in">';
+                                some_html += '<label>调用后台出错：' + xhr.statusText + '</label>';
+                                some_html += '</div>';
+                                bootbox.alert(some_html);
+                            }
+                        });
+                    }
+                });
+            });
 	$('.pagination').bootstrapPaginator(options);
 </script> 
 {/script}

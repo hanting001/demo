@@ -2,46 +2,51 @@
  * Created by thinkpad on 14-6-23.
  */
 var mongoose = require("mongoose");
-//var updatedTimestamp = require('mongoose-updated_at');
+var updatedTimestamp = require('mongoose-updated_at');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var validator = require('../../lib/validator');
 var Error = mongoose.Error;
-var BizacceptSchema =new mongoose.Schema({
-    createdAt   : 	     {type:Date, default: Date.now  },
-    createuId   :       {type:ObjectId ,required:true},
-    updatedAt   :       {type:Date, default: Date.now },
-    updateuId   :       {type:ObjectId ,required:true},
-    acceptbranchId  :   {type:String,required:true},
-    acceptuId        :  {type:ObjectId ,required:true},
-    acceptdAd        :  { type: Date, default: Date.now },
-    acceptStatus    :   {type:String,default:'AcceptStatus_A'},
-    agentidNo   :   {type:String},
-    customeridNo    :  {type:String},
-    providerCode    :  {type:String},
-    providerId   :  {type:ObjectId},
-    acceptNum   :{type:Number},
-    agentId     :{type:ObjectId},
-    agentname    :{type:String},
-    applicationno :{type:String,required:true}
+var BizAcceptSchema =new mongoose.Schema({
+    createDate			:  {type:Date, default: Date.now  },
+    createUserId		:  {type:ObjectId ,required:true},
+    updateDate			:  {type:Date, default: Date.now },
+    updateUserId		:  {type:ObjectId ,required:true},
+    acceptBranchId	    :  {type:String,required:true},
+    acceptUserId		:  {type:ObjectId ,required:true},
+    acceptDate			:  {type: Date, default: Date.now },
+    acceptStatus      :  {type:String,default:'AcceptStatus_A'},
+    agentIdNo          :  {type:String},
+    customerIdNo       :  {type:String},
+    providerCode       :  {type:String},
+    providerId         :  {type:ObjectId,ref:'Provider'},
+    acceptNum          :  {type:Number},
+    agentId            :   {type:ObjectId},
+    agentName          :   {type:String},
+    applicationNo     :   {type:String,required:true},
+    contractId         :  {type:ObjectId}
 },{ collection: 'bizaccepts' });
 
-BizacceptSchema.pre('save', function (next) {
+BizAcceptSchema.plugin(updatedTimestamp);
+
+BizAcceptSchema.pre('save', function (next) {
     var errMsg = {};
     var self = this;
 
-    if (!validator.IsIdCardNo(self.agentidNo)) {
+    if (!validator.IsIdCardNo(self.agentIdNo)) {
         //key为页面上输入元素的id,value为错误信息
-        errMsg.agentidNo = '代理人身份证格式不正确';
+        errMsg.agentIdNo = '代理人身份证格式不正确';
     };
 
-    if (!validator.IsIdCardNo(self.customeridNo)) {
-        errMsg.customeridNo = '客户身份证格式不正确';
+    if (!validator.IsIdCardNo(self.customerIdNo)) {
+        errMsg.customerIdNo = '客户身份证格式不正确';
     };
-
-    console.log(self.acceptNum+'----------'+validator.IsMoney(self.acceptNum));
 
     if (!validator.IsMoney(self.acceptNum)) {
         errMsg.acceptNum = '保费格式不争取，最多有两位小数';
+    };
+
+    if (!validator.checkno(self.applicationNo)) {
+        errMsg.applicationNo = '投保单号不能包括汉子，特殊符号';
     };
 
     if (Object.keys(errMsg).length > 0) {
@@ -51,4 +56,5 @@ BizacceptSchema.pre('save', function (next) {
         next();
     }
 });
-module.exports = mongoose.model('Bizaccept', BizacceptSchema);
+
+module.exports = mongoose.model('BizAccept', BizAcceptSchema);
