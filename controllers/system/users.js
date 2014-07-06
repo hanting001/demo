@@ -3,6 +3,7 @@ var auth = require('../../lib/auth');
 var User = require('../../models/system/User');
 var UserInfo = require('../../models/UserInfo');
 var Role = require('../../models/system/Role');
+var branchHelper = require('../../lib/branchHelper');
 module.exports = function(app) {
 	app.get('/system/auth/users/signup', function(req, res) {
 		// render the page and pass in any flash data if it exists
@@ -73,11 +74,28 @@ module.exports = function(app) {
 				return next(err);
 			}
 			model.roles = roles;
-			console.log(roles);
+			var branchTree = branchHelper.branchTree;
+			var userBranches = [];
+			var oprBranches = req.user.oprBranches;
+			branchTree.forEach(function(branch) {
+				userBranches.push(getUserBranch(oprBranches, branch));
+			});
+			model.userBranches = userBranches;
 			res.render('system/users/add', model);
 		});
-
-
-		
 	});
+
+	function getUserBranch(oprBranches, branch) {
+		var node = {};
+		node.id = branch.code;
+		node.name = branch.name;
+		node.children = [];
+		if (oprBranches.indexOf(branch.code) >=0 || oprBranches.indexOf('ALL') >= 0) {
+			node.checked = true;
+		}
+		for (var i = 0, l = branch.children.length; i < l; i ++) {
+			node.children.push(getUserBranch(oprBranches, branch.children[i]));
+		}
+		return node;
+	}
 };
