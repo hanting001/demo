@@ -1,21 +1,26 @@
 var mongoose = require('mongoose'), 
 	bcrypt = require('bcrypt'), 
 	nconf = require('nconf');
-
+var updatedTimestamp = require('mongoose-updated_at');
+var uniqueValidator = require('mongoose-unique-validator');
+var ObjectId = mongoose.Schema.Types.ObjectId;
 var userSchema = new mongoose.Schema({
-	name : {
-		type : String,
-		unique : true
-	},
-	password : String,
-	role : String
+	name		: {type : String, unique : true, required : true},
+	password	: {type : String, unique : true},
+    fullName    : String,
+	roles		: {type:[String], default:['ROLE_USER']},
+    userInfo    : {type:ObjectId, ref:'UserInfo'},
+	branchCode	: {type:String},
+	userType	: {type:String, default:'1'},
+	oprBranches	: [String],
+	isValid		: {type:String, default:'1'},
+	createdAt	: {type: Date, default: Date.now }
 });
 
-// methods ======================
-// generating a hash
-//userSchema.methods.generateHash = function(password) {
-//	return md5(password);
-//};
+//添加create、update字段
+userSchema.plugin(updatedTimestamp);
+//添加唯一字段校验
+userSchema.plugin(uniqueValidator, { message: '出错拉, {PATH}不能同已有值重复' });
 /**
  * Helper function that hooks into the 'save' method, and replaces plaintext passwords with a hashed version.
  */
@@ -27,7 +32,9 @@ userSchema.pre('save', function (next) {
         next();
         return;
     }
-
+    if (!this.oprBranches) {
+    	this.oprBranches = [this.branchCode];
+    }
     //Retrieve the desired difficulty from the configuration. (Default = 8)
     var DIFFICULTY = (nconf.get('bcrypt') && nconf.get('bcrypt').difficulty) || 8;
 

@@ -4,22 +4,26 @@ var cluster = require('cluster');
 var os = require('os');
 var numCPUs = os.cpus().length;
 
-if (cluster.isMaster) {
-	for ( var i = 0; i < numCPUs; i++) {
-		cluster.fork();
-	}
-	cluster.on('death', function(worker) {
-		console.log('Worker ' + worker.pid + ' died.');
-	});
-} else {
+//if (cluster.isMaster) {
+//	for ( var i = 0; i < numCPUs; i++) {
+//		cluster.fork();
+//	}
+//	cluster.on('death', function(worker) {
+//		console.log('Worker ' + worker.pid + ' died.');
+//	});
+//} else {
 	var kraken = require('kraken-js'),
 		db = require('./lib/database'),
 	    passport = require('passport'),
 	    auth = require('./lib/auth'),
 	    flash = require('connect-flash'),
-	    User = require('./models/User'),
+	    User = require('./models/system/User'),
+	    errorMessages = require('./lib/middlewear/errorMessages'),
 	    _app = {};
-	
+	var showMenuMiddleware = require('./lib/middlewear/showMenu');
+	require('./lib/helper-dateFormat');
+	require('./lib/helper-baseCode');
+	require('./lib/helper-security');
 	_app.configure = function configure(nconf, next) {
 	    // Async method run on startup.
 		// Configure the database
@@ -42,23 +46,20 @@ if (cluster.isMaster) {
 	
 	
 	_app.requestStart = function requestStart(app) {
-	    // Run before most express middleware has been registered.
-		app.locals.pretty = true;        //format HTML page source code
+		//app.use(errorMessages());
 	};
-	
-	
 	_app.requestBeforeRoute = function requestBeforeRoute(app) {
 	    // Run before any routes have been added.
 		app.use(passport.initialize());  //Use Passport for authentication
 		app.use(passport.session());     //Persist the user in the session
 		app.use(flash());                //Use flash for saving/retrieving error messages for the user
 		app.use(auth.injectUser);        //Inject the authenticated user into the response context
-		
+		app.use(showMenuMiddleware());   //用于确定该显示什么菜单
 	};
 	
 	
 	_app.requestAfterRoute = function requestAfterRoute(app) {
-	    // Run after all routes have been added.
+		app.use(errorMessages());
 	};
 	
 	
@@ -67,11 +68,11 @@ if (cluster.isMaster) {
 	        if (err) {
 	            console.error(err.stack);
 	        }
-	        global.socketio = require('socket.io').listen(server);
-	    	var SIO = require('./lib/sio');
-	    	var sio = SIO.createNew();
-	    	sio.init(global.socketio);
+	        //global.socketio = require('socket.io').listen(server);
+	    	//var SIO = require('./lib/sio');
+	    	//var sio = SIO.createNew();
+	    	//sio.init(global.socketio);
 	    });   
 	}
-}
-module.exports = _app;
+//}
+//module.exports = _app;
