@@ -92,7 +92,9 @@ module.exports = function(app) {
 		node.id = branch.code;
 		node.text = branch.name;
 		node.children = [];
-		node.state = {};
+		node.state = {
+			opened: false
+		};
 		if (oprBranches.indexOf(branch.code) >=0 || oprBranches.indexOf('ALL') >= 0) {
 			node.state.selected = true;
 		}
@@ -103,6 +105,7 @@ module.exports = function(app) {
 	}
 
 	app.post('/system/auth/users/add', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		console.log(req.body);
 		req.flash('showMessage', '创建成功');
 		res.redirect('/system/auth/users')
 	});
