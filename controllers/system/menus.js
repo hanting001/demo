@@ -1,5 +1,5 @@
 var Menu = require('../../models/system/Menu');
-var baseCode = require('../../lib/baseCode');
+var menuHelper = require('../../lib/menuHelper');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
 var auth = require('../../lib/auth');
@@ -75,6 +75,8 @@ module.exports = function(app) {
 				Menu.rebuildTree(root, 1, function(){
 					console.log('rebuild tree for % sucess', root.url);
 				});
+				//刷新菜单树缓存
+				menuHelper.refresh();
 			});
 		});
 	});
@@ -119,6 +121,8 @@ module.exports = function(app) {
 				Menu.rebuildTree(parent, parent.lft, function(){
 					console.log('rebuild tree for % sucess', parent.url);
 				});
+				//刷新菜单树缓存
+				menuHelper.refresh();
 			});				
 		});			
 	});	
@@ -152,31 +156,25 @@ module.exports = function(app) {
 	});
 	app.post('/system/menus/:id/edit', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var id = req.params.id;
-		Menu.findById(new ObjectId(id), function(err, menu){
+		var newMenu = req.body.menu;
+		Menu.findByIdAndUpdate(new ObjectId(id), newMenu, function(err, menu) {
 			if (err) {
-				return next(err);
+				newMenu.id = id;
+				var model = {
+					menu: newMenu,
+					parent: req.body.parent
+				};
+				res.locals.err = err;
+				res.locals.view = 'system/menus/edit';
+				res.locals.model = model;
+				return next(); //调用下一个错误处理middlewear
 			}
-			var newMenu = req.body.menu;
-			for (var o in newMenu) {
-				menu[o] = newMenu[o];
-			}
-			menu.save(function(err, menu){
-				if(err) {
-					newMenu.id = id;
-					var model = {
-							menu : newMenu,
-							parent : req.body.parent
-					};
-					res.locals.err = err;
-					res.locals.view = 'system/menus/edit';
-					res.locals.model = model;
-					return next();//调用下一个错误处理middlewear
-				} 
-				req.flash('showMessage', '修改成功');
-				res.redirect('/system/menus/' + menu.id + '/edit');
-									
-			});								
-		});		
+			console.log(menu);
+			req.flash('showMessage', '修改成功');
+			res.redirect('/system/menus/' + menu.id + '/edit');
+			//刷新菜单树缓存
+			menuHelper.refresh();
+		});
 	});
 	
 	app.get('/system/menus/:id/down', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
@@ -233,6 +231,46 @@ module.exports = function(app) {
 				return next(err);
 			}
 			res.redirect('/system/menus?parentId=' + menu.parentId);
+		});
+	});
+
+	app.get('/system/menus/:id/delete', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		var id = req.params.id;
+		Menu.findById(new ObjectId(id), function(err, menu) {
+			if (err) {
+				return next(err);
+			}
+			Menu.findById(menu.parentId, function(err, parent) {
+				if (err) {
+					return err;
+				}
+				Menu.remove({
+					lft: {
+						$gt: menu.lft
+					},
+					rgt: {
+						$lt: menu.rgt
+					},
+					parentId: {
+						$ne: menu.parentId
+					}
+				}, function(err) {
+					if (err) {
+						return next(err);
+					}
+					menu.remove(function(err, menu) {
+						if (err) {
+							return next(err);
+						}
+						res.json({
+							message: 'OK'
+						});
+						Menu.rebuildTree(parent, parent.lft, function() {
+							console.log('rebuild tree for % sucess', parent.url);
+						});
+					});
+				});
+			});
 		});
 	});
 };

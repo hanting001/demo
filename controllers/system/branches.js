@@ -5,6 +5,9 @@ var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
 var auth = require('../../lib/auth');
 module.exports = function(app) {
+	app.get('/system', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		res.redirect('/system/branches');
+	});
 	app.get('/system/branches', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var page = 1;
 		if (req.query.page) {
@@ -49,6 +52,7 @@ module.exports = function(app) {
 				res.locals.err = err;
 				res.locals.view = 'system/branches/add';
 				res.locals.model = model;
+				console.log(err);
 				next();//调用下一个错误处理middlewear
 			} else {
 				req.flash('showMessage', '创建成功');
@@ -103,7 +107,7 @@ module.exports = function(app) {
 								next(err);
 							} else {
 								req.flash('showMessage', '创建成功');
-								res.redirect('/system/branches/'+parentId +'/down');
+								res.redirect('/system/branches?parent=' + parent.code);
 							}
 						});
 					}
@@ -124,7 +128,7 @@ module.exports = function(app) {
 					title : '编辑机构信息',
 					isAdmin : true,
 					branch : branch,
-					parent : parent,
+					parent : parent?parent:branch,
 					showMessage : req.flash('showMessage')
 				};			
 				res.render('system/branches/edit', model);
@@ -149,6 +153,7 @@ module.exports = function(app) {
 						res.locals.err = err;
 						res.locals.view = 'system/branches/edit';
 						res.locals.model = model;
+						console.log(err);
 						next();//调用下一个错误处理middlewear
 					} else {
 						req.flash('showMessage', '修改成功');
@@ -191,24 +196,18 @@ module.exports = function(app) {
 			page = req.query.page;
 		}
 		var id = req.params.id;
-		Branch.findOne({_id : new ObjectId(id)}, function(err, branch){
-			if (err){
-				next(err)
-			} else {
-				var condition = {};
-				condition.code = branch.parent;
-				Branch.paginate(condition, page, 10, function(err, pageCount, branches){
-					var model = {
-							title : '机构列表',
-							isAdmin : true,
-							branches : branches,
-							page : page,
-							pageCount : pageCount,
-							showMessage : req.flash('showMessage')
-						};			
-					res.render('system/branches/index', model);
-				}, { sortBy : { code : 1 } });					
-			}			
+		Branch.findById(new ObjectId(id), function(err, branch) {
+			if (err) {
+				return next(err)
+			}
+			Branch.findOne({
+				code : branch.parent
+			}, function(err, parent) {
+				if (err) {
+					return next(err)
+				}
+				res.redirect('/system/branches?parent=' + parent.parent);
+			});
 		});
 	});
 	
@@ -220,6 +219,44 @@ module.exports = function(app) {
 				return next(err);
 			}
 			res.redirect('/system/branches?parent=' + branch.parent);
+		});
+	});
+	app.get('/system/branches/:id/delete', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		var id = req.params.id;
+		console.log(id);
+		Branch.findById(new ObjectId(id), function(err, branch) {
+			if (err) {
+				return next(err);
+			}
+			//从parent的subs中删掉
+			Branch.findOneAndUpdate({
+				code: branch.parent
+			}, {
+				$pull: {
+					subs: branch.code
+				}
+			}, function(err, parent) {
+				if (err) {
+					return next(err);
+				}
+				//删除子节点
+				Branch.remove({
+					code: new RegExp('^' + branch.code)
+				}, function(err) {
+					if (err) {
+						return next(err);
+					}
+					//删除自身
+					branch.remove(function(err) {
+						if (err) {
+							return next(err);
+						}
+						res.json({
+							message: 'OK'
+						});
+					});
+				});
+			});
 		});
 	});
 };
