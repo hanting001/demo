@@ -22,6 +22,7 @@
 <link href="http://cdn.bootcss.com/bootstrap-switch/3.0.2/css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet">
 <link href="/css/font-awesome.min.css" rel="stylesheet">
 <link href="/css/validator.css" rel="stylesheet">
+<link href="http://cdn.bootcss.com/jstree/3.0.2/themes/default/style.min.css" rel="stylesheet">
 <style>
 html,body {
 	height: 100%;
@@ -139,6 +140,7 @@ pre code {
         <script src="/js/additional-methods.min.js"></script>
         <script src="/js/bootstrap-tree.js"></script>
         <script src="/js/bootbox.min.js"></script>
+        <script src="http://cdn.bootcss.com/jstree/3.0.2/jstree.min.js"></script>
         <script type="text/javascript">
 
             $(function(){
@@ -155,6 +157,7 @@ pre code {
             		   }
             	   }
                }
+               showErrors();
             }); 
         	function showErrors() {
         		var errorMessages = '{errorMessages|js|s}';
@@ -171,7 +174,6 @@ pre code {
         			}
         		}
         	};
-        	showErrors();
         </script>
         {>errorMessages/}
         {+script/}

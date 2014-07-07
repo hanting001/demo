@@ -5,7 +5,7 @@
         {@select key=type}
         {@eq value="addNew"}
         <div class="col-sm-1">
-            <input type="text" name="newUser[name]" class="form-control" id="userName" value="{newUser.name}" required>
+            <input type="text" name="user[name]" class="form-control" id="userName" value="{user.name}" required>
         </div>
         {/eq}
         {@eq value="user"}
@@ -15,19 +15,25 @@
         </div>
         {/eq}
         {/select}
-        <label for="userFullName" class="col-sm-1 control-label">姓名<span class="required-indicator">*</span></label>
         {@select key=type}
         {@eq value="addNew"}
+        <label for="userFullName" class="col-sm-1 control-label">姓名<span class="required-indicator">*</span></label>
         <div class="col-sm-1">
-            <input type="text" name="newUser[fullName]" class="form-control" id="userFullName" value="{newUser.fullName}" required>
+            <input type="text" name="user[fullName]" class="form-control" id="userFullName" value="{user.fullName}" required>
+        </div>
+        <label for="userPassword" class="col-sm-1 control-label">初始密码<span class="required-indicator">*</span></label>
+        <div class="col-sm-1">
+            <input type="text" name="user[password]" class="form-control" id="userPassword" value="{user.password}" required>
         </div>
         {/eq}
         {@eq value="user"}
+        <label for="userFullName" class="col-sm-1 control-label">姓名<span class="required-indicator">*</span></label>
         <div class="col-sm-1">
             <input type="text" name="user[fullName]" class="form-control" id="userFullName" value="{user.fullName}" required>
         </div>
         {/eq}
         {/select}
+
         <label for="userInfoEmail" class="col-sm-1 control-label">邮箱<span class="required-indicator">*</span></label>
         <div class="col-sm-2">
             <input type="email" name="userInfo[email]" value="{userInfo.email}"  class="form-control" id="userInfoEmail" required>
@@ -87,3 +93,125 @@
         </div>
     </div>
 </form>
+<script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $.get("/address/provinces?" + new Date().getTime(), function(data, status, xhr) {
+        if (status === 'success') {
+            var provinces = data.provinces;
+            var options = '<option  value="0">请选择</option>';
+            for (var i = 0, l = provinces.length; i < l; i++) {
+                for (var o in provinces[i]) {
+                    if (o === 'key') {
+                        options += '<option  value="' + provinces[i][o] + '">';
+                    } else if (o === 'value') {
+                        options += provinces[i][o] + '</option>'
+                    }
+                }
+            }
+            $('#provinceSlt').html(options);
+        } else {
+            var some_html = '<br><div class="alert alert-danger fade in">';
+            some_html += '<label>调用后台出错：' + xhr.statusText + '</label>';
+            some_html += '</div>';
+            bootbox.alert(some_html);
+        }
+    });
+   $('#provinceSlt').change(function() {
+        var selected = $(this).val();
+        var text = $('#provinceSlt option:selected').text();
+        $.get("/address/citys?province=" + selected + '&' + new Date().getTime(), function(data, status, xhr) {
+            if (status === 'success') {
+                var citys = data.citys;
+                var options = '<option  value="0">请选择</option>';
+                for (var i = 0, l = citys.length; i < l; i++) {
+                    for (var o in citys[i]) {
+                        if (o === 'key') {
+                            options += '<option  value="' + citys[i][o] + '">';
+                        } else if (o === 'value') {
+                            options += citys[i][o] + '</option>'
+                        }
+                    }
+                }
+                $('#citySlt').html(options);
+                $('#countySlt').html('<option  value="0">请选择</option>');
+                $('#townSlt').html('<option  value="0">请选择</option>');
+                $('#userInfoAddress').val('');
+                if (selected != 0) {
+                    $('[name="userInfo[province]"]').val(text);
+                }
+            } else {
+                var some_html = '<br><div class="alert alert-danger fade in">';
+                some_html += '<label>调用后台出错：' + xhr.statusText + '</label>';
+                some_html += '</div>';
+                bootbox.alert(some_html);
+            }
+        });
+    });
+    $('#citySlt').change(function() {
+        var selected = $(this).val();
+        var text = $('#citySlt option:selected').text();
+        $.get("/address/countys?city=" + selected + '&' + new Date().getTime(), function(data, status, xhr) {
+            if (status === 'success') {
+                var countys = data.countys;
+                var options = '<option  value="0">请选择</option>';
+                for (var i = 0, l = countys.length; i < l; i++) {
+                    for (var o in countys[i]) {
+                        if (o === 'key') {
+                            options += '<option  value="' + countys[i][o] + '">';
+                        } else if (o === 'value') {
+                            options += countys[i][o] + '</option>'
+                        }
+                    }
+                }
+                $('#countySlt').html(options);
+                $('#townSlt').html('<option  value="0">请选择</option>');
+                $('#userInfoAddress').val('');
+                if (selected != 0) {
+                    $('[name="userInfo[city]"]').val(text);
+                }
+            } else {
+                var some_html = '<br><div class="alert alert-danger fade in">';
+                some_html += '<label>调用后台出错：' + xhr.statusText + '</label>';
+                some_html += '</div>';
+                bootbox.alert(some_html);
+            }
+        });
+    });
+    $('#countySlt').change(function() {
+        var selected = $(this).val();
+        var text = $('#countySlt option:selected').text();
+        $.get("/address/towns?county=" + selected + '&' + new Date().getTime(), function(data, status, xhr) {
+            if (status === 'success') {
+                var towns = data.towns;
+                var options = '<option  value="0">请选择</option>';
+                for (var i = 0, l = towns.length; i < l; i++) {
+                    for (var o in towns[i]) {
+                        if (o === 'key') {
+                            options += '<option  value="' + towns[i][o] + '">';
+                        } else if (o === 'value') {
+                            options += towns[i][o] + '</option>'
+                        }
+                    }
+                }
+                $('#townSlt').html(options);
+                $('#userInfoAddress').val('');
+                if (selected != 0) {
+                    $('[name="userInfo[county]"]').val(text);
+                }
+            } else {
+                var some_html = '<br><div class="alert alert-danger fade in">';
+                some_html += '<label>调用后台出错：' + xhr.statusText + '</label>';
+                some_html += '</div>';
+                bootbox.alert(some_html);
+            }
+        });
+    });
+    $('#townSlt').change(function() {
+        var selected = $(this).val();
+        var text = $('#townSlt option:selected').text(); 
+        $('#userInfoAddress').val('');
+        if (selected != 0) {
+            $('[name="userInfo[town]"]').val(text);
+        }               
+    });    
+</script>

@@ -15,9 +15,9 @@
                 {/roleMenuTree}
             </ul>
             <ui class="nav navbar-nav navbar-right">
-                {?user}
+                {?logedInUser}
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{user.name}<b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{logedInUser.name}<b class="caret"></b></a>
                         <ul class="dropdown-menu" role="menu" >
                             <li><a href="/user/baseInfo" tabindex="-1" >维护基本信息</a></li>
                             <li><a href="#" tabindex="-1" >帮助中心</a></li>
@@ -27,7 +27,7 @@
                 {:else}
                     <li><a href="/login">登陆</a></li>
                     <li><a href="/users">注册</a></li>                
-                {/user}
+                {/logedInUser}
             </ui>
         </div>
     </div>                

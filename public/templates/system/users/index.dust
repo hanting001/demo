@@ -53,7 +53,7 @@
                     <td class="col-sm-1">{@baseCode code="{.userType}" base="userType"/}</td>
                     <td class="col-sm-1">{@baseCode code="{.isValid}" base="valid"/}</td>
                     <td class="col-md-3">
-                        {@security allowed="ROLE_ADMIN" roles="{user.roles}"}
+                        {@security allowed="ROLE_ADMIN" roles="{logedInUser.roles}"}
                         <div class="btn-group btn-group-sm">
                             <a class="btn btn-default" data-toggle="tooltip" data-placement="left" title="编辑" href="/system/auth/users/{.name}/edit"><i class="icon-edit icon-large"></i></a>
                             <a class="btn btn-default"  href="/system/menus/{.name}/addRoles" data-toggle="tooltip" data-placement="top" title="分配权限"><i class="icon-plus icon-large"></i></a>

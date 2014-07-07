@@ -75,11 +75,13 @@ module.exports = function(app) {
 			}
 			model.roles = roles;
 			var branchTree = branchHelper.branchTree;
+			
 			var userBranches = [];
-			var oprBranches = req.user.oprBranches;
+			//var oprBranches = req.user.oprBranches;
 			branchTree.forEach(function(branch) {
-				userBranches.push(getUserBranch(oprBranches, branch));
+				userBranches.push(getUserBranch([], branch));
 			});
+			console.log(userBranches);
 			model.userBranches = userBranches;
 			res.render('system/users/add', model);
 		});
@@ -88,14 +90,20 @@ module.exports = function(app) {
 	function getUserBranch(oprBranches, branch) {
 		var node = {};
 		node.id = branch.code;
-		node.name = branch.name;
+		node.text = branch.name;
 		node.children = [];
+		node.state = {};
 		if (oprBranches.indexOf(branch.code) >=0 || oprBranches.indexOf('ALL') >= 0) {
-			node.checked = true;
+			node.state.selected = true;
 		}
 		for (var i = 0, l = branch.children.length; i < l; i ++) {
 			node.children.push(getUserBranch(oprBranches, branch.children[i]));
 		}
 		return node;
 	}
+
+	app.post('/system/auth/users/add', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		req.flash('showMessage', '创建成功');
+		res.redirect('/system/auth/users')
+	});
 };

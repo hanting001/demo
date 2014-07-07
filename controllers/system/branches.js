@@ -102,12 +102,12 @@ module.exports = function(app) {
 						res.locals.model = model;
 						next();//调用下一个错误处理middlewear
 					} else {
-						Branch.findByIdAndUpdate(new ObjectId(parentId), {$push:{subs:branch.code}}, function(err){
+						Branch.findByIdAndUpdate(new ObjectId(parentId), {$push:{subs:branch.code}}, function(err, parent){
 							if (err){
 								next(err);
 							} else {
 								req.flash('showMessage', '创建成功');
-								res.redirect('/system/branches?parent=' + parent.code);
+								res.redirect('/system/branches?parent=' + parent.parent);
 							}
 						});
 					}
@@ -256,6 +256,31 @@ module.exports = function(app) {
 						});
 					});
 				});
+			});
+		});
+	});
+
+
+	app.get('/system/branches/getBranches', function(req, res, next) {
+		var level = req.query.level;
+		var parent = req.query.parent;
+		var condition = {};
+		if (level) {
+			condition.levelId = level;
+		}
+		if (parent) {
+			condition.parent = parent;
+		}
+		Branch.find(condition).
+		select('code name').
+		sort('code').
+		exec(function(err, branches) {
+			if (err) {
+				return next(err);
+			}
+			res.json({
+				message: 'ok',
+				branches: branches
 			});
 		});
 	});

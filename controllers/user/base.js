@@ -31,6 +31,7 @@ module.exports = function(app) {
                 model.userInfo = user;
             }
             model.title = '维护用户信息';
+            model.user = req.user;
             res.render('user/add', model);
         });
     });
