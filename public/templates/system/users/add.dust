@@ -8,14 +8,14 @@
 </div>
 {/content}
 {<script}
+<script src="/js/jquery.complexify.js"></script>
 <script type="text/javascript">
-
     function showBranchInfo() {
         var div = $('<div class="form-group"></div>');
         div.append('<label  class="col-sm-1 control-label">所属机构<span class="required-indicator">*</span></label>');
-        div.append('<div class="col-sm-2"><input type="text" name="user[branch]" class="form-control" id="userBranch" value="{user.branch}" required><select id="branch0" class="form-control"><option  value="0">请选择</option></select></div>');
+        div.append('<div class="col-sm-2"><input type="text" name="user[branch]" readonly class="form-control" id="userBranch" value="{user.branch}" required><select id="branch0" class="form-control"><option  value="0">请选择</option></select></div>');
         div.append('<label  class="col-sm-1 control-label">可操作机构</label>');
-        div.append('<div class="col-sm-8"><div id="branchTree"></div></div>');
+        div.append('<div class="col-sm-8" id="oprBranches"><div id="branchTree"></div></div>');
         $('#branchInfo').append(div);
     }
     function showBranchTree() {
@@ -23,9 +23,11 @@
             'core': {
                 'data': JSON.parse('{userBranches|js|s}')
             },
+            ui: {
+                'theme_name': "checkbox"
+            },
             'checkbox': {
-                'cascade': 'down',
-                'keep_selected_style' : false
+                'cascade' : 'up'
             },
             "plugins": ["checkbox"]
         });
@@ -38,8 +40,8 @@
                 $('#roleInfo').append(div);
             {/eq}
             {/math}
-            div.append('<label class="col-sm-1 control-label">{.name}<span class="required-indicator">*</span></label>');
-            div.append('<div class="col-sm-1"><div class="switch" tabindex="0"><input name="user[roles]" type="checkbox" value="{.code}" /></div></div>');
+            div.append('<label class="col-sm-1 control-label">{.name}</label>');
+            div.append('<div class="col-sm-1"><div class="switch" tabindex="0"><input name="user[roles]" {@select key=checked}{@eq value="1"}checked{/eq}{/select} type="checkbox" value="{.code}" /></div></div>');
         {/roles}
         $("[name='user[roles]']").bootstrapSwitch('onText','已分配');
         $("[name='user[roles]']").bootstrapSwitch('offText', '未分配');        
@@ -50,6 +52,7 @@
             if (status === 'success') {
                 var branches = data.branches;
                 var options = '<option value="">请选择</option>';
+                options += '<option value="ALL">ALL</option>';
                 for (var i = 0, l = branches.length; i < l; i++) {
                     options += '<option  value="' + branches[i].code + '">' + branches[i].code + '-' + branches[i].name + '</option>';
                 }
@@ -180,19 +183,32 @@
         showBranchInfo();
         showBranch0();
         showBranchTree();
+        $("#userPassword").complexify({}, function(valid, complexity) {
+            if (valid) {
+                $('.progress-bar').removeClass('progress-bar-warning').addClass('progress-bar-success').css('width', complexity+'%').attr('aria-valuenow', complexity);
+            } else {
+                $('.progress-bar').removeClass('progress-bar-success').addClass('progress-bar-warning').css('width', complexity+'%').attr('aria-valuenow', complexity);               
+            }
+            
+        });
         $('#branch0').change(function() {
             var selected = $(this).val();
             $('#userBranch').val(selected);
-            showBranch1(selected);
+            if (selected != 'ALL') {
+                showBranch1(selected);
+            }
         });
         $("#returnButton").attr("href", "/system/auth/users");
         $("#userInfoForm").validate({
-            submitHandler:function(form){
-                $(":button").attr("disabled","true");  
-                form.action = '/system/auth/users/add';
+            submitHandler: function(form) {
+                var selectedElms = $('#branchTree').jstree("get_selected", true);
+                $.each(selectedElms, function() {
+                    $('#oprBranches').append('<input type="hidden" name="user[oprBranches]" class="form-control" value="' + this.id + '">');
+                });
+                $(":button").attr("disabled", "true");
                 form.submit();
             },
-            focusCleanup:true
+            focusCleanup: true
         });
     });
 

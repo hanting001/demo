@@ -4,6 +4,8 @@ var User = require('../../models/system/User');
 var UserInfo = require('../../models/UserInfo');
 var Role = require('../../models/system/Role');
 var branchHelper = require('../../lib/branchHelper');
+var mongoose = require('mongoose');
+var ObjectId = mongoose.Types.ObjectId;
 module.exports = function(app) {
 	app.get('/system/auth/users/signup', function(req, res) {
 		// render the page and pass in any flash data if it exists
@@ -65,45 +67,304 @@ module.exports = function(app) {
 
 	app.get('/system/auth/users/add', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
 		var model = {
-			title: '新增用户',
-			showMessage: req.flash('showMessage')
+			showMessage: req.flash('showMessage'),
+			title: '用户信息维护'
 		};
-
 		Role.find({}, function(err, roles) {
 			if (err) {
 				return next(err);
 			}
-			model.roles = roles;
+			var userRoles = [];
+			roles.forEach(function(role) {
+				var node = {};
+				node.code = role.code;
+				node.name = role.name;
+				node.checked = false;
+				userRoles.push(node);
+			})
+			model.roles = userRoles;
 			var branchTree = branchHelper.branchTree;
-			
 			var userBranches = [];
 			//var oprBranches = req.user.oprBranches;
 			branchTree.forEach(function(branch) {
-				userBranches.push(getUserBranch([], branch));
+				userBranches.push(branchHelper.getUserOprBranches([], branch));
 			});
-			console.log(userBranches);
 			model.userBranches = userBranches;
 			res.render('system/users/add', model);
 		});
 	});
 
-	function getUserBranch(oprBranches, branch) {
-		var node = {};
-		node.id = branch.code;
-		node.text = branch.name;
-		node.children = [];
-		node.state = {};
-		if (oprBranches.indexOf(branch.code) >=0 || oprBranches.indexOf('ALL') >= 0) {
-			node.state.selected = true;
-		}
-		for (var i = 0, l = branch.children.length; i < l; i ++) {
-			node.children.push(getUserBranch(oprBranches, branch.children[i]));
-		}
-		return node;
-	}
-
 	app.post('/system/auth/users/add', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
-		req.flash('showMessage', '创建成功');
-		res.redirect('/system/auth/users')
+		var userInput = req.body.user;
+		var userInfoInput = req.body.userInfo;
+		var address = userInfoInput.province + userInfoInput.city + userInfoInput.county + userInfoInput.town;
+		address = address + ' ' + userInfoInput.address;
+		userInfoInput.address = [{
+			value: address.trim()
+		}];
+
+		var userModel = new User(userInput);
+		var userInfoModel = new UserInfo(userInfoInput);
+
+		if (userInput.oprBranches && userInput.oprBranches.length > 0) {
+			userModel.oprBranches = branchHelper.getOprBranches(userInput.oprBranches);
+		}
+		console.log(userModel);
+		console.log(userInfoModel);
+		var model = {
+			title: '用户信息维护'
+		};
+		model.user = userInput;
+		userInfoInput.address = userInfoInput.address[0].value;
+		model.userInfo = userInfoInput;
+		Role.find({}, function(err, roles) {
+			userModel.save(function(err, user) {
+				if (err) {
+					res.locals.err = err;
+					res.locals.view = 'system/users/add';
+					var branchTree = branchHelper.branchTree;
+					var userBranches = [];
+					//var oprBranches = req.user.oprBranches;
+					branchTree.forEach(function(branch) {
+						userBranches.push(branchHelper.getUserOprBranches(userModel.oprBranches, branch));
+					});
+					model.userBranches = userBranches;
+					var userRoles = [];
+					roles.forEach(function(role) {
+						var node = {};
+						node.code = role.code;
+						node.name = role.name;
+						if (userModel.roles && userModel.roles.indexOf(role) >= 0) {
+							node.checked = '1';
+						} else {
+							node.checked = '0';
+						}
+						userRoles.push(node);
+					})
+					model.roles = userRoles;
+					res.locals.model = model;
+					return next();
+				}
+				userInfoModel.name = user.name;
+				userInfoModel.user = user._id;
+				userInfoModel.save(function(err, userInfo) {
+					if (err) {
+						//回滚
+						user.remove(function(err) {
+							if (err) {
+								return next(err);
+							}
+						});
+						res.locals.err = err;
+						res.locals.view = 'system/users/add';
+						var userBranches = [];
+						//var oprBranches = req.user.oprBranches;
+						branchTree.forEach(function(branch) {
+							userBranches.push(branchHelper.getUserOprBranches(user.oprBranches, branch));
+						});
+						model.userBranches = userBranches;
+						var userRoles = [];
+						roles.forEach(function(role) {
+							var node = {};
+							node.code = role.code;
+							node.name = role.name;
+							if (user.roles && user.roles.indexOf(role) >= 0) {
+								node.checked = '1';
+							} else {
+								node.checked = '0';
+							}
+							userRoles.push(node);
+						})
+						model.roles = userRoles;
+						res.locals.model = model;
+						return next();
+					}
+					User.findByIdAndUpdate(user._id, {
+						$set: {
+							userInfo: userInfo._id
+						}
+					}, function(err) {
+						if (err) {
+							return next(err);
+						}
+					})
+					req.flash('showMessage', '创建成功');
+					res.redirect('/system/auth/users');
+				});
+			});
+		});
+	});
+
+
+	app.get('/system/auth/users/:name/edit', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		var model = {
+			showMessage: req.flash('showMessage'),
+			title: '用户信息维护'
+		};
+		Role.find({}, function(err, roles) {
+			if (err) {
+				return next(err);
+			}
+			var name = req.params.name;
+			User.findOne({
+				name: name
+			}).
+			populate('userInfo').
+			exec(function(err, user) {
+				model.user = user;
+				var userInfo = user.userInfo;
+				if (userInfo) {
+					var data = {};
+					for (var o in userInfo) {
+						data[o] = userInfo[o];
+					}
+					for (var i = 0, l = userInfo.address.length; i < l; i++) {
+						if (userInfo.address[i].type === '默认') {
+							data.address = userInfo.address[i].value;
+							break;
+						}
+					}
+					model.userInfo = data;
+				}
+				var userRoles = [];
+				roles.forEach(function(role) {
+					var node = {};
+					node.code = role.code;
+					node.name = role.name;
+					if (user.roles && user.roles.indexOf(role.code) >= 0) {
+						node.checked = '1';
+					} else {
+						node.checked = '0';
+					}
+					userRoles.push(node);
+				})
+				model.roles = userRoles;
+				var branchTree = branchHelper.branchTree;
+				var userBranches = [];
+				branchTree.forEach(function(branch) {
+					userBranches.push(branchHelper.getUserOprBranches(user.oprBranches, branch));
+				});
+				model.userBranches = userBranches;
+				res.render('system/users/add', model);
+			});
+		});
+	});
+
+	app.post('/system/auth/users/:name/edit', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+		var name = req.params.name;
+		var userInput = req.body.user;
+		var userInfoInput = req.body.userInfo;
+		var address = userInfoInput.province + userInfoInput.city + userInfoInput.county + userInfoInput.town;
+		address = address + ' ' + userInfoInput.address;
+		userInfoInput.address = [{
+			value: address.trim()
+		}];
+		var model = {
+			title: '用户信息维护'
+		};
+
+		Role.find({}, function(err, roles) {
+			User.findOne({
+				name: name
+			}, function(err, user) {
+				if (err) {
+					return next(err);
+				}
+				for (var o in userInput) {
+					user[o] = userInput[o];
+				}
+				if (userInput.oprBranches && userInput.oprBranches.length > 0) {
+					user.oprBranches = branchHelper.getOprBranches(userInput.oprBranches);
+				}
+				console.log(user);
+				user.save(function(err, user) {
+					if (err) {
+						model.user = userInput;
+						userInfoInput.address = userInfoInput.address[0].value;
+						model.userInfo = userInfoInput;
+						res.locals.err = err;
+						res.locals.view = 'system/users/add';
+						var branchTree = branchHelper.branchTree;
+						var userBranches = [];
+						//var oprBranches = req.user.oprBranches;
+						branchTree.forEach(function(branch) {
+							userBranches.push(branchHelper.getUserOprBranches(user.oprBranches, branch));
+						});
+						model.userBranches = userBranches;
+						var userRoles = [];
+						roles.forEach(function(role) {
+							var node = {};
+							node.code = role.code;
+							node.name = role.name;
+							if (user.roles && user.roles.indexOf(role) >= 0) {
+								node.checked = '1';
+							} else {
+								node.checked = '0';
+							}
+							userRoles.push(node);
+						})
+						model.roles = userRoles;
+						res.locals.model = model;
+						return next();
+					}
+					UserInfo.findOne({
+						name: name
+					}, function(err, userInfo) {
+						if (err) {
+							return next(err);
+						}
+						if (userInfo) {
+							for (var o in userInfoInput) {
+								userInfo[o] = userInfoInput[o]
+							}
+						} else {
+							userInfo = new UserInfo(userInfoInput);
+							userInfo.name = user.name;
+							userInfo.user = user._id;
+						}
+
+						userInfo.save(function(err) {
+							if (err) {
+								model.user = userInput;
+								userInfoInput.address = userInfoInput.address[0].value;
+								model.userInfo = userInfoInput;
+								res.locals.err = err;
+								res.locals.view = 'system/users/add';
+								var branchTree = branchHelper.branchTree;
+								var userBranches = [];
+								//var oprBranches = req.user.oprBranches;
+								branchTree.forEach(function(branch) {
+									userBranches.push(branchHelper.getUserOprBranches(user.oprBranches, branch));
+								});
+								model.userBranches = userBranches;
+								var userRoles = [];
+								roles.forEach(function(role) {
+									var node = {};
+									node.code = role.code;
+									node.name = role.name;
+									if (user.roles && user.roles.indexOf(role) >= 0) {
+										node.checked = '1';
+									} else {
+										node.checked = '0';
+									}
+									userRoles.push(node);
+								})
+								model.roles = userRoles;
+								res.locals.model = model;
+								return next();
+							}
+							user.userInfo = userInfo._id;
+							user.save(function(err) {
+								if (err) {
+									return next(err);
+								}
+								req.flash('showMessage', '创建成功');
+								res.redirect('/system/auth/users/' + name + '/edit');
+							});
+						});
+					})
+				})
+			});
+		});
 	});
 };
