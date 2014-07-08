@@ -44,7 +44,7 @@ module.exports = function(app) {
 				return next();
 			}
 			req.flash('showMessage', '创建成功');
-			res.redirect('/system/roles');
+			res.redirect('/system/auth/roles');
 		});
 	});
 
@@ -80,7 +80,7 @@ module.exports = function(app) {
 					return next(); //调用下一个错误处理middlewear
 				}
 				req.flash('showMessage', '修改成功');
-				res.redirect('/system/roles');
+				res.redirect('/system/auth/roles');
 			});
 		});
 	});

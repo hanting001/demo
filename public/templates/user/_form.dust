@@ -63,6 +63,10 @@
             <input name="userInfo[town]" type="hidden">
             <input type="text" name="userInfo[address]" value="{userInfo.address}"  class="form-control" id="userInfoAddress" required>
         </div>
+        <label for="userInfoEmail" class="col-sm-1 control-label">用户类型<span class="required-indicator">*</span></label>
+        <div class="col-sm-1">
+            {@baseCode selectValue="{user.userType}" name="user[userType]" base="userType"/}
+        </div>       
     </div>
     {@select key=type}
     {@ne value="user"}

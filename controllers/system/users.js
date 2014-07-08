@@ -358,7 +358,7 @@ module.exports = function(app) {
 								if (err) {
 									return next(err);
 								}
-								req.flash('showMessage', '创建成功');
+								req.flash('showMessage', '更新成功');
 								res.redirect('/system/auth/users/' + name + '/edit');
 							});
 						});
