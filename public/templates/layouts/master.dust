@@ -138,6 +138,7 @@ pre code {
         <script src="/js/jquery.validate.min.js"></script>
         <script src="/js/localization/messages_zh.js"></script>
         <script src="/js/additional-methods.min.js"></script>
+        <script src="/js/additional-methods.js"></script>
         <script src="/js/bootstrap-tree.js"></script>
         <script src="/js/bootbox.min.js"></script>
         <script src="http://cdn.bootcss.com/jstree/3.0.2/jstree.min.js"></script>
