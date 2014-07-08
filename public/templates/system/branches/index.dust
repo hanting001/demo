@@ -68,7 +68,7 @@
 			          <div class="btn-group btn-group-sm">
 	  					<a class="btn btn-default" data-toggle="tooltip" data-placement="left" title="编辑" href="/system/branches/{.id}/edit"><i class="icon-edit icon-large"></i></a>
 	  					<a class="btn btn-default {@select key=levelId}{@gte value=4}disabled{/gte}{/select}"  href="/system/branches/{.id}/addSub" data-toggle="tooltip" data-placement="top" title="新增下级"><i class="icon-plus icon-large"></i></a>
-	  					<a class="btn btn-default" href="#" value="{.id}" data-toggle="tooltip" data-placement="right" name="deleteBtn" title="删除"><i class="icon-remove icon-large"></i></a>
+	  					{@security allowed="ROLE_ADMIN" roles="{logedInUser.roles}"}<a class="btn btn-default" href="#" value="{.id}" data-toggle="tooltip" data-placement="right" name="deleteBtn" title="删除"><i class="icon-remove icon-large"></i></a>{/security}
 					  </div>
 			          {:else}
 			          <a class="btn btn-default btn-xs disabled" href="#">修改</a>
