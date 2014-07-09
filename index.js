@@ -21,6 +21,7 @@ var numCPUs = os.cpus().length;
 	    errorMessages = require('./lib/middlewear/errorMessages'),
 	    _app = {};
 	var showMenuMiddleware = require('./lib/middlewear/showMenu');
+	var specialization = require('./lib/middlewear/specialization');
 	require('./lib/helper-dateFormat');
 	require('./lib/helper-baseCode');
 	require('./lib/helper-security');
@@ -53,6 +54,7 @@ var numCPUs = os.cpus().length;
 		app.use(passport.initialize());  //Use Passport for authentication
 		app.use(passport.session());     //Persist the user in the session
 		app.use(flash());                //Use flash for saving/retrieving error messages for the user
+		app.use(specialization());
 		app.use(auth.injectUser);        //Inject the authenticated user into the response context
 		app.use(showMenuMiddleware());   //用于确定该显示什么菜单
 	};
