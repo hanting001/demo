@@ -32,16 +32,16 @@
         <table class="table table-hover table-condensed">
             <thead>
                 <tr>
-                    <th class="col-md-3">菜单名</th>
-                    <th class="col-md-3">菜单链接</th>
-                    <th class="col-md-3">级别</th>
-                    <th class="col-md-3">操作选项</th>
+                    <th class="col-sm-3">菜单名</th>
+                    <th class="col-sm-3">菜单链接</th>
+                    <th class="col-sm-3">级别</th>
+                    <th class="col-sm-3">操作选项</th>
                 </tr>
             </thead>
             <tbody>
             {#menus} 
             <tr>
-                <td class="col-md-3">
+                <td class="col-sm-3">
                     {@select key=parentUrl}
                         {@ne value="/"}
                     <a data-toggle="tooltip" data-placement="top" title="显示上层菜单"  href="/system/menus/{parentId}/up" ><i class="icon-angle-left icon-large"></i></a>
@@ -54,11 +54,11 @@
                         {/gt}
                     {/select}
                 </td>
-                <td class="col-md-3">{.fullUrl}</td>
-                <td class="col-md-3">{@baseCode code="" base="menuLevel"/}</td>
-                <td class="col-md-3">
+                <td class="col-sm-3">{.fullUrl}</td>
+                <td class="col-sm-3">{@baseCode code="" base="menuLevel"/}</td>
+                <td class="col-sm-3">
                     {?isAdmin}
-                    <div class="btn-group btn-group-md">
+                    <div class="btn-group btn-group-sm">
                         <a class="btn btn-default" data-toggle="tooltip" data-placement="left" title="编辑" href="/system/menus/{.id}/edit"><i class="icon-edit icon-large"></i></a>
                         <a class="btn btn-default {@select key=levelId}{@gte value=3}disabled{/gte}{/select}"  href="/system/menus/{.id}/addSub" data-toggle="tooltip" data-placement="top" title="新增下级"><i class="icon-plus icon-large"></i></a>
                         {@eq key="{.levelId}" value="1"}

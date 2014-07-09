@@ -52,7 +52,9 @@
             if (status === 'success') {
                 var branches = data.branches;
                 var options = '<option value="">请选择</option>';
+                {@security allowed="ROLE_ADMIN" roles="{logedInUser.roles}"}
                 options += '<option value="ALL">ALL</option>';
+                {/security}
                 for (var i = 0, l = branches.length; i < l; i++) {
                     options += '<option  value="' + branches[i].code + '">' + branches[i].code + '-' + branches[i].name + '</option>';
                 }
@@ -179,6 +181,7 @@
         });
     }
     $(function() {
+        loadProvinces();
         showRoleInfo();
         showBranchInfo();
         showBranch0();
