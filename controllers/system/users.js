@@ -21,12 +21,14 @@ module.exports = function(app) {
 		failureFlash: true // allow flash messages
 	}));
 
-	app.get('/system/auth/users', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+	app.get('/system/auth/users', auth.isAuthenticated('ROLE_ADMIN, ROLE_BRANCH_ADMIN'), function(req, res, next) {
 		var page = 1;
 		if (req.query.page) {
 			page = req.query.page;
 		}
-		User.paginate({}, page, 10, function(err, pageCount, users) {
+		var condition = {};
+		auth.branchCondition(condition, req.user, 'branch');
+		User.paginate(condition, page, 10, function(err, pageCount, users) {
 			if (err) {
 				return next(err);
 			}
@@ -46,7 +48,7 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get('/system/auth/users/:name/delete', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+	app.get('/system/auth/users/:name/delete', auth.isAuthenticated('ROLE_ADMIN, ROLE_BRANCH_ADMIN'), function(req, res, next) {
 		var name = req.params.name;
 		User.findOneAndRemove({
 			name: name
@@ -65,7 +67,7 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get('/system/auth/users/add', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+	app.get('/system/auth/users/add', auth.isAuthenticated('ROLE_ADMIN, ROLE_BRANCH_ADMIN'), function(req, res, next) {
 		var model = {
 			showMessage: req.flash('showMessage'),
 			title: '用户信息维护'
@@ -76,25 +78,23 @@ module.exports = function(app) {
 			}
 			var userRoles = [];
 			roles.forEach(function(role) {
-				var node = {};
-				node.code = role.code;
-				node.name = role.name;
-				node.checked = false;
-				userRoles.push(node);
+				if (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN') {
+					var node = {};
+					node.code = role.code;
+					node.name = role.name;
+					node.checked = false;
+					userRoles.push(node);
+				}
 			})
 			model.roles = userRoles;
 			var branchTree = branchHelper.branchTree;
-			var userBranches = [];
-			//var oprBranches = req.user.oprBranches;
-			branchTree.forEach(function(branch) {
-				userBranches.push(branchHelper.getUserOprBranches([], branch));
-			});
+			var userBranches = branchHelper.getUserOprBranches(req.user, [], branchTree);
 			model.userBranches = userBranches;
 			res.render('system/users/add', model);
 		});
 	});
 
-	app.post('/system/auth/users/add', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+	app.post('/system/auth/users/add', auth.isAuthenticated('ROLE_ADMIN, ROLE_BRANCH_ADMIN'), function(req, res, next) {
 		var userInput = req.body.user;
 		var userInfoInput = req.body.userInfo;
 		var address = userInfoInput.province + userInfoInput.city + userInfoInput.county + userInfoInput.town;
@@ -115,6 +115,7 @@ module.exports = function(app) {
 			title: '用户信息维护'
 		};
 		model.user = userInput;
+		delete model.user.password;
 		userInfoInput.address = userInfoInput.address[0].value;
 		model.userInfo = userInfoInput;
 		Role.find({}, function(err, roles) {
@@ -123,23 +124,21 @@ module.exports = function(app) {
 					res.locals.err = err;
 					res.locals.view = 'system/users/add';
 					var branchTree = branchHelper.branchTree;
-					var userBranches = [];
-					//var oprBranches = req.user.oprBranches;
-					branchTree.forEach(function(branch) {
-						userBranches.push(branchHelper.getUserOprBranches(userModel.oprBranches, branch));
-					});
+					var userBranches = branchHelper.getUserOprBranches(req.user, user.oprBranches, branchTree);
 					model.userBranches = userBranches;
 					var userRoles = [];
 					roles.forEach(function(role) {
-						var node = {};
-						node.code = role.code;
-						node.name = role.name;
-						if (userModel.roles && userModel.roles.indexOf(role) >= 0) {
-							node.checked = '1';
-						} else {
-							node.checked = '0';
+						if (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN') {
+							var node = {};
+							node.code = role.code;
+							node.name = role.name;
+							if (userModel.roles && userModel.roles.indexOf(role) >= 0) {
+								node.checked = '1';
+							} else {
+								node.checked = '0';
+							}
+							userRoles.push(node);
 						}
-						userRoles.push(node);
 					})
 					model.roles = userRoles;
 					res.locals.model = model;
@@ -157,23 +156,22 @@ module.exports = function(app) {
 						});
 						res.locals.err = err;
 						res.locals.view = 'system/users/add';
-						var userBranches = [];
-						//var oprBranches = req.user.oprBranches;
-						branchTree.forEach(function(branch) {
-							userBranches.push(branchHelper.getUserOprBranches(user.oprBranches, branch));
-						});
+						var branchTree = branchHelper.branchTree;
+						var userBranches = branchHelper.getUserOprBranches(req.user, user.oprBranches, branchTree);
 						model.userBranches = userBranches;
 						var userRoles = [];
 						roles.forEach(function(role) {
-							var node = {};
-							node.code = role.code;
-							node.name = role.name;
-							if (user.roles && user.roles.indexOf(role) >= 0) {
-								node.checked = '1';
-							} else {
-								node.checked = '0';
+							if (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN') {
+								var node = {};
+								node.code = role.code;
+								node.name = role.name;
+								if (user.roles && user.roles.indexOf(role) >= 0) {
+									node.checked = '1';
+								} else {
+									node.checked = '0';
+								}
+								userRoles.push(node);
 							}
-							userRoles.push(node);
 						})
 						model.roles = userRoles;
 						res.locals.model = model;
@@ -196,7 +194,7 @@ module.exports = function(app) {
 	});
 
 
-	app.get('/system/auth/users/:name/edit', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+	app.get('/system/auth/users/:name/edit', auth.isAuthenticated('ROLE_ADMIN, ROLE_BRANCH_ADMIN'), function(req, res, next) {
 		var model = {
 			showMessage: req.flash('showMessage'),
 			title: '用户信息维护'
@@ -228,29 +226,28 @@ module.exports = function(app) {
 				}
 				var userRoles = [];
 				roles.forEach(function(role) {
-					var node = {};
-					node.code = role.code;
-					node.name = role.name;
-					if (user.roles && user.roles.indexOf(role.code) >= 0) {
-						node.checked = '1';
-					} else {
-						node.checked = '0';
+					if (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN') {
+						var node = {};
+						node.code = role.code;
+						node.name = role.name;
+						if (user.roles && user.roles.indexOf(role.code) >= 0) {
+							node.checked = '1';
+						} else {
+							node.checked = '0';
+						}
+						userRoles.push(node);
 					}
-					userRoles.push(node);
 				})
 				model.roles = userRoles;
 				var branchTree = branchHelper.branchTree;
-				var userBranches = [];
-				branchTree.forEach(function(branch) {
-					userBranches.push(branchHelper.getUserOprBranches(user.oprBranches, branch));
-				});
+				var userBranches = branchHelper.getUserOprBranches(req.user, user.oprBranches, branchTree);
 				model.userBranches = userBranches;
 				res.render('system/users/add', model);
 			});
 		});
 	});
 
-	app.post('/system/auth/users/:name/edit', auth.isAuthenticated('ROLE_ADMIN'), function(req, res, next) {
+	app.post('/system/auth/users/:name/edit', auth.isAuthenticated('ROLE_ADMIN, ROLE_BRANCH_ADMIN'), function(req, res, next) {
 		var name = req.params.name;
 		var userInput = req.body.user;
 		var userInfoInput = req.body.userInfo;
@@ -285,23 +282,21 @@ module.exports = function(app) {
 						res.locals.err = err;
 						res.locals.view = 'system/users/add';
 						var branchTree = branchHelper.branchTree;
-						var userBranches = [];
-						//var oprBranches = req.user.oprBranches;
-						branchTree.forEach(function(branch) {
-							userBranches.push(branchHelper.getUserOprBranches(user.oprBranches, branch));
-						});
+						var userBranches = branchHelper.getUserOprBranches(req.user, user.oprBranches, branchTree);
 						model.userBranches = userBranches;
 						var userRoles = [];
 						roles.forEach(function(role) {
-							var node = {};
-							node.code = role.code;
-							node.name = role.name;
-							if (user.roles && user.roles.indexOf(role) >= 0) {
-								node.checked = '1';
-							} else {
-								node.checked = '0';
+							if (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN') {
+								var node = {};
+								node.code = role.code;
+								node.name = role.name;
+								if (user.roles && user.roles.indexOf(role) >= 0) {
+									node.checked = '1';
+								} else {
+									node.checked = '0';
+								}
+								userRoles.push(node);
 							}
-							userRoles.push(node);
 						})
 						model.roles = userRoles;
 						res.locals.model = model;
@@ -331,23 +326,21 @@ module.exports = function(app) {
 								res.locals.err = err;
 								res.locals.view = 'system/users/add';
 								var branchTree = branchHelper.branchTree;
-								var userBranches = [];
-								//var oprBranches = req.user.oprBranches;
-								branchTree.forEach(function(branch) {
-									userBranches.push(branchHelper.getUserOprBranches(user.oprBranches, branch));
-								});
+								var userBranches = branchHelper.getUserOprBranches(req.user, user.oprBranches, branchTree);
 								model.userBranches = userBranches;
 								var userRoles = [];
 								roles.forEach(function(role) {
-									var node = {};
-									node.code = role.code;
-									node.name = role.name;
-									if (user.roles && user.roles.indexOf(role) >= 0) {
-										node.checked = '1';
-									} else {
-										node.checked = '0';
+									if (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN') {
+										var node = {};
+										node.code = role.code;
+										node.name = role.name;
+										if (user.roles && user.roles.indexOf(role) >= 0) {
+											node.checked = '1';
+										} else {
+											node.checked = '0';
+										}
+										userRoles.push(node);
 									}
-									userRoles.push(node);
 								})
 								model.roles = userRoles;
 								res.locals.model = model;
@@ -358,7 +351,7 @@ module.exports = function(app) {
 								if (err) {
 									return next(err);
 								}
-								req.flash('showMessage', '创建成功');
+								req.flash('showMessage', '更新成功');
 								res.redirect('/system/auth/users/' + name + '/edit');
 							});
 						});

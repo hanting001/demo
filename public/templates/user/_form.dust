@@ -63,6 +63,10 @@
             <input name="userInfo[town]" type="hidden">
             <input type="text" name="userInfo[address]" value="{userInfo.address}"  class="form-control" id="userInfoAddress" required>
         </div>
+        <label for="userInfoEmail" class="col-sm-1 control-label">用户类型<span class="required-indicator">*</span></label>
+        <div class="col-sm-1">
+            {@baseCode selectValue="{user.userType}" name="user[userType]" base="userType"/}
+        </div>       
     </div>
     {@select key=type}
     {@ne value="user"}
@@ -102,8 +106,8 @@
 </form>
 <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript">
-    $(function() {
-        $.get("/address/provinces?" + new Date().getTime(), function(data, status, xhr) {
+    function loadProvinces() {
+         $.get("/address/provinces?" + new Date().getTime(), function(data, status, xhr) {
             if (status === 'success') {
                 var provinces = data.provinces;
                 var options = '<option  value="0">请选择</option>';
@@ -123,7 +127,10 @@
                 some_html += '</div>';
                 bootbox.alert(some_html);
             }
-        });
+        });       
+    }
+    $(function() {
+        loadProvinces();
     });
    $('#provinceSlt').change(function() {
         var selected = $(this).val();

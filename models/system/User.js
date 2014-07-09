@@ -52,10 +52,14 @@ userSchema.plugin(uniqueValidator, {
  */
 userSchema.pre('save', function(next) {
     var user = this;
+    console.log(this.oprBranches);
     if (this.oprBranches && this.oprBranches.length == 0) {
-        this.oprBranches = [this.branch];
+        console.log(this.branch);
+        this.oprBranches.push(this.branch);
     }
-
+    if (this.roles.indexOf('ROLE_USER') < 0) {
+        this.roles.push('ROLE_USER');
+    }
     
     //If the password has not been modified in this save operation, leave it alone (So we don't double hash it)
     if (!user.isModified('password')) {
