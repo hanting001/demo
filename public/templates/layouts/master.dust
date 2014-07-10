@@ -38,8 +38,6 @@
 <link href="/css/validator.css" rel="stylesheet">
 <link href="http://cdn.bootcss.com/jstree/3.0.2/themes/default/style.min.css" rel="stylesheet">
 <style>
-
-
 /* Wrapper for page content to push down footer */
 #wrap {
     min-height: 99%;

@@ -9,7 +9,7 @@ var ObjectId = mongoose.Types.ObjectId;
 module.exports = function(app) {
 	app.get('/system/auth/users/signup', function(req, res) {
 		// render the page and pass in any flash data if it exists
-		res.render('system/users/signupForm', {
+		res.render('user/signupForm', {
 			title: '注册用户',
 			message: req.flash('error')
 		});
