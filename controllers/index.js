@@ -3,7 +3,7 @@
 
 var passport = require('passport');
 var auth = require('../lib/auth');
-
+var dustHelper = require('../lib/dustHelper');
 module.exports = function(app) {
 
 	app.get('/', auth.isAuthenticated(), function(req, res) {
@@ -39,4 +39,14 @@ module.exports = function(app) {
 		req.session.theme = req.params.theme;
 		res.redirect('/');
 	});
+
+	app.get('/createStatic', function(req, res, next) {
+		dustHelper.render(res, 'index', {}, function(err, html) {
+			if (err) {
+				return next(err);
+			}
+			console.log(html);
+			res.render('system/branches/index');
+		});
+	})
 };
