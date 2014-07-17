@@ -3,7 +3,7 @@
 <div class="panel panel-primary">
   <div class="panel-heading">{title}</div>
   <div class="panel-body">
-		{>"/system/menus/_form" edit="true" /}
+		{>"system/menus/_form" edit="true" /}
 	</div>
 </div>
 {/content}

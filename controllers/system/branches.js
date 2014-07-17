@@ -1,3 +1,4 @@
+"use strict";
 var Branch = require('../../models/system/Branch');
 var BranchCounter = require('../../models/system/BranchCounter');
 var baseCode = require('../../lib/baseCode');

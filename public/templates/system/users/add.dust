@@ -3,7 +3,7 @@
 <div class="panel panel-primary">
   <div class="panel-heading">{title}</div>
   <div class="panel-body">
-        {>"/user/_form" type="addNew"/}
+        {>"user/_form" type="addNew"/}
     </div>
 </div>
 {/content}

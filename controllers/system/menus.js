@@ -1,3 +1,4 @@
+"use strict";
 var Menu = require('../../models/system/Menu');
 var menuHelper = require('../../lib/menuHelper');
 var mongoose = require('mongoose');

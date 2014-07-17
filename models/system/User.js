@@ -1,3 +1,4 @@
+"use strict";
 var mongoose = require('mongoose'),
     bcrypt = require('bcrypt'),
     nconf = require('nconf');
@@ -53,7 +54,7 @@ userSchema.plugin(uniqueValidator, {
 userSchema.pre('save', function(next) {
     var user = this;
     console.log(this.oprBranches);
-    if (this.oprBranches && this.oprBranches.length == 0) {
+    if (this.oprBranches && this.oprBranches.length == 0 && this.branch) {
         console.log(this.branch);
         this.oprBranches.push(this.branch);
     }

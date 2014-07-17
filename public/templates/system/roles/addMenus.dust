@@ -3,7 +3,7 @@
 <div class="panel panel-primary">
     <div class="panel-heading">{title}</div>
     <div class="panel-body">
-        {>"/system/menus/_menuTree" select="true"/}
+        {>"system/menus/_menuTree" select="true"/}
     <div class="btn-toolbar" role="toolbar">
         <div class="btn-group">
             <a id="returnButton" class="btn btn-default">返回</a>

@@ -1,3 +1,4 @@
+"use strict";
 var User = require('../../models/system/User');
 var UserInfo = require('../../models/UserInfo');
 var auth = require('../../lib/auth');

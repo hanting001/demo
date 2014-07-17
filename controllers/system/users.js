@@ -1,3 +1,4 @@
+"use strict";
 var passport = require('passport');
 var auth = require('../../lib/auth');
 var User = require('../../models/system/User');

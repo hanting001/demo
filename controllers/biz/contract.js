@@ -1,6 +1,4 @@
-/**
- * Created by thinkpad on 14-6-24.
- */
+"use strict";
 var BizAccept = require('../../models/biz/BizAccept');
 var AgentBroker = require('../../models/agent/AgentBroker');
 var Provider = require('../../models/product/Provider');
