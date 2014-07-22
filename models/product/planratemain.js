@@ -18,4 +18,3 @@ var planratemainSchema = new mongoose.Schema({
     Branchcode  :String
 }, { collection: 'planratemains' });
 module.exports = mongoose.model('Planratemain', planratemainSchema);
-
