@@ -19,7 +19,7 @@
 <link href="/css/themes/cosmo/bootstrap.min.css" rel="stylesheet">
 {/eq}
 {@eq value="darkly"}
-<link href="/css/themes/darkly/bootstrap.min.css" rel="stylesheet">
+<link href="./css/themes/darkly/bootstrap.min.css" rel="stylesheet">
 {/eq}
 {@eq value="flatly"}
 <link href="/css/themes/flatly/bootstrap.min.css" rel="stylesheet">

@@ -79,7 +79,7 @@ module.exports = function(app) {
 			}
 			var userRoles = [];
 			roles.forEach(function(role) {
-				if (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN') {
+				if (req.user.roles.indexOf('ROLE_ADMIN') >= 0 || (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN')) {
 					var node = {};
 					node.code = role.code;
 					node.name = role.name;
@@ -129,7 +129,7 @@ module.exports = function(app) {
 					model.userBranches = userBranches;
 					var userRoles = [];
 					roles.forEach(function(role) {
-						if (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN') {
+						if (req.user.roles.indexOf('ROLE_ADMIN') >= 0 || (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN')) {
 							var node = {};
 							node.code = role.code;
 							node.name = role.name;
@@ -162,7 +162,7 @@ module.exports = function(app) {
 						model.userBranches = userBranches;
 						var userRoles = [];
 						roles.forEach(function(role) {
-							if (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN') {
+							if (req.user.roles.indexOf('ROLE_ADMIN') >= 0 || (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN')) {
 								var node = {};
 								node.code = role.code;
 								node.name = role.name;
@@ -227,7 +227,8 @@ module.exports = function(app) {
 				}
 				var userRoles = [];
 				roles.forEach(function(role) {
-					if (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN') {
+					console.log(req.user.roles);
+					if (req.user.roles.indexOf('ROLE_ADMIN') >= 0 || (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN')) {
 						var node = {};
 						node.code = role.code;
 						node.name = role.name;
@@ -287,7 +288,7 @@ module.exports = function(app) {
 						model.userBranches = userBranches;
 						var userRoles = [];
 						roles.forEach(function(role) {
-							if (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN') {
+							if (req.user.roles.indexOf('ROLE_ADMIN') >= 0 || (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN')) {
 								var node = {};
 								node.code = role.code;
 								node.name = role.name;
@@ -331,7 +332,7 @@ module.exports = function(app) {
 								model.userBranches = userBranches;
 								var userRoles = [];
 								roles.forEach(function(role) {
-									if (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN') {
+									if (req.user.roles.indexOf('ROLE_ADMIN') >= 0 || (role.code != 'ROLE_ADMIN' && role.code != 'ROLE_BRANCH_ADMIN')) {
 										var node = {};
 										node.code = role.code;
 										node.name = role.name;
