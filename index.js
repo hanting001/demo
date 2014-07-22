@@ -25,6 +25,7 @@ var numCPUs = os.cpus().length;
 	require('./lib/helper-dateFormat');
 	require('./lib/helper-baseCode');
 	require('./lib/helper-security');
+	require('./lib/helper-selector');
 	_app.configure = function configure(nconf, next) {
 	    // Async method run on startup.
 		// Configure the database
