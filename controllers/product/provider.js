@@ -1,6 +1,4 @@
-/**
- * New node file
- */
+"use strict";
 var Provider = require('../../models/product/Provider');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;

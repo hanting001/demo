@@ -1,3 +1,4 @@
+"use strict";
 var mongoose = require('mongoose');
 
 function addZero(str, length){              
@@ -20,7 +21,7 @@ branchCounterSchema.statics.getNextSeq = function(branchCode, level,cb){
 					cb(err);
 				} else {
 					var newSeq = branchCounter.seq;
-					console.log(newSeq);
+					//console.log(newSeq);
 					cb(err, addZero(newSeq.toString(), 3));
 				}
 			});

@@ -1,3 +1,4 @@
+"use strict";
 var User = require('../../models/system/User');
 var UserInfo = require('../../models/UserInfo');
 var auth = require('../../lib/auth');
@@ -89,6 +90,45 @@ module.exports = function(app) {
                     });
                 });
             });
+        });
+    });
+
+    app.get('/user/resetPassword', auth.isAuthenticated(), function(req, res, next) {
+        var model = {
+            title: '重置密码',
+            showMessage: req.flash('showMessage'),
+            showErrorMessage: req.flash('showErrorMessage')
+        };
+        res.render('user/resetPassword', model);
+    });
+    app.post('/user/resetPassword', auth.isAuthenticated(), function(req, res, next) {
+        var oldPassword = req.body.oldPassword;
+        var newPassword = req.body.newPassword;
+        if (oldPassword.trim() === newPassword.trim()) {
+            req.flash('showErrorMessage', '新密码不能和原密码相同');
+            res.redirect('/user/resetPassword');
+        }
+        User.findOne({
+            name: req.user.name
+        }, function(err, user) {
+            if (err) {
+                return next(err);
+            }
+            var model = {};
+
+            if (user.validPassword(oldPassword)) {
+                user.password = newPassword;
+                user.save(function(err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    req.flash('showMessage', '修改成功');
+                    res.redirect('/user/resetPassword');
+                })
+            } else {
+                req.flash('showErrorMessage', '原密码不正确');
+                res.redirect('/user/resetPassword');
+            }
         });
     });
 };

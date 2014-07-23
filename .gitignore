@@ -1,5 +1,5 @@
 /node_modules/
+/public/html/
 /.build
 /.project
 /.settings/
-/tasks/

@@ -3,7 +3,7 @@
 <div class="panel panel-primary">
   <div class="panel-heading">信息录入</div>
   <div class="panel-body">
-		{>"/system/branches/_form" addTop="true"/}
+		{>"system/branches/_form" addTop="true"/}
 	</div>
 </div>
 {/content}

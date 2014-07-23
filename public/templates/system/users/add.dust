@@ -3,7 +3,7 @@
 <div class="panel panel-primary">
   <div class="panel-heading">{title}</div>
   <div class="panel-body">
-        {>"/user/_form" type="addNew"/}
+        {>"user/_form" type="addNew"/}
     </div>
 </div>
 {/content}
@@ -33,16 +33,7 @@
         });
     }
     function showRoleInfo() {
-         {#roles}
-            {@math key=$idx method="mod" operand=5}
-            {@eq value=0}
-                var div = $('<div class="form-group"></div>');
-                $('#roleInfo').append(div);
-            {/eq}
-            {/math}
-            div.append('<label class="col-sm-1 control-label">{.name}</label>');
-            div.append('<div class="col-sm-1"><div class="switch" tabindex="0"><input name="user[roles]" {@select key=checked}{@eq value="1"}checked{/eq}{/select} type="checkbox" value="{.code}" /></div></div>');
-        {/roles}
+
         $("[name='user[roles]']").bootstrapSwitch('onText','已分配');
         $("[name='user[roles]']").bootstrapSwitch('offText', '未分配');        
     }

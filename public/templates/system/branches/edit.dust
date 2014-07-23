@@ -3,7 +3,7 @@
 <div class="panel panel-primary">
   <div class="panel-heading">信息编辑</div>
   <div class="panel-body">
-		{>"/system/branches/_form" edit="true" /}
+		{>"system/branches/_form" edit="true" /}
 	</div>
 </div>
 {/content}

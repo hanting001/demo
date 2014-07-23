@@ -1,3 +1,4 @@
+"use strict";
 var mongoose = require('mongoose'),
     bcrypt = require('bcrypt'),
     nconf = require('nconf');
@@ -11,8 +12,7 @@ var userSchema = new mongoose.Schema({
         required: true
     },
     password: {
-        type: String,
-        unique: true
+        type: String
     },
     fullName: String,
     roles: {
@@ -52,13 +52,15 @@ userSchema.plugin(uniqueValidator, {
  */
 userSchema.pre('save', function(next) {
     var user = this;
-    console.log(this.oprBranches);
-    if (this.oprBranches && this.oprBranches.length == 0) {
-        console.log(this.branch);
-        this.oprBranches.push(this.branch);
+    
+    if (user.oprBranches && user.oprBranches.length == 0 && user.branch) {
+        user.oprBranches.push(user.branch);
     }
-    if (this.roles.indexOf('ROLE_USER') < 0) {
-        this.roles.push('ROLE_USER');
+    if (user.branch === 'ALL') {
+        user.oprBranches = ['ALL'];
+    }
+    if (user.roles.indexOf('ROLE_USER') < 0) {
+        user.roles.push('ROLE_USER');
     }
     
     //If the password has not been modified in this save operation, leave it alone (So we don't double hash it)

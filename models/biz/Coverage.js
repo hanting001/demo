@@ -4,6 +4,7 @@
 /**
  * Created by thinkpad on 14-6-24.
  */
+ "use strict";
 var mongoose = require("mongoose");
 var updatedTimestamp = require('mongoose-updated_at');
 var ObjectId = mongoose.Schema.Types.ObjectId;

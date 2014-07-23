@@ -1,6 +1,8 @@
+ "use strict";
 /**
  * Created by thinkpad on 14-6-26.
  */
+
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var planratemainSchema = new mongoose.Schema({
@@ -16,4 +18,3 @@ var planratemainSchema = new mongoose.Schema({
     Branchcode  :String
 }, { collection: 'planratemains' });
 module.exports = mongoose.model('Planratemain', planratemainSchema);
-

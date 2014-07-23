@@ -1,3 +1,4 @@
+"use strict";
 var auth = require('../../lib/auth');
 var menuHelper = require('../../lib/menuHelper');
 var Role = require('../../models/system/Role');

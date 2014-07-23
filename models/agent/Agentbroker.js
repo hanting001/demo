@@ -1,7 +1,7 @@
 /**
  * Created by thinkpad on 14-6-24.
  */
-
+"use strict";
 var mongoose = require("mongoose");
 var ObjectId = mongoose.Schema.Types.ObjectId;
 var AgentBrokerSchema =new mongoose.Schema({

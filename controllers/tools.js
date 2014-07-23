@@ -1,6 +1,4 @@
-/**
- * New node file
- */
+"use strict";
 var Tool = require('../models/Tool'),
 	auth = require('../lib/auth');
 

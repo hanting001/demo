@@ -1,3 +1,4 @@
+"use strict";
 var http = require('http');
 var Iconv = require('iconv').Iconv;
 var BufferHelper = require('bufferhelper');

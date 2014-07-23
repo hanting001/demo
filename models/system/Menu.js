@@ -1,3 +1,4 @@
+"use strict";
 var mongoose = require('mongoose');
 var updatedTimestamp = require('mongoose-updated_at');
 var validator = require('../../lib/validator');
